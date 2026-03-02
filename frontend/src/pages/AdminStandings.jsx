@@ -32,22 +32,11 @@ export default function AdminStandings() {
   }
 
   return (
-    <div>
+    <>
       <div className="admin-header">
         <div>
           <h1>Standings Admin</h1>
           <p>Standing JSON betöltése és DB-be mentése.</p>
-        </div>
-
-        <div className="admin-badges">
-          <span className="pill">
-            <span className="dot admin" />
-            ADMIN
-          </span>
-          <span className="pill">
-            <span className="dot" />
-            Season {season}
-          </span>
         </div>
       </div>
 
@@ -57,9 +46,7 @@ export default function AdminStandings() {
             <h3 className="card-title">Controls</h3>
 
             <div className="field">
-              <div className="muted" style={{ marginBottom: 6 }}>
-                Season
-              </div>
+              <div className="muted" style={{ marginBottom: 6 }}>Season</div>
               <input
                 className="input"
                 type="number"
@@ -104,6 +91,6 @@ export default function AdminStandings() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

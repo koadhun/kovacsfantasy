@@ -4,8 +4,21 @@ import { Link } from "react-router-dom";
 
 const SEASON = 2025;
 
-function formatKickoff(iso) {
+function safeDate(iso) {
+  if (!iso) return null;
   const d = new Date(iso);
+  if (!isNaN(d.getTime())) return d;
+
+  // fallback: "2025-09-10 20:15" -> "2025-09-10T20:15"
+  const d2 = new Date(String(iso).replace(" ", "T"));
+  if (!isNaN(d2.getTime())) return d2;
+
+  return null;
+}
+
+function formatKickoff(iso) {
+  const d = safeDate(iso);
+  if (!d) return "SCHEDULED";
   const day = d.toLocaleDateString(undefined, { weekday: "short" });
   const time = d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
   return `${day} ${time}`;
@@ -19,7 +32,6 @@ export default function WeeklyPickEm() {
   const [savingId, setSavingId] = useState(null);
 
   async function loadWeeks() {
-    // reuse schedule endpoint, mert ott megvan a “mely hetek vannak”
     const res = await api.get("/schedule/weeks", { params: { season: SEASON } });
     const ws = res.data.weeks || [];
     setWeeks(ws);
@@ -47,7 +59,6 @@ export default function WeeklyPickEm() {
     try {
       setSavingId(gameId);
       await api.post("/pickem/pick", { gameId, picked: team });
-      // reload to reflect selection
       await loadWeek(week);
     } catch (e) {
       setErr(e?.response?.data?.error || "Hiba történt a mentésnél.");
@@ -56,7 +67,7 @@ export default function WeeklyPickEm() {
     }
   }
 
-  const pickedCount = useMemo(() => games.filter(g => g.picked).length, [games]);
+  const pickedCount = useMemo(() => games.filter((g) => g.picked).length, [games]);
 
   return (
     <div className="container page">
@@ -66,15 +77,17 @@ export default function WeeklyPickEm() {
           <span>Weekly Pick&apos;Em</span>
         </div>
         <h1 className="h1">Weekly Pick&apos;Em</h1>
-        <p className="sub">
-          Tippeld meg a meccsek győztesét kickoff előtt. Kickoff után a választás tiltva.
-        </p>
+        <p className="sub">Tippeld meg a meccsek győztesét kickoff előtt. Kickoff után a választás tiltva.</p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <div className="filters-group">
             <span className="filters-label">WEEK</span>
             <select className="select-dark" value={week} onChange={(e) => setWeek(Number(e.target.value))}>
-              {weeks.map(w => <option key={w} value={w}>Week {w}</option>)}
+              {weeks.map((w) => (
+                <option key={w} value={w}>
+                  Week {w}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -94,71 +107,94 @@ export default function WeeklyPickEm() {
       {err && <p className="error" style={{ marginTop: 14 }}>{err}</p>}
 
       <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
-        {games.map(g => {
-          const disabled = !g.canPick || savingId === g.id;
-          const final = g.final;
+        {games.map((g) => {
+          const final = !!g.final;
+
+          // ✅ lockolás: kickoff alapján (nem canPick alapján!)
+          const kickoff = safeDate(g.kickoffAt);
+          const kickoffPassed = kickoff ? Date.now() >= kickoff.getTime() : false;
+
+          // ha final vagy kickoff elmúlt → locked
+          // plusz: ha backend adott canPick=false-t, akkor is locked
+          const locked = final || kickoffPassed || g.canPick === false;
+
+          const disabledAway = locked || savingId === g.id;
+          const disabledHome = locked || savingId === g.id;
 
           // correct indicator
           let verdict = null;
           if (final && g.picked) verdict = g.correct ? "✅ Helyes" : "❌ Hibás";
 
+          // Scores külön
+          const awayScore = typeof g.awayScore === "number" ? g.awayScore : (g.awayScore ?? "");
+          const homeScore = typeof g.homeScore === "number" ? g.homeScore : (g.homeScore ?? "");
+
+          // Middle text: FINAL vagy kickoff
+          const middleText = final ? "FINAL" : formatKickoff(g.kickoffAt);
+
           return (
             <div key={g.id} className="scheduleRow">
               <div className="scheduleRowBar" style={{ background: "rgba(60,130,255,.65)" }} />
 
-              <div className="scheduleRowMain" style={{ gridTemplateColumns: "1.4fr .6fr" }}>
-                {/* left: pick UI */}
-                <div className="scheduleTeams" style={{ gap: 8 }}>
-                  <div className="pickRow">
-                    <button
-                      className={`pickTeamBtn ${g.picked === g.awayTeam ? "selected" : ""}`}
-                      disabled={disabled}
-                      onClick={() => pick(g.id, g.awayTeam)}
-                      title={disabled ? "Kickoff után nem módosítható" : "Válaszd a győztest"}
-                    >
-                      {g.awayTeam}
-                    </button>
-
-                    <div className="pickMeta muted">
-                      {final ? "FINAL" : formatKickoff(g.kickoffAt)}
-                    </div>
-
-                    <button
-                      className={`pickTeamBtn ${g.picked === g.homeTeam ? "selected" : ""}`}
-                      disabled={disabled}
-                      onClick={() => pick(g.id, g.homeTeam)}
-                      title={disabled ? "Kickoff után nem módosítható" : "Válaszd a győztest"}
-                    >
-                      {g.homeTeam}
-                    </button>
+              {/* ✅ ÚJ 3 oszlopos layout: LEFT | MIDDLE | RIGHT */}
+              <div
+                className="scheduleRowMain"
+                style={{
+                  gridTemplateColumns: "1fr auto 1fr",
+                  alignItems: "center",
+                  gap: 14,
+                }}
+              >
+                {/* LEFT: AWAY (TEAM + SCORE külön) */}
+                <button
+                  className={`pickTeamBtn ${g.picked === g.awayTeam ? "selected" : ""}`}
+                  disabled={disabledAway}
+                  onClick={() => pick(g.id, g.awayTeam)}
+                  title={locked ? "Kickoff után nem módosítható" : "Válaszd a győztest"}
+                  style={{ justifySelf: "start", minWidth: 220 }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+                    <span style={{ fontWeight: 900 }}>{g.awayTeam}</span>
+                    {final && <span style={{ fontWeight: 900 }}>{awayScore}</span>}
                   </div>
+                </button>
 
-                  <div className="muted" style={{ fontSize: 12 }}>
-                    {final
-                      ? `Eredmény: ${g.awayTeam} ${g.awayScore} — ${g.homeScore} ${g.homeTeam}`
-                      : `Kickoff: ${formatKickoff(g.kickoffAt)}`
-                    }
+                {/* MIDDLE */}
+                <div style={{ textAlign: "center", minWidth: 180 }}>
+                  <div className={`statusPill ${final ? "final" : "scheduled"}`}>
+                    {middleText}
                   </div>
 
                   {verdict && (
-                    <div style={{ fontWeight: 900, fontSize: 13 }}>
+                    <div style={{ fontWeight: 900, fontSize: 13, marginTop: 8 }}>
                       {verdict}
                     </div>
                   )}
+
+                  {!final && g.picked && (
+                    <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
+                      Picked: <span style={{ fontWeight: 900 }}>{g.picked}</span>
+                    </div>
+                  )}
+
+                  <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
+                    {locked ? "Locked" : "Open"}
+                  </div>
                 </div>
 
-                {/* right */}
-                <div className="scheduleRight">
-                  <div className={`statusPill ${final ? "final" : "scheduled"}`}>
-                    {final ? "FINAL" : "SCHEDULED"}
+                {/* RIGHT: HOME (SCORE + TEAM külön) */}
+                <button
+                  className={`pickTeamBtn ${g.picked === g.homeTeam ? "selected" : ""}`}
+                  disabled={disabledHome}
+                  onClick={() => pick(g.id, g.homeTeam)}
+                  title={locked ? "Kickoff után nem módosítható" : "Válaszd a győztest"}
+                  style={{ justifySelf: "end", minWidth: 220 }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+                    {final && <span style={{ fontWeight: 900 }}>{homeScore}</span>}
+                    <span style={{ fontWeight: 900 }}>{g.homeTeam}</span>
                   </div>
-                  <div className="muted" style={{ fontSize: 12 }}>
-                    {g.canPick ? "Open" : "Locked"}
-                  </div>
-                  <button className="btn scheduleBtn" disabled>
-                    {savingId === g.id ? "Saving..." : "—"}
-                  </button>
-                </div>
+                </button>
               </div>
             </div>
           );

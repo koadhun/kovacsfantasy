@@ -17,7 +17,6 @@ export default function Users() {
     load().catch((e) => {
       setErr(e?.response?.data?.error || "Nem sikerült betölteni a felhasználókat. (Admin kell)");
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function setRole(userId, role) {
@@ -48,24 +47,18 @@ export default function Users() {
   }
 
   return (
-    <div>
+    <>
       <div className="admin-header">
         <div>
           <h1>Users</h1>
           <p>Felhasználók kezelése (role váltás, törlés).</p>
         </div>
-        <div className="admin-badges">
-          <span className="pill">
-            <span className="dot admin" />
-            ADMIN
-          </span>
-        </div>
       </div>
 
-      <div className="card">
-        {err && <p className="error">{err}</p>}
-        {msg && <p className="success">{msg}</p>}
+      {err && <p className="error">{err}</p>}
+      {msg && <p className="success">{msg}</p>}
 
+      <div className="card">
         <table className="table">
           <thead>
             <tr>
@@ -119,6 +112,6 @@ export default function Users() {
           Tipp: saját magad törlése/role módosítása backendben tiltva van.
         </p>
       </div>
-    </div>
+    </>
   );
 }

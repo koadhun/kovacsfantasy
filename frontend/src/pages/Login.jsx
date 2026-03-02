@@ -12,20 +12,12 @@ export default function Login() {
   async function handleLogin(e) {
     e.preventDefault();
     setError("");
-
     try {
       const res = await api.post("/auth/login", { username, password });
 
-      // ✅ token
+      // ✅ token + user mentése
       localStorage.setItem("token", res.data.token);
-
-      // ✅ user (username, role, email, id...)
-      if (res.data.user) {
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-      } else {
-        // ha valamiért nincs user a válaszban
-        localStorage.removeItem("user");
-      }
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
       navigate("/schedule");
     } catch (err) {
@@ -42,7 +34,7 @@ export default function Login() {
             <span>Bejelentkezés a KovacsFantasy oldalra</span>
           </div>
           <h1 className="h1">Welcome back</h1>
-          <p className="sub">Jelentkezz be és nézd a schedule-t, statokat, fantasy-t.</p>
+          <p className="sub">Jelentkezz be és nézd a schedule-t, standings-et, statokat, fantasy-t.</p>
         </div>
 
         <div className="card" style={{ marginTop: 14 }}>
@@ -76,17 +68,9 @@ export default function Login() {
               </button>
             </div>
 
-            <div
-              className="field"
-              style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
-            >
-              <Link className="muted" to="/forgot-password">
-                Elfelejtett jelszó
-              </Link>
-
-              <Link className="muted" to="/register">
-                Regisztráció
-              </Link>
+            <div className="field" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Link className="muted" to="/forgot-password">Elfelejtett jelszó</Link>
+              <Link className="muted" to="/register">Regisztráció</Link>
             </div>
 
             {error && <p className="error">{error}</p>}
