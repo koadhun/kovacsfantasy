@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
-import AdminLayout from "../components/AdminLayout";
 
 export default function AdminStandings() {
   const [season, setSeason] = useState(2025);
@@ -9,7 +8,8 @@ export default function AdminStandings() {
   const [err, setErr] = useState("");
 
   async function load() {
-    setErr(""); setMsg("");
+    setErr("");
+    setMsg("");
     const res = await api.get(`/standings?season=${season}`);
     setJsonText(JSON.stringify(res.data, null, 2));
   }
@@ -20,7 +20,8 @@ export default function AdminStandings() {
   }, []);
 
   async function save() {
-    setErr(""); setMsg("");
+    setErr("");
+    setMsg("");
     try {
       const payload = JSON.parse(jsonText);
       await api.put("/admin/standings", payload);
@@ -31,17 +32,23 @@ export default function AdminStandings() {
   }
 
   return (
-<AdminLayout
-	title="Standings"
-	subtitle="Standing JSON betöltése és DB-be mentése.">
-    <div className="container page">
-      <div className="hero">
-        <div className="kicker">
-          <span className="tag">ADMIN</span>
-          <span>Standings DB frissítés</span>
+    <div>
+      <div className="admin-header">
+        <div>
+          <h1>Standings Admin</h1>
+          <p>Standing JSON betöltése és DB-be mentése.</p>
         </div>
-        <h1 className="h1">Standings Admin</h1>
-        <p className="sub">Töltsd be a jelenlegi JSON-t, szerkeszd, majd mentsd DB-be.</p>
+
+        <div className="admin-badges">
+          <span className="pill">
+            <span className="dot admin" />
+            ADMIN
+          </span>
+          <span className="pill">
+            <span className="dot" />
+            Season {season}
+          </span>
+        </div>
       </div>
 
       <div className="grid">
@@ -50,7 +57,9 @@ export default function AdminStandings() {
             <h3 className="card-title">Controls</h3>
 
             <div className="field">
-              <div className="muted" style={{ marginBottom: 6 }}>Season</div>
+              <div className="muted" style={{ marginBottom: 6 }}>
+                Season
+              </div>
               <input
                 className="input"
                 type="number"
@@ -82,7 +91,10 @@ export default function AdminStandings() {
             <h3 className="card-title">Standings JSON</h3>
             <textarea
               className="input"
-              style={{ minHeight: 520, fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" }}
+              style={{
+                minHeight: 520,
+                fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+              }}
               value={jsonText}
               onChange={(e) => setJsonText(e.target.value)}
             />
@@ -93,6 +105,5 @@ export default function AdminStandings() {
         </div>
       </div>
     </div>
-</AdminLayout>
   );
 }

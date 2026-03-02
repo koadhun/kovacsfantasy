@@ -151,7 +151,7 @@ a:hover{ text-decoration: underline; }
   flex-shrink: 0;     /* a jobb oldal ne törjön le */
 }
 
-.userBadge {
+.userBadge{
   display: flex;
   align-items: center;
   gap: 10px;
@@ -159,6 +159,30 @@ a:hover{ text-decoration: underline; }
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,0.10);
   background: rgba(255,255,255,0.04);
+  cursor: pointer;
+  color: var(--text);
+}
+
+.userBadge:hover{
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.18);
+}
+
+.userBadge:active{
+  transform: translateY(1px);
+}
+
+.userDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #2b6cff;
+  box-shadow: 0 0 0 4px rgba(43,108,255,0.12);
+}
+
+.userDot.admin{
+  background: #ff3b3b;
+  box-shadow: 0 0 0 4px rgba(255,59,59,0.12);
 }
 
 .userDot {

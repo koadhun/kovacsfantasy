@@ -1,118 +1,66 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
-import AdminDropdown from "./AdminDropdown";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const navigate = useNavigate();
 
-  const [openUserMenu, setOpenUserMenu] = useState(false);
-
   const token = localStorage.getItem("token");
-
-  const user = useMemo(() => {
-    try {
-      return JSON.parse(localStorage.getItem("user") || "null");
-    } catch {
-      return null;
-    }
-  }, [token]);
-
+  const user = JSON.parse(localStorage.getItem("user") || "null");
   const isLoggedIn = !!token;
-  const isAdmin = user?.role === "ADMIN";
-
-  useEffect(() => {
-    const onDocClick = (e) => {
-      // zárjuk a user menüt, ha máshová kattintanak
-      if (!e.target.closest?.(".userMenuWrap")) setOpenUserMenu(false);
-    };
-    document.addEventListener("click", onDocClick);
-    return () => document.removeEventListener("click", onDocClick);
-  }, []);
 
   function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    setOpenUserMenu(false);
     navigate("/login");
   }
 
   return (
     <div className="topbar">
-      <div className="topbarInner">
-        {/* Brand */}
-        <Link to={isLoggedIn ? "/schedule" : "/login"} className="brand">
-          <span className="brandDot" />
-          <span className="brandText">KOVACS FANTASY</span>
-        </Link>
+      <div className="container">
+        <div className="topbar-inner">
+          <Link to={isLoggedIn ? "/schedule" : "/login"} className="brand">
+            <span className="brandDot" />
+            <span>KOVACS FANTASY</span>
+          </Link>
 
-        {/* Main nav */}
-        {isLoggedIn && (
-          <nav className="nav">
-            <NavLink to="/schedule" className={({ isActive }) => (isActive ? "navItem active" : "navItem")}>
-              Schedule
-            </NavLink>
-
-            <NavLink to="/standings" className={({ isActive }) => (isActive ? "navItem active" : "navItem")}>
-              Standings
-            </NavLink>
-
-            <NavLink to="/stats" className={({ isActive }) => (isActive ? "navItem active" : "navItem")}>
-              Stats
-            </NavLink>
-
-            <NavLink to="/fantasy" className={({ isActive }) => (isActive ? "navItem active" : "navItem")}>
-              Fantasy
-            </NavLink>
-
-            <NavLink to="/profile" className={({ isActive }) => (isActive ? "navItem active" : "navItem")}>
-              Profile
-            </NavLink>
-          </nav>
-        )}
-
-        <div className="topbarRight">
-          {/* Admin dropdown only for admins */}
-          {isLoggedIn && isAdmin && <AdminDropdown />}
-
-          {/* Right side */}
-          {isLoggedIn ? (
-            <div className="userMenuWrap" style={{ position: "relative" }}>
-              {/* clickable badge */}
-              <button
-                type="button"
-                className="userBadge"
-                onClick={() => setOpenUserMenu((v) => !v)}
-                style={{ cursor: "pointer" }}
-                aria-label="User menu"
-              >
-                <span className={`userDot ${isAdmin ? "admin" : ""}`} />
-                <span className="userText">
-                  {user?.username || "User"}
-                  <span className="muted" style={{ margin: "0 6px" }}>
-                    ·
-                  </span>
-                  <span className="role">{user?.role || "USER"}</span>
-                </span>
-                <span style={{ opacity: 0.7, marginLeft: 6 }}>▾</span>
-              </button>
-
-              {/* dropdown */}
-              {openUserMenu && (
-                <div className="userMenu">
-                  <button className="userMenuItem" onClick={() => { setOpenUserMenu(false); navigate("/profile"); }}>
-                    Profile
-                  </button>
-                  <button className="userMenuItem" onClick={logout}>
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <Link className="btn ghost" to="/login">
-              Login
-            </Link>
+          {isLoggedIn && (
+            <nav className="nav">
+              <NavLink to="/schedule" className={({ isActive }) => (isActive ? "active" : "")}>
+                Schedule
+              </NavLink>
+              <NavLink to="/standings" className={({ isActive }) => (isActive ? "active" : "")}>
+                Standings
+              </NavLink>
+              <NavLink to="/stats" className={({ isActive }) => (isActive ? "active" : "")}>
+                Stats
+              </NavLink>
+              <NavLink to="/fantasy" className={({ isActive }) => (isActive ? "active" : "")}>
+                Fantasy
+              </NavLink>
+            </nav>
           )}
+
+          <div className="topbarRight">
+            {isLoggedIn && (
+              <>
+                {/* ✅ kattintás: profile */}
+                <button
+                  type="button"
+                  className="userBadge"
+                  onClick={() => navigate("/profile")}
+                  title="Profile"
+                >
+                  <span className={`userDot ${user?.role === "ADMIN" ? "admin" : ""}`} />
+                  <span style={{ fontWeight: 800 }}>
+                    {user?.username || "User"} · {user?.role || "USER"}
+                  </span>
+                </button>
+
+                <button className="btn ghost" onClick={logout}>
+                  Logout
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

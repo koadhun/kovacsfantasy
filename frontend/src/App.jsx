@@ -21,13 +21,14 @@ import PickEmUserPicks from "./pages/PickEmUserPicks";
 
 import Users from "./pages/Users";
 
-// Admin pages
+// ✅ Admin oldalak
 import ScheduleResultsEditor from "./pages/admin/ScheduleResultsEditor";
+import AdminStandings from "./pages/AdminStandings.jsx";
 
 export default function App() {
   return (
     <Routes>
-      {/* "/" → login, ha nincs token; különben schedule */}
+      {/* "/" → login ha nincs token, különben schedule */}
       <Route
         path="/"
         element={
@@ -39,13 +40,13 @@ export default function App() {
         }
       />
 
-      {/* AUTH */}
+      {/* Auth */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* MAIN APP (protected) */}
+      {/* App pages */}
       <Route
         path="/schedule"
         element={
@@ -56,7 +57,6 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/standings"
         element={
@@ -67,7 +67,6 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/stats"
         element={
@@ -78,7 +77,6 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/fantasy"
         element={
@@ -90,6 +88,7 @@ export default function App() {
         }
       />
 
+      {/* Profile: navbarból a user badge-re kattintva */}
       <Route
         path="/profile"
         element={
@@ -101,7 +100,7 @@ export default function App() {
         }
       />
 
-      {/* WEEKLY PICK'EM */}
+      {/* Weekly Pick'Em */}
       <Route
         path="/fantasy/weekly-pickem"
         element={
@@ -112,7 +111,6 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/fantasy/weekly-pickem/leaderboard"
         element={
@@ -123,7 +121,6 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/fantasy/weekly-pickem/user/:userId"
         element={
@@ -135,37 +132,23 @@ export default function App() {
         }
       />
 
-      {/* (ha még bárhol hivatkozol rá, maradhat) */}
+      {/* ✅ Admin area (sidebar + content) */}
       <Route
-        path="/users"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <Users />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
+  path="/admin"
+  element={
+    <ProtectedRoute>
+      <Layout>
+        <AdminLayout />
+      </Layout>
+    </ProtectedRoute>
+  }
+>
+  <Route path="users" element={<Users />} />
+  <Route path="standings" element={<AdminStandings />} />
+  <Route path="schedule-results" element={<ScheduleResultsEditor />} />
+</Route>
 
-      {/* ✅ ADMIN AREA (AdminLayout + nested admin routes) */}
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute>
-            <AdminLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route path="schedule-results" element={<ScheduleResultsEditor />} />
-
-        {/* A már meglévő USERS kezelő oldalad */}
-        <Route path="users" element={<Users />} />
-
-        {/* A már meglévő Standings oldalad, amin az admin frissítés már működik */}
-        <Route path="standings" element={<Standings />} />
-      </Route>
-
-      {/* fallback */}
+      {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
