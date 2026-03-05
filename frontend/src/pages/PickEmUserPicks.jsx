@@ -1,79 +1,187 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SEASON = 2025;
 
-export default function PickEmUserPicks() {
-  const { userId } = useParams();
-  const [sp] = useSearchParams();
-  const week = Number(sp.get("week") || 1);
+function formatKickoff(iso) {
+  const d = new Date(iso);
+  const day = d.toLocaleDateString(undefined, { weekday: "short" });
+  const time = d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+  return `${day} ${time}`;
+}
 
-  const [rows, setRows] = useState([]);
+export default function WeeklyPickEm() {
+  const [week, setWeek] = useState(1);
+  const [weeks, setWeeks] = useState([]);
+  const [games, setGames] = useState([]);
   const [err, setErr] = useState("");
+  const [savingId, setSavingId] = useState(null);
 
-  async function load() {
+  async function loadWeeks() {
+    const res = await api.get("/schedule/weeks", { params: { season: SEASON } });
+    const ws = res.data.weeks || [];
+    setWeeks(ws);
+    if (ws.length) setWeek(ws[0]);
+  }
+
+  async function loadWeek(w) {
     setErr("");
-    const res = await api.get(`/pickem/user/${userId}/picks`, { params: { season: SEASON, week } });
-    setRows(res.data.picks || []);
+    const res = await api.get("/pickem/week", { params: { season: SEASON, week: w } });
+    setGames(res.data.games || []);
   }
 
   useEffect(() => {
-    load().catch(() => setErr("Nem sikerült betölteni a tippeket."));
+    loadWeeks().catch(() => setErr("Nem sikerült betölteni a heteket."));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, week]);
+  }, []);
+
+  useEffect(() => {
+    if (!week) return;
+    loadWeek(week).catch(() => setErr("Nem sikerült betölteni a meccseket."));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [week]);
+
+  async function pick(gameId, team) {
+    try {
+      setErr("");
+      setSavingId(gameId);
+      await api.post("/pickem/pick", { gameId, picked: team });
+      await loadWeek(week);
+    } catch (e) {
+      setErr(e?.response?.data?.error || "Hiba történt a mentésnél.");
+    } finally {
+      setSavingId(null);
+    }
+  }
+
+  const pickedCount = useMemo(() => games.filter((g) => g.picked).length, [games]);
 
   return (
     <div className="container page">
       <div className="hero">
         <div className="kicker">
           <span className="tag">FANTASY</span>
-          <span>User Picks</span>
+          <span>Weekly Pick&apos;Em</span>
         </div>
-        <h1 className="h1">User Picks · Week {week}</h1>
-        <p className="sub">Csak a már elkezdődött meccsek tippjei láthatók.</p>
+        <h1 className="h1">Weekly Pick&apos;Em</h1>
+        <p className="sub">Tippeld meg a meccsek győztesét kickoff előtt. Kickoff után a választás tiltva.</p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
+          <div className="filters-group">
+            <span className="filters-label">WEEK</span>
+            <select className="select-dark" value={week} onChange={(e) => setWeek(Number(e.target.value))}>
+              {weeks.map((w) => (
+                <option key={w} value={w}>
+                  Week {w}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="filters-spacer" />
-          <Link className="btn" to={`/fantasy/weekly-pickem/leaderboard?week=${week}`}>Back to leaderboard</Link>
+
+          <span className="pill">
+            <span className="dot" />
+            {pickedCount}/{games.length} picked
+          </span>
+
+          <Link to={`/fantasy/weekly-pickem/leaderboard?week=${week}`} className="btn primary">
+            Leaderboard
+          </Link>
         </div>
       </div>
 
       {err && <p className="error" style={{ marginTop: 14 }}>{err}</p>}
 
-      <div className="card" style={{ marginTop: 14, padding: 14 }}>
-        <div style={{ overflowX: "auto" }}>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Kickoff</th>
-                <th>Match</th>
-                <th>Picked</th>
-                <th>Result</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map(r => (
-                <tr key={r.gameId}>
-                  <td className="muted" style={{ whiteSpace: "nowrap" }}>
-                    {new Date(r.kickoffAt).toLocaleString()}
-                  </td>
-                  <td style={{ fontWeight: 900 }}>{r.awayTeam} @ {r.homeTeam}</td>
-                  <td style={{ fontWeight: 900 }}>{r.picked ?? "—"}</td>
-                  <td className="muted">
-                    {r.status === "FINAL"
-                      ? `${r.awayScore} - ${r.homeScore}`
-                      : "IN PROGRESS / STARTED"
-                    }
-                  </td>
-                </tr>
-              ))}
-              {!rows.length && (
-                <tr><td colSpan={4} className="muted" style={{ padding: 12 }}>Nincs megjeleníthető tipp.</td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+      <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
+        {games.map((g) => {
+          const isSaving = savingId === g.id;
+          const canPick = !!g.canPick && !isSaving;
+          const final = !!g.final;
+
+          const leftSelected = g.picked === g.awayTeam;
+          const rightSelected = g.picked === g.homeTeam;
+
+          const leftScore = final ? g.awayScore : "—";
+          const rightScore = final ? g.homeScore : "—";
+
+          let verdict = null;
+          if (final && g.picked) verdict = g.correct ? "✅ Helyes tipp" : "❌ Hibás tipp";
+
+          return (
+            <div key={g.id} className="scheduleRow">
+              <div className="scheduleRowBar" style={{ background: "rgba(60,130,255,.65)" }} />
+
+              <div className="scheduleRowMain" style={{ gridTemplateColumns: "1fr" }}>
+                {/* NFL-like single row */}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 220px 1fr",
+                    gap: 12,
+                    alignItems: "center",
+                  }}
+                >
+                  {/* LEFT: AWAY */}
+                  <button
+                    className={`pickTeamBtn ${leftSelected ? "selected" : ""}`}
+                    disabled={!canPick}
+                    onClick={() => pick(g.id, g.awayTeam)}
+                    title={!g.canPick ? "Kickoff után nem módosítható" : "Válaszd a győztest"}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "0 14px",
+                    }}
+                  >
+                    <span style={{ fontWeight: 900, letterSpacing: ".4px" }}>{g.awayTeam}</span>
+                    <span style={{ fontWeight: 900, opacity: final ? 1 : 0.65 }}>{leftScore}</span>
+                  </button>
+
+                  {/* CENTER: STATUS */}
+                  <div style={{ textAlign: "center" }}>
+                    <div className={`statusPill ${final ? "final" : "scheduled"}`} style={{ justifyContent: "center" }}>
+                      {final ? "FINAL" : formatKickoff(g.kickoffAt)}
+                    </div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
+                      {g.canPick ? (isSaving ? "Saving..." : "Open") : "Locked"}
+                    </div>
+                    {verdict && (
+                      <div style={{ marginTop: 6, fontWeight: 900, fontSize: 12 }}>
+                        {verdict}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* RIGHT: HOME */}
+                  <button
+                    className={`pickTeamBtn ${rightSelected ? "selected" : ""}`}
+                    disabled={!canPick}
+                    onClick={() => pick(g.id, g.homeTeam)}
+                    title={!g.canPick ? "Kickoff után nem módosítható" : "Válaszd a győztest"}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "0 14px",
+                    }}
+                  >
+                    <span style={{ fontWeight: 900, opacity: final ? 1 : 0.65 }}>{rightScore}</span>
+                    <span style={{ fontWeight: 900, letterSpacing: ".4px" }}>{g.homeTeam}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        {!games.length && (
+          <div className="card" style={{ padding: 14 }}>
+            <div className="muted">Ehhez a héthez nincs schedule adat.</div>
+          </div>
+        )}
       </div>
     </div>
   );
