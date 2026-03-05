@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
+import TeamLogo from "../components/TeamLogo";
 
-// később lehet állítható
 const SEASON = 2025;
 
 function formatDay(iso) {
@@ -26,7 +26,7 @@ function winnerSide(game) {
   return game.homeScore > game.awayScore ? "HOME" : "AWAY";
 }
 
-// nem hivatalos “team color” csík – bővíthető
+// nem hivatalos “team color” csík – bővíthető, ha akarsz
 const TEAM_COLOR = {
   LAR: "#2563EB",
   DET: "#60A5FA",
@@ -35,7 +35,7 @@ const TEAM_COLOR = {
   PHI: "#10B981",
   DAL: "#38BDF8",
   BUF: "#3B82F6",
-  NYJ: "#22C55E"
+  NYJ: "#22C55E",
 };
 
 function teamBar(team) {
@@ -80,7 +80,6 @@ export default function Schedule() {
           <span className="tag">SCHEDULE</span>
           <span>By Week</span>
         </div>
-
         <h1 className="h1">{headerTitle}</h1>
         <p className="sub">
           BY WEEK nézet — lejátszott meccsnél eredmény (FINAL), jövőbeninél kezdési idő.
@@ -89,7 +88,6 @@ export default function Schedule() {
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <div className="filters-group">
             <span className="filters-label">WEEK</span>
-
             <select
               className="select-dark"
               value={week}
@@ -113,13 +111,9 @@ export default function Schedule() {
         </div>
       </div>
 
-      {err && (
-        <p className="error" style={{ marginTop: 14 }}>
-          {err}
-        </p>
-      )}
+      {err && <p className="error" style={{ marginTop: 14 }}>{err}</p>}
 
-      <div style={{ marginTop: 14, display: "grid", gap: 12 }}>
+      <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
         {games.map((g) => {
           const final = isFinal(g);
           const win = winnerSide(g);
@@ -127,49 +121,47 @@ export default function Schedule() {
 
           return (
             <div key={g.id} className="scheduleRow">
-              {/* left colored bar */}
               <div className="scheduleRowBar" style={{ background: leftColor }} />
 
-              {/* main */}
               <div className="scheduleRowMain">
-                {/* teams */}
                 <div className="scheduleTeams">
-                  {/* Away */}
-                  <div className={`scheduleTeam ${final && win === "AWAY" ? "winner" : ""}`}>
-                    <div className="teamCode">{g.awayTeam}</div>
+                  {/* AWAY */}
+                  <div className={`scheduleTeam ${win === "AWAY" ? "winner" : ""}`}>
+                    <div className="teamCode" style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                      <TeamLogo team={g.awayTeam} size={26} />
+                      <span>{g.awayTeam}</span>
+                    </div>
+
                     <div className="teamMeta">
                       <div className="teamName">{g.awayTeam}</div>
                       <div className="teamSub muted">{final ? "FINAL" : "SCHEDULED"}</div>
                     </div>
 
-                    <div className="teamScore">
-                      {final ? g.awayScore : "—"}
-                    </div>
+                    <div className="teamScore">{final ? g.awayScore : "—"}</div>
                   </div>
 
-                  {/* Home */}
-                  <div className={`scheduleTeam ${final && win === "HOME" ? "winner" : ""}`}>
-                    <div className="teamCode">{g.homeTeam}</div>
+                  {/* HOME */}
+                  <div className={`scheduleTeam ${win === "HOME" ? "winner" : ""}`}>
+                    <div className="teamCode" style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                      <TeamLogo team={g.homeTeam} size={26} />
+                      <span>{g.homeTeam}</span>
+                    </div>
+
                     <div className="teamMeta">
                       <div className="teamName">{g.homeTeam}</div>
                       <div className="teamSub muted">{final ? "FINAL" : "KICKOFF"}</div>
                     </div>
 
-                    <div className="teamScore">
-                      {final ? g.homeScore : "—"}
-                    </div>
+                    <div className="teamScore">{final ? g.homeScore : "—"}</div>
                   </div>
                 </div>
 
-                {/* right info */}
                 <div className="scheduleRight">
                   <div className={`statusPill ${final ? "final" : "scheduled"}`}>
                     {final ? "FINAL" : formatKickoff(g.kickoffAt)}
                   </div>
+                  <div className="muted scheduleDate">{formatDay(g.kickoffAt)}</div>
 
-                  <div className="scheduleDate muted">{formatDay(g.kickoffAt)}</div>
-
-                  {/* hely a későbbi “Game details / Box score” gombnak */}
                   <button className="btn scheduleBtn" disabled>
                     Details
                   </button>
@@ -179,7 +171,7 @@ export default function Schedule() {
           );
         })}
 
-        {!games.length && (
+        {!games.length && !err && (
           <div className="card" style={{ padding: 14 }}>
             <div className="muted">Ehhez a héthez nincs adat.</div>
           </div>

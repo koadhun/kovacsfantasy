@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import { Link } from "react-router-dom";
+import TeamLogo from "../components/TeamLogo";
 
 const SEASON = 2025;
 
@@ -92,7 +93,11 @@ export default function WeeklyPickEm() {
         </div>
       </div>
 
-      {err && <p className="error" style={{ marginTop: 14 }}>{err}</p>}
+      {err && (
+        <p className="error" style={{ marginTop: 14 }}>
+          {err}
+        </p>
+      )}
 
       <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
         {games.map((g) => {
@@ -100,23 +105,20 @@ export default function WeeklyPickEm() {
           const canPick = !!g.canPick && !isSaving;
           const final = !!g.final;
 
+          // a jelenlegi szabályod: ha selected és scheduled → gold; ha final → green/red
           const leftSelected = g.picked === g.awayTeam;
           const rightSelected = g.picked === g.homeTeam;
 
           const leftClass = (() => {
             if (!leftSelected) return "";
-
-            if (!g.final) return "gold";        // scheduled
-            if (g.correct) return "correct";    // good pick
-            return "wrong";                     // bad pick
+            if (!final) return "gold";
+            return g.correct ? "correct" : "wrong";
           })();
 
           const rightClass = (() => {
             if (!rightSelected) return "";
-
-            if (!g.final) return "gold";
-            if (g.correct) return "correct";
-            return "wrong";
+            if (!final) return "gold";
+            return g.correct ? "correct" : "wrong";
           })();
 
           const leftScore = final ? g.awayScore : "—";
@@ -129,71 +131,94 @@ export default function WeeklyPickEm() {
             <div key={g.id} className="scheduleRow">
               <div className="scheduleRowBar" style={{ background: "rgba(60,130,255,.65)" }} />
 
-              <div className="scheduleRowMain" style={{ gridTemplateColumns: "1fr" }}>
-                {/* NFL-like single row */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 220px 1fr",
-                    gap: 12,
-                    alignItems: "center",
-                  }}
-                >
-                  {/* LEFT: AWAY */}
+              <div className="scheduleRowMain" style={{ gridTemplateColumns: "1fr", gap: 10 }}>
+                {/* 1 sor / meccs: LEFT | CENTER | RIGHT */}
+                <div className="pickRow">
                   <button
-                    className={`pickTeamBtn ${leftClass}`}
+                    className={`pickTeamBtn ${leftSelected ? "selected" : ""}`}
+                    style={{
+                      borderColor:
+                        leftClass === "correct"
+                          ? "rgba(34,197,94,.55)"
+                          : leftClass === "wrong"
+                          ? "rgba(225,29,72,.60)"
+                          : leftClass === "gold"
+                          ? "rgba(245,158,11,.65)"
+                          : undefined,
+                      boxShadow:
+                        leftClass === "correct"
+                          ? "inset 0 0 0 1px rgba(34,197,94,.35)"
+                          : leftClass === "wrong"
+                          ? "inset 0 0 0 1px rgba(225,29,72,.35)"
+                          : leftClass === "gold"
+                          ? "inset 0 0 0 1px rgba(245,158,11,.35)"
+                          : undefined,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 10,
+                      padding: "0 14px",
+                    }}
                     disabled={!canPick}
                     onClick={() => pick(g.id, g.awayTeam)}
                     title={!g.canPick ? "Kickoff után nem módosítható" : "Válaszd a győztest"}
+                  >
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+                      <TeamLogo team={g.awayTeam} size={22} />
+                      <span style={{ fontWeight: 900 }}>{g.awayTeam}</span>
+                    </span>
+                    <span style={{ fontWeight: 900 }}>{leftScore}</span>
+                  </button>
+
+                  <div className="pickMeta muted" style={{ textAlign: "center" }}>
+                    <div style={{ fontWeight: 900 }}>{final ? "FINAL" : formatKickoff(g.kickoffAt)}</div>
+                    <div style={{ opacity: 0.9 }}>{g.canPick ? (isSaving ? "Saving..." : "Open") : "Locked"}</div>
+                  </div>
+
+                  <button
+                    className={`pickTeamBtn ${rightSelected ? "selected" : ""}`}
                     style={{
+                      borderColor:
+                        rightClass === "correct"
+                          ? "rgba(34,197,94,.55)"
+                          : rightClass === "wrong"
+                          ? "rgba(225,29,72,.60)"
+                          : rightClass === "gold"
+                          ? "rgba(245,158,11,.65)"
+                          : undefined,
+                      boxShadow:
+                        rightClass === "correct"
+                          ? "inset 0 0 0 1px rgba(34,197,94,.35)"
+                          : rightClass === "wrong"
+                          ? "inset 0 0 0 1px rgba(225,29,72,.35)"
+                          : rightClass === "gold"
+                          ? "inset 0 0 0 1px rgba(245,158,11,.35)"
+                          : undefined,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      gap: 10,
                       padding: "0 14px",
                     }}
-                  >
-                    <span style={{ fontWeight: 900, letterSpacing: ".4px" }}>{g.awayTeam}</span>
-                    <span style={{ fontWeight: 900, opacity: final ? 1 : 0.65 }}>{leftScore}</span>
-                  </button>
-
-                  {/* CENTER: STATUS */}
-                  <div style={{ textAlign: "center" }}>
-                    <div className={`statusPill ${final ? "final" : "scheduled"}`} style={{ justifyContent: "center" }}>
-                      {final ? "FINAL" : formatKickoff(g.kickoffAt)}
-                    </div>
-                    <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
-                      {g.canPick ? (isSaving ? "Saving..." : "Open") : "Locked"}
-                    </div>
-                    {verdict && (
-                      <div style={{ marginTop: 6, fontWeight: 900, fontSize: 12 }}>
-                        {verdict}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* RIGHT: HOME */}
-                  <button
-                    className={`pickTeamBtn ${rightClass}`}
                     disabled={!canPick}
                     onClick={() => pick(g.id, g.homeTeam)}
                     title={!g.canPick ? "Kickoff után nem módosítható" : "Válaszd a győztest"}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "0 14px",
-                    }}
                   >
-                    <span style={{ fontWeight: 900, opacity: final ? 1 : 0.65 }}>{rightScore}</span>
-                    <span style={{ fontWeight: 900, letterSpacing: ".4px" }}>{g.homeTeam}</span>
+                    <span style={{ fontWeight: 900 }}>{rightScore}</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+                      <span style={{ fontWeight: 900 }}>{g.homeTeam}</span>
+                      <TeamLogo team={g.homeTeam} size={22} />
+                    </span>
                   </button>
                 </div>
+
+                {verdict && <div style={{ fontWeight: 900, fontSize: 13 }}>{verdict}</div>}
               </div>
             </div>
           );
         })}
 
-        {!games.length && (
+        {!games.length && !err && (
           <div className="card" style={{ padding: 14 }}>
             <div className="muted">Ehhez a héthez nincs schedule adat.</div>
           </div>
