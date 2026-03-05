@@ -103,6 +103,22 @@ export default function WeeklyPickEm() {
           const leftSelected = g.picked === g.awayTeam;
           const rightSelected = g.picked === g.homeTeam;
 
+          const leftClass = (() => {
+            if (!leftSelected) return "";
+
+            if (!g.final) return "gold";        // scheduled
+            if (g.correct) return "correct";    // good pick
+            return "wrong";                     // bad pick
+          })();
+
+          const rightClass = (() => {
+            if (!rightSelected) return "";
+
+            if (!g.final) return "gold";
+            if (g.correct) return "correct";
+            return "wrong";
+          })();
+
           const leftScore = final ? g.awayScore : "—";
           const rightScore = final ? g.homeScore : "—";
 
@@ -125,7 +141,7 @@ export default function WeeklyPickEm() {
                 >
                   {/* LEFT: AWAY */}
                   <button
-                    className={`pickTeamBtn ${leftSelected ? "selected" : ""}`}
+                    className={`pickTeamBtn ${leftClass}`}
                     disabled={!canPick}
                     onClick={() => pick(g.id, g.awayTeam)}
                     title={!g.canPick ? "Kickoff után nem módosítható" : "Válaszd a győztest"}
@@ -157,7 +173,7 @@ export default function WeeklyPickEm() {
 
                   {/* RIGHT: HOME */}
                   <button
-                    className={`pickTeamBtn ${rightSelected ? "selected" : ""}`}
+                    className={`pickTeamBtn ${rightClass}`}
                     disabled={!canPick}
                     onClick={() => pick(g.id, g.homeTeam)}
                     title={!g.canPick ? "Kickoff után nem módosítható" : "Válaszd a győztest"}

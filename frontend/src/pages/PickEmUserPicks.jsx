@@ -11,6 +11,16 @@ function formatKickoff(iso) {
   return `${day} ${time}`;
 }
 
+function isFinal(g) {
+  return g.status === "FINAL" && g.homeScore != null && g.awayScore != null;
+}
+
+function winnerTeam(g) {
+  if (!isFinal(g)) return null;
+  if (g.homeScore === g.awayScore) return null; // tie (ritka NFL-ben, de lehet)
+  return g.homeScore > g.awayScore ? g.homeTeam : g.awayTeam;
+}
+
 export default function PickEmUserPicks() {
   const { userId } = useParams();
   const [sp] = useSearchParams();
@@ -39,10 +49,12 @@ export default function PickEmUserPicks() {
   const picks = data?.picks || [];
   const username = data?.user?.username || "Unknown";
 
-  const visiblePickCount = useMemo(
-    () => picks.filter((g) => g.started && g.picked).length,
-    [picks]
-  );
+  const visiblePickCount = useMemo(() => {
+    // “látható pick”: csak started után mutatjuk (a backend logikád szerint)
+    return picks.filter((g) => g.started && g.picked).length;
+  }, [picks]);
+
+  const startedCount = useMemo(() => picks.filter((g) => g.started).length, [picks]);
 
   function goMyPicks() {
     navigate(`/fantasy/weekly-pickem?week=${week}`);
@@ -58,18 +70,18 @@ export default function PickEmUserPicks() {
 
         <h1 className="h1">User Picks · Week {week}</h1>
         <p className="sub">
-          Kickoff előtt a választás rejtve marad. Kickoff után látható.
+          Csak a már elkezdődött meccseknél látható a másik user választása. A jövőbeli meccseknél rejtve marad.
         </p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <span className="pill">
             <span className="dot" />
-            Viewing: <strong style={{ color: "var(--text)" }}>{username}</strong>
+            Viewing: <b style={{ marginLeft: 6 }}>{username}</b>
           </span>
 
           <span className="pill">
             <span className="dot" />
-            {visiblePickCount}/{picks.filter((g) => g.started).length} visible picks
+            {visiblePickCount}/{startedCount} visible picks
           </span>
 
           <div className="filters-spacer" />
@@ -84,35 +96,65 @@ export default function PickEmUserPicks() {
         </div>
       </div>
 
-      {err && <p className="error" style={{ marginTop: 14 }}>{err}</p>}
+      {err && (
+        <p className="error" style={{ marginTop: 14 }}>
+          {err}
+        </p>
+      )}
 
       <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
         {picks.map((g) => {
-          const final = g.status === "FINAL" && g.homeScore != null && g.awayScore != null;
+          const final = isFinal(g);
 
-          // A te preferált “LAR 17 | FINAL | 24 DET” szerkezet:
-          // bal: AWAY TEAM + score
-          // közép: FINAL vagy kickoff
-          // jobb: HOME score + TEAM
+          // NFL-szerű sor: AWAY + score | MIDDLE (FINAL/kickoff) | score + HOME
           const leftScore = final ? g.awayScore : "—";
           const rightScore = final ? g.homeScore : "—";
 
-          // pick megjelenítés:
-          // - ha még nem started: nincs highlight, “Pick hidden”
-          // - ha started és van picked: azt a csapatot emeljük ki
-          const leftSelected = g.started && g.picked && g.picked === g.awayTeam;
-          const rightSelected = g.started && g.picked && g.picked === g.homeTeam;
+          // szabály: ha még nem started => pick rejtve (még akkor is, ha a DB-ben van)
+          const canRevealPick = !!g.started;
+
+          const awayPicked = canRevealPick && g.picked && g.picked === g.awayTeam;
+          const homePicked = canRevealPick && g.picked && g.picked === g.homeTeam;
+
+          // színezés:
+          // - started && !final: arany (pending / in progress)
+          // - final: green ha correct, red ha wrong
+          const w = winnerTeam(g);
+          const correct = final && canRevealPick && g.picked && w ? g.picked === w : null;
+
+          const awayClasses = ["pickTeamBtn"];
+          const homeClasses = ["pickTeamBtn"];
+
+          if (awayPicked) awayClasses.push("selected");
+          if (homePicked) homeClasses.push("selected");
+
+          // csak akkor színezzük, ha a pick látható
+          if (canRevealPick && g.picked) {
+            if (!final) {
+              // IN PROGRESS / STARTED
+              if (awayPicked) awayClasses.push("pending");
+              if (homePicked) homeClasses.push("pending");
+            } else if (correct === true) {
+              if (awayPicked) awayClasses.push("good");
+              if (homePicked) homeClasses.push("good");
+            } else if (correct === false) {
+              if (awayPicked) awayClasses.push("bad");
+              if (homePicked) homeClasses.push("bad");
+            }
+          }
 
           return (
-            <div key={g.gameId} className="scheduleRow">
+            <div key={g.id} className="scheduleRow">
               <div className="scheduleRowBar" style={{ background: "rgba(60,130,255,.65)" }} />
 
-              <div className="scheduleRowMain" style={{ gridTemplateColumns: "1fr .6fr 1fr", gap: 12 }}>
-                {/* LEFT */}
-                <div className={`pickTeamBtn ${leftSelected ? "selected" : ""}`} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "default" }}>
-                  <span style={{ fontWeight: 900 }}>{g.awayTeam}</span>
-                  <span style={{ fontWeight: 900 }}>{leftScore}</span>
-                </div>
+              <div className="scheduleRowMain" style={{ gridTemplateColumns: "1fr .4fr 1fr", gap: 14 }}>
+                {/* LEFT: away */}
+                <button className={awayClasses.join(" ")} disabled>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                    <span>{g.awayTeam}</span>
+                    <span style={{ fontWeight: 900 }}>{leftScore}</span>
+                  </div>
+                </button>
 
                 {/* MIDDLE */}
                 <div style={{ display: "grid", justifyItems: "center", alignContent: "center", gap: 6 }}>
@@ -120,16 +162,24 @@ export default function PickEmUserPicks() {
                     {final ? "FINAL" : formatKickoff(g.kickoffAt)}
                   </div>
 
-                  <div className="muted" style={{ fontSize: 12 }}>
-                    {!g.started ? "Pick hidden" : (g.picked ? `Picked: ${g.picked}` : "No pick")}
+                  <div className="muted" style={{ fontSize: 12, textAlign: "center" }}>
+                    {!canRevealPick
+                      ? "Pick hidden"
+                      : g.picked
+                        ? final
+                          ? (correct === true ? "✅ Correct" : correct === false ? "❌ Wrong" : "Tie")
+                          : "IN PROGRESS / STARTED"
+                        : "No pick"}
                   </div>
                 </div>
 
-                {/* RIGHT */}
-                <div className={`pickTeamBtn ${rightSelected ? "selected" : ""}`} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "default" }}>
-                  <span style={{ fontWeight: 900 }}>{rightScore}</span>
-                  <span style={{ fontWeight: 900 }}>{g.homeTeam}</span>
-                </div>
+                {/* RIGHT: home */}
+                <button className={homeClasses.join(" ")} disabled>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                    <span style={{ fontWeight: 900 }}>{rightScore}</span>
+                    <span>{g.homeTeam}</span>
+                  </div>
+                </button>
               </div>
             </div>
           );
