@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
 import { api } from "../api";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 const SEASON = 2025;
 
@@ -14,46 +14,39 @@ function formatKickoff(iso) {
 export default function PickEmUserPicks() {
   const { userId } = useParams();
   const [sp] = useSearchParams();
+  const navigate = useNavigate();
+
   const week = Number(sp.get("week") || 1);
 
-  const [targetUser, setTargetUser] = useState(null);
-
-  const [games, setGames] = useState([]);
-  const [pickMap, setPickMap] = useState({}); // gameId -> pickedTeam
+  const [data, setData] = useState(null);
   const [err, setErr] = useState("");
-  const [loading, setLoading] = useState(true);
 
   async function load() {
     setErr("");
-    setLoading(true);
-
-    // 1) full schedule for the week (shows all games)
-    const scheduleRes = await api.get("/schedule/by-week", { params: { season: SEASON, week } });
-    const scheduleGames = scheduleRes.data?.games || [];
-
-    // 2) picks for the given user (anti-cheat: only started games)
-    const picksRes = await api.get(`/pickem/user/${userId}/picks`, { params: { season: SEASON, week } });
-    const user = picksRes.data?.user || null;
-    const picks = picksRes.data?.picks || [];
-
-    const map = Object.fromEntries(picks.map((p) => [p.gameId, p.picked]));
-    setTargetUser(user);
-    setPickMap(map);
-    setGames(scheduleGames);
-    setLoading(false);
+    const res = await api.get(`/pickem/user/${userId}/picks`, {
+      params: { season: SEASON, week },
+    });
+    setData(res.data);
   }
 
   useEffect(() => {
     load().catch((e) => {
       setErr(e?.response?.data?.error || "Nem sikerült betölteni a user pickeket.");
-      setLoading(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, week]);
 
-  const pickedVisibleCount = useMemo(() => {
-    return Object.values(pickMap).filter(Boolean).length;
-  }, [pickMap]);
+  const picks = data?.picks || [];
+  const username = data?.user?.username || "Unknown";
+
+  const visiblePickCount = useMemo(
+    () => picks.filter((g) => g.started && g.picked).length,
+    [picks]
+  );
+
+  function goMyPicks() {
+    navigate(`/fantasy/weekly-pickem?week=${week}`);
+  }
 
   return (
     <div className="container page">
@@ -65,21 +58,25 @@ export default function PickEmUserPicks() {
 
         <h1 className="h1">User Picks · Week {week}</h1>
         <p className="sub">
-          Csak a már elkezdődött meccsek tippei láthatók. A jövőbeli meccseknél a választás rejtve marad.
+          Kickoff előtt a választás rejtve marad. Kickoff után látható.
         </p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <span className="pill">
             <span className="dot" />
-            Viewing: <b style={{ color: "var(--text)" }}>{targetUser?.username || "—"}</b>
+            Viewing: <strong style={{ color: "var(--text)" }}>{username}</strong>
           </span>
 
           <span className="pill">
             <span className="dot" />
-            {pickedVisibleCount} visible picks
+            {visiblePickCount}/{picks.filter((g) => g.started).length} visible picks
           </span>
 
           <div className="filters-spacer" />
+
+          <button className="btn" onClick={goMyPicks}>
+            My picks
+          </button>
 
           <Link to={`/fantasy/weekly-pickem/leaderboard?week=${week}`} className="btn primary">
             Back to leaderboard
@@ -89,100 +86,61 @@ export default function PickEmUserPicks() {
 
       {err && <p className="error" style={{ marginTop: 14 }}>{err}</p>}
 
-      {loading ? (
-        <div className="card" style={{ marginTop: 14 }}>
-          <div className="muted">Betöltés...</div>
-        </div>
-      ) : (
-        <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
-          {games.map((g) => {
-            const final = g.status === "FINAL" && g.homeScore != null && g.awayScore != null;
+      <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
+        {picks.map((g) => {
+          const final = g.status === "FINAL" && g.homeScore != null && g.awayScore != null;
 
-            // only started games have picks in the map (anti-cheat)
-            const picked = pickMap[g.id] || null;
+          // A te preferált “LAR 17 | FINAL | 24 DET” szerkezet:
+          // bal: AWAY TEAM + score
+          // közép: FINAL vagy kickoff
+          // jobb: HOME score + TEAM
+          const leftScore = final ? g.awayScore : "—";
+          const rightScore = final ? g.homeScore : "—";
 
-            // winner calc (optional highlight)
-            let winner = null;
-            if (final) {
-              if (g.homeScore > g.awayScore) winner = g.homeTeam;
-              else if (g.awayScore > g.homeScore) winner = g.awayTeam;
-              else winner = "TIE";
-            }
+          // pick megjelenítés:
+          // - ha még nem started: nincs highlight, “Pick hidden”
+          // - ha started és van picked: azt a csapatot emeljük ki
+          const leftSelected = g.started && g.picked && g.picked === g.awayTeam;
+          const rightSelected = g.started && g.picked && g.picked === g.homeTeam;
 
-            const leftTeam = g.awayTeam;
-            const rightTeam = g.homeTeam;
-            const leftScore = final ? g.awayScore : "—";
-            const rightScore = final ? g.homeScore : "—";
+          return (
+            <div key={g.gameId} className="scheduleRow">
+              <div className="scheduleRowBar" style={{ background: "rgba(60,130,255,.65)" }} />
 
-            // highlight only if we actually know their pick (started game)
-            const leftSelected = picked && picked === leftTeam;
-            const rightSelected = picked && picked === rightTeam;
+              <div className="scheduleRowMain" style={{ gridTemplateColumns: "1fr .6fr 1fr", gap: 12 }}>
+                {/* LEFT */}
+                <div className={`pickTeamBtn ${leftSelected ? "selected" : ""}`} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "default" }}>
+                  <span style={{ fontWeight: 900 }}>{g.awayTeam}</span>
+                  <span style={{ fontWeight: 900 }}>{leftScore}</span>
+                </div>
 
-            const leftWinner = final && winner && winner !== "TIE" && winner === leftTeam;
-            const rightWinner = final && winner && winner !== "TIE" && winner === rightTeam;
-
-            return (
-              <div key={g.id} className="scheduleRow">
-                <div className="scheduleRowBar" style={{ background: "rgba(60,130,255,.65)" }} />
-
-                <div className="scheduleRowMain" style={{ gridTemplateColumns: "1fr .45fr 1fr", alignItems: "center" }}>
-                  {/* LEFT */}
-                  <div
-                    className={`pickTeamBtn ${leftSelected ? "selected" : ""}`}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr auto",
-                      alignItems: "center",
-                      padding: "12px 14px",
-                      height: "auto",
-                      cursor: "default",
-                      ...(leftWinner ? { background: "rgba(60,130,255,.10)", borderColor: "rgba(60,130,255,.28)" } : null),
-                    }}
-                    title={picked ? `Picked: ${picked}` : "Pick rejtve (még nem kezdődött el a meccs)"}
-                  >
-                    <span style={{ fontWeight: 900, letterSpacing: ".4px" }}>{leftTeam}</span>
-                    <span style={{ fontWeight: 900, opacity: final ? 1 : 0.6 }}>{leftScore}</span>
+                {/* MIDDLE */}
+                <div style={{ display: "grid", justifyItems: "center", alignContent: "center", gap: 6 }}>
+                  <div className={`statusPill ${final ? "final" : "scheduled"}`}>
+                    {final ? "FINAL" : formatKickoff(g.kickoffAt)}
                   </div>
 
-                  {/* MIDDLE */}
-                  <div style={{ display: "grid", justifyItems: "center", gap: 6 }}>
-                    <div className={`statusPill ${final ? "final" : "scheduled"}`}>
-                      {final ? "FINAL" : formatKickoff(g.kickoffAt)}
-                    </div>
-                    <div className="muted" style={{ fontSize: 12 }}>
-                      {picked ? `Picked: ${picked}` : "Pick hidden"}
-                    </div>
-                  </div>
-
-                  {/* RIGHT */}
-                  <div
-                    className={`pickTeamBtn ${rightSelected ? "selected" : ""}`}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "auto 1fr",
-                      alignItems: "center",
-                      padding: "12px 14px",
-                      height: "auto",
-                      cursor: "default",
-                      ...(rightWinner ? { background: "rgba(60,130,255,.10)", borderColor: "rgba(60,130,255,.28)" } : null),
-                    }}
-                    title={picked ? `Picked: ${picked}` : "Pick rejtve (még nem kezdődött el a meccs)"}
-                  >
-                    <span style={{ fontWeight: 900, opacity: final ? 1 : 0.6 }}>{rightScore}</span>
-                    <span style={{ fontWeight: 900, letterSpacing: ".4px", justifySelf: "end" }}>{rightTeam}</span>
+                  <div className="muted" style={{ fontSize: 12 }}>
+                    {!g.started ? "Pick hidden" : (g.picked ? `Picked: ${g.picked}` : "No pick")}
                   </div>
                 </div>
-              </div>
-            );
-          })}
 
-          {!games.length && (
-            <div className="card" style={{ padding: 14 }}>
-              <div className="muted">Ehhez a héthez nincs schedule adat.</div>
+                {/* RIGHT */}
+                <div className={`pickTeamBtn ${rightSelected ? "selected" : ""}`} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "default" }}>
+                  <span style={{ fontWeight: 900 }}>{rightScore}</span>
+                  <span style={{ fontWeight: 900 }}>{g.homeTeam}</span>
+                </div>
+              </div>
             </div>
-          )}
-        </div>
-      )}
+          );
+        })}
+
+        {!picks.length && !err && (
+          <div className="card" style={{ padding: 14 }}>
+            <div className="muted">Ehhez a héthez nincs adat.</div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

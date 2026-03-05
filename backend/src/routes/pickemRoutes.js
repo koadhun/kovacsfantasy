@@ -37,15 +37,12 @@ router.get("/week", requireAuth, async (req, res) => {
   });
 
   const pickMap = Object.fromEntries(picks.map((p) => [p.gameId, p.picked]));
-
   const now = getNow();
 
   const enriched = games.map((g) => {
     const picked = pickMap[g.id] || null;
-
     const started = new Date(g.kickoffAt) <= now;
-    const final =
-      g.status === "FINAL" && g.homeScore != null && g.awayScore != null;
+    const final = g.status === "FINAL" && g.homeScore != null && g.awayScore != null;
 
     let winner = null;
     if (final) {
@@ -91,9 +88,7 @@ router.post("/pick", requireAuth, async (req, res) => {
 
   const now = getNow();
   if (new Date(game.kickoffAt) <= now) {
-    return res
-      .status(400)
-      .json({ error: "A mérkőzés már elkezdődött, nem lehet tippelni." });
+    return res.status(400).json({ error: "A mérkőzés már elkezdődött, nem lehet tippelni." });
   }
 
   const validTeams = [game.homeTeam, game.awayTeam];
@@ -147,15 +142,7 @@ async function recomputeWeekScore(season, week, userId) {
 
   const row = await prisma.pickEmWeekScore.upsert({
     where: { userId_season_week: { userId, season, week } },
-    create: {
-      userId,
-      season,
-      week,
-      correct,
-      totalGames,
-      points,
-      calculatedAt: new Date(),
-    },
+    create: { userId, season, week, correct, totalGames, points, calculatedAt: new Date() },
     update: { correct, totalGames, points, calculatedAt: new Date() },
   });
 
@@ -169,9 +156,7 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
   const season = Number(req.query.season || 2025);
   const week = Number(req.query.week || 1);
 
-  const users = await prisma.user.findMany({
-    select: { id: true, username: true },
-  });
+  const users = await prisma.user.findMany({ select: { id: true, username: true } });
 
   await Promise.all(users.map((u) => recomputeWeekScore(season, week, u.id)));
 
@@ -188,7 +173,6 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
   });
 
   const userMap = Object.fromEntries(users.map((u) => [u.id, u.username]));
-
   const totals = totalsRaw
     .map((r) => ({
       userId: r.userId,
@@ -204,8 +188,8 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
 
 /**
  * GET /api/pickem/user/:userId/picks?season=2025&week=1
- * - csak a már elkezdődött meccsek látszanak (anti-cheat)
- * - plusz visszaadjuk a username-t, hogy a UI ki tudja írni
+ * - anti-cheat: kickoff előtt a pick rejtve (picked: null), de a meccs LISTA látszik
+ * - kickoff után látszik a pick
  */
 router.get("/user/:userId/picks", requireAuth, async (req, res) => {
   const season = Number(req.query.season || 2025);
@@ -216,7 +200,6 @@ router.get("/user/:userId/picks", requireAuth, async (req, res) => {
     where: { id: targetUserId },
     select: { id: true, username: true },
   });
-
   if (!targetUser) {
     return res.status(404).json({ error: "Felhasználó nem található." });
   }
@@ -226,33 +209,32 @@ router.get("/user/:userId/picks", requireAuth, async (req, res) => {
     orderBy: { kickoffAt: "asc" },
   });
 
-  const now = getNow();
-  const visibleGames = games.filter((g) => new Date(g.kickoffAt) <= now);
-
+  // lekérjük az összes picket erre a hétre, aztán csak kickoff után “fedjük fel”
   const picks = await prisma.pickEmPick.findMany({
-    where: { userId: targetUserId, gameId: { in: visibleGames.map((g) => g.id) } },
+    where: { userId: targetUserId, gameId: { in: games.map((g) => g.id) } },
   });
-
   const pickMap = Object.fromEntries(picks.map((p) => [p.gameId, p.picked]));
 
-  const result = visibleGames.map((g) => ({
-    gameId: g.id,
-    kickoffAt: g.kickoffAt,
-    homeTeam: g.homeTeam,
-    awayTeam: g.awayTeam,
-    status: g.status,
-    homeScore: g.homeScore,
-    awayScore: g.awayScore,
-    picked: pickMap[g.id] || null,
-  }));
+  const now = getNow();
 
-  res.json({
-    season,
-    week,
-    user: targetUser,
-    picks: result,
-    now,
+  const result = games.map((g) => {
+    const started = new Date(g.kickoffAt) <= now;
+    const revealedPick = started ? (pickMap[g.id] || null) : null;
+
+    return {
+      gameId: g.id,
+      kickoffAt: g.kickoffAt,
+      homeTeam: g.homeTeam,
+      awayTeam: g.awayTeam,
+      status: g.status,
+      homeScore: g.homeScore,
+      awayScore: g.awayScore,
+      started,
+      picked: revealedPick,
+    };
   });
+
+  res.json({ season, week, user: targetUser, picks: result, now });
 });
 
 export default router;
