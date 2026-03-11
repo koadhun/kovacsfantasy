@@ -14,8 +14,15 @@ export default function PickEmLeaderboard() {
 
   async function load() {
     setErr("");
-    const res = await api.get("/pickem/leaderboard", { params: { season: SEASON, week } });
-    setData(res.data);
+    try {
+      const res = await api.get("/pickem/leaderboard", {
+        params: { season: SEASON, week },
+      });
+      setData(res.data);
+    } catch (e) {
+      setData(null);
+      setErr(e?.response?.data?.error || e?.message || "Nem sikerült betölteni a leaderboardot.");
+    }
   }
 
   useEffect(() => {

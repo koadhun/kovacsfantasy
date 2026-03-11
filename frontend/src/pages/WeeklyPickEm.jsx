@@ -48,15 +48,14 @@ export default function WeeklyPickEm() {
 
   async function loadWeek(w) {
     setErr("");
-    setLoadingGames(true);
-
     try {
       const res = await api.get("/pickem/week", {
         params: { season: SEASON, week: w },
       });
-      setGames(Array.isArray(res.data?.games) ? res.data.games : []);
-    } finally {
-      setLoadingGames(false);
+      setGames(res.data.games || []);
+    } catch (e) {
+      setGames([]);
+      setErr(e?.response?.data?.error || e?.message || "Nem sikerült betölteni a meccseket.");
     }
   }
 
