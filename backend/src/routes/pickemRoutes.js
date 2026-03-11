@@ -6,7 +6,7 @@ import { requireAuth } from "../middleware/requireAuth.js";
 const router = Router();
 
 /**
- * DEV helper: idő override (hogy 2025-ös schedule-t is tudj tesztelni 2026-ban)
+ * DEV helper: idő override
  * .env -> NOW_OVERRIDE=2025-09-01T12:00:00.000Z
  */
 function getNow() {
@@ -16,6 +16,19 @@ function getNow() {
     if (!Number.isNaN(d.getTime())) return d;
   }
   return new Date();
+}
+
+function buildWinner(game) {
+  const isFinal =
+    game.status === "FINAL" &&
+    game.homeScore != null &&
+    game.awayScore != null;
+
+  if (!isFinal) return null;
+
+  if (game.homeScore > game.awayScore) return game.homeTeam;
+  if (game.awayScore > game.homeScore) return game.awayTeam;
+  return "TIE";
 }
 
 /**
@@ -42,14 +55,12 @@ router.get("/week", requireAuth, async (req, res) => {
   const enriched = games.map((g) => {
     const picked = pickMap[g.id] || null;
     const started = new Date(g.kickoffAt) <= now;
-    const final = g.status === "FINAL" && g.homeScore != null && g.awayScore != null;
+    const final =
+      g.status === "FINAL" &&
+      g.homeScore != null &&
+      g.awayScore != null;
 
-    let winner = null;
-    if (final) {
-      if (g.homeScore > g.awayScore) winner = g.homeTeam;
-      else if (g.awayScore > g.homeScore) winner = g.awayTeam;
-      else winner = "TIE";
-    }
+    const winner = buildWinner(g);
 
     let correct = null;
     if (final && picked) {
@@ -59,7 +70,7 @@ router.get("/week", requireAuth, async (req, res) => {
     return {
       ...g,
       picked,
-      canPick: !started, // kickoff előtt engedjük
+      canPick: !started,
       started,
       final,
       winner,
@@ -84,11 +95,15 @@ router.post("/pick", requireAuth, async (req, res) => {
   }
 
   const game = await prisma.game.findUnique({ where: { id: gameId } });
-  if (!game) return res.status(404).json({ error: "Meccs nem található." });
+  if (!game) {
+    return res.status(404).json({ error: "Meccs nem található." });
+  }
 
   const now = getNow();
   if (new Date(game.kickoffAt) <= now) {
-    return res.status(400).json({ error: "A mérkőzés már elkezdődött, nem lehet tippelni." });
+    return res.status(400).json({
+      error: "A mérkőzés már elkezdődött, nem lehet tippelni.",
+    });
   }
 
   const validTeams = [game.homeTeam, game.awayTeam];
@@ -128,11 +143,7 @@ async function recomputeWeekScore(season, week, userId) {
 
   let correct = 0;
   for (const g of finalGames) {
-    let winner = null;
-    if (g.homeScore > g.awayScore) winner = g.homeTeam;
-    else if (g.awayScore > g.homeScore) winner = g.awayTeam;
-    else winner = "TIE";
-
+    const winner = buildWinner(g);
     const picked = pickMap[g.id];
     if (picked && winner !== "TIE" && picked === winner) correct += 1;
   }
@@ -142,8 +153,21 @@ async function recomputeWeekScore(season, week, userId) {
 
   const row = await prisma.pickEmWeekScore.upsert({
     where: { userId_season_week: { userId, season, week } },
-    create: { userId, season, week, correct, totalGames, points, calculatedAt: new Date() },
-    update: { correct, totalGames, points, calculatedAt: new Date() },
+    create: {
+      userId,
+      season,
+      week,
+      correct,
+      totalGames,
+      points,
+      calculatedAt: new Date(),
+    },
+    update: {
+      correct,
+      totalGames,
+      points,
+      calculatedAt: new Date(),
+    },
   });
 
   return row;
@@ -156,7 +180,9 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
   const season = Number(req.query.season || 2025);
   const week = Number(req.query.week || 1);
 
-  const users = await prisma.user.findMany({ select: { id: true, username: true } });
+  const users = await prisma.user.findMany({
+    select: { id: true, username: true },
+  });
 
   await Promise.all(users.map((u) => recomputeWeekScore(season, week, u.id)));
 
@@ -188,8 +214,9 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
 
 /**
  * GET /api/pickem/user/:userId/picks?season=2025&week=1
- * - anti-cheat: kickoff előtt a pick rejtve (picked: null), de a meccs LISTA látszik
+ * - kickoff előtt a pick rejtve
  * - kickoff után látszik a pick
+ * - FINAL esetén correct is visszajön a frontendnek
  */
 router.get("/user/:userId/picks", requireAuth, async (req, res) => {
   const season = Number(req.query.season || 2025);
@@ -200,6 +227,7 @@ router.get("/user/:userId/picks", requireAuth, async (req, res) => {
     where: { id: targetUserId },
     select: { id: true, username: true },
   });
+
   if (!targetUser) {
     return res.status(404).json({ error: "Felhasználó nem található." });
   }
@@ -209,19 +237,34 @@ router.get("/user/:userId/picks", requireAuth, async (req, res) => {
     orderBy: { kickoffAt: "asc" },
   });
 
-  // lekérjük az összes picket erre a hétre, aztán csak kickoff után “fedjük fel”
   const picks = await prisma.pickEmPick.findMany({
-    where: { userId: targetUserId, gameId: { in: games.map((g) => g.id) } },
+    where: {
+      userId: targetUserId,
+      gameId: { in: games.map((g) => g.id) },
+    },
   });
-  const pickMap = Object.fromEntries(picks.map((p) => [p.gameId, p.picked]));
 
+  const pickMap = Object.fromEntries(picks.map((p) => [p.gameId, p.picked]));
   const now = getNow();
 
   const result = games.map((g) => {
     const started = new Date(g.kickoffAt) <= now;
-    const revealedPick = started ? (pickMap[g.id] || null) : null;
+    const final =
+      g.status === "FINAL" &&
+      g.homeScore != null &&
+      g.awayScore != null;
+
+    const winner = buildWinner(g);
+    const realPicked = pickMap[g.id] || null;
+    const revealedPick = started ? realPicked : null;
+
+    let correct = null;
+    if (final && realPicked) {
+      correct = winner !== "TIE" ? realPicked === winner : false;
+    }
 
     return {
+      id: g.id,
       gameId: g.id,
       kickoffAt: g.kickoffAt,
       homeTeam: g.homeTeam,
@@ -230,7 +273,10 @@ router.get("/user/:userId/picks", requireAuth, async (req, res) => {
       homeScore: g.homeScore,
       awayScore: g.awayScore,
       started,
+      final,
+      winner,
       picked: revealedPick,
+      correct: started ? correct : null,
     };
   });
 

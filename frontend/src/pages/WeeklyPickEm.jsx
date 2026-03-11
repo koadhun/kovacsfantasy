@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import TeamLogo from "../components/TeamLogo";
 
 const SEASON = 2025;
@@ -8,37 +8,73 @@ const SEASON = 2025;
 function formatKickoff(iso) {
   const d = new Date(iso);
   const day = d.toLocaleDateString(undefined, { weekday: "short" });
-  const time = d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+  const time = d.toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
   return `${day} ${time}`;
 }
 
 export default function WeeklyPickEm() {
-  const [week, setWeek] = useState(1);
+  const [sp, setSp] = useSearchParams();
+
+  const requestedWeek = Number(sp.get("week") || 1);
+
+  const [week, setWeek] = useState(requestedWeek);
   const [weeks, setWeeks] = useState([]);
   const [games, setGames] = useState([]);
   const [err, setErr] = useState("");
   const [savingId, setSavingId] = useState(null);
+  const [loadingWeeks, setLoadingWeeks] = useState(true);
+  const [loadingGames, setLoadingGames] = useState(false);
 
   async function loadWeeks() {
-    const res = await api.get("/schedule/weeks", { params: { season: SEASON } });
-    const ws = res.data.weeks || [];
+    setLoadingWeeks(true);
+    const res = await api.get("/schedule/weeks", {
+      params: { season: SEASON },
+    });
+
+    const ws = Array.isArray(res.data?.weeks) ? res.data.weeks : [];
     setWeeks(ws);
-    if (ws.length) setWeek(ws[0]);
+
+    if (!ws.length) {
+      setWeek(1);
+      return;
+    }
+
+    const safeWeek = ws.includes(requestedWeek) ? requestedWeek : ws[0];
+    setWeek(safeWeek);
   }
 
   async function loadWeek(w) {
     setErr("");
-    const res = await api.get("/pickem/week", { params: { season: SEASON, week: w } });
-    setGames(res.data.games || []);
+    setLoadingGames(true);
+
+    try {
+      const res = await api.get("/pickem/week", {
+        params: { season: SEASON, week: w },
+      });
+      setGames(Array.isArray(res.data?.games) ? res.data.games : []);
+    } finally {
+      setLoadingGames(false);
+    }
   }
 
   useEffect(() => {
-    loadWeeks().catch(() => setErr("Nem sikerült betölteni a heteket."));
+    loadWeeks()
+      .catch(() => setErr("Nem sikerült betölteni a heteket."))
+      .finally(() => setLoadingWeeks(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (!week) return;
+
+    const currentQueryWeek = Number(sp.get("week") || 0);
+    if (currentQueryWeek !== week) {
+      setSp({ week: String(week) }, { replace: true });
+    }
+
     loadWeek(week).catch(() => setErr("Nem sikerült betölteni a meccseket."));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [week]);
@@ -56,7 +92,10 @@ export default function WeeklyPickEm() {
     }
   }
 
-  const pickedCount = useMemo(() => games.filter((g) => g.picked).length, [games]);
+  const pickedCount = useMemo(
+    () => games.filter((g) => g.picked).length,
+    [games]
+  );
 
   return (
     <div className="container page">
@@ -65,13 +104,23 @@ export default function WeeklyPickEm() {
           <span className="tag">FANTASY</span>
           <span>Weekly Pick&apos;Em</span>
         </div>
+
         <h1 className="h1">Weekly Pick&apos;Em</h1>
-        <p className="sub">Tippeld meg a meccsek győztesét kickoff előtt. Kickoff után a választás tiltva.</p>
+
+        <p className="sub">
+          Tippeld meg a meccsek győztesét kickoff előtt. Kickoff után a választás
+          tiltva.
+        </p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <div className="filters-group">
             <span className="filters-label">WEEK</span>
-            <select className="select-dark" value={week} onChange={(e) => setWeek(Number(e.target.value))}>
+            <select
+              className="select-dark"
+              value={week}
+              onChange={(e) => setWeek(Number(e.target.value))}
+              disabled={loadingWeeks || !weeks.length}
+            >
               {weeks.map((w) => (
                 <option key={w} value={w}>
                   Week {w}
@@ -87,7 +136,10 @@ export default function WeeklyPickEm() {
             {pickedCount}/{games.length} picked
           </span>
 
-          <Link to={`/fantasy/weekly-pickem/leaderboard?week=${week}`} className="btn primary">
+          <Link
+            to={`/fantasy/weekly-pickem/leaderboard?week=${week}`}
+            className="btn primary"
+          >
             Leaderboard
           </Link>
         </div>
@@ -99,13 +151,18 @@ export default function WeeklyPickEm() {
         </p>
       )}
 
+      {loadingGames && !games.length && !err && (
+        <p className="muted" style={{ marginTop: 14 }}>
+          Meccsek betöltése…
+        </p>
+      )}
+
       <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
         {games.map((g) => {
           const isSaving = savingId === g.id;
           const canPick = !!g.canPick && !isSaving;
           const final = !!g.final;
 
-          // a jelenlegi szabályod: ha selected és scheduled → gold; ha final → green/red
           const leftSelected = g.picked === g.awayTeam;
           const rightSelected = g.picked === g.homeTeam;
 
@@ -125,14 +182,21 @@ export default function WeeklyPickEm() {
           const rightScore = final ? g.homeScore : "—";
 
           let verdict = null;
-          if (final && g.picked) verdict = g.correct ? "✅ Helyes tipp" : "❌ Hibás tipp";
+          if (final && g.picked) {
+            verdict = g.correct ? "✅ Helyes tipp" : "❌ Hibás tipp";
+          }
 
           return (
             <div key={g.id} className="scheduleRow">
-              <div className="scheduleRowBar" style={{ background: "rgba(60,130,255,.65)" }} />
+              <div
+                className="scheduleRowBar"
+                style={{ background: "rgba(60,130,255,.65)" }}
+              />
 
-              <div className="scheduleRowMain" style={{ gridTemplateColumns: "1fr", gap: 10 }}>
-                {/* 1 sor / meccs: LEFT | CENTER | RIGHT */}
+              <div
+                className="scheduleRowMain"
+                style={{ gridTemplateColumns: "1fr", gap: 10 }}
+              >
                 <div className="pickRow">
                   <button
                     className={`pickTeamBtn ${leftSelected ? "selected" : ""}`}
@@ -161,9 +225,19 @@ export default function WeeklyPickEm() {
                     }}
                     disabled={!canPick}
                     onClick={() => pick(g.id, g.awayTeam)}
-                    title={!g.canPick ? "Kickoff után nem módosítható" : "Válaszd a győztest"}
+                    title={
+                      !g.canPick
+                        ? "Kickoff után nem módosítható"
+                        : "Válaszd a győztest"
+                    }
                   >
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 10,
+                      }}
+                    >
                       <TeamLogo team={g.awayTeam} size={22} />
                       <span style={{ fontWeight: 900 }}>{g.awayTeam}</span>
                     </span>
@@ -171,8 +245,12 @@ export default function WeeklyPickEm() {
                   </button>
 
                   <div className="pickMeta muted" style={{ textAlign: "center" }}>
-                    <div style={{ fontWeight: 900 }}>{final ? "FINAL" : formatKickoff(g.kickoffAt)}</div>
-                    <div style={{ opacity: 0.9 }}>{g.canPick ? (isSaving ? "Saving..." : "Open") : "Locked"}</div>
+                    <div style={{ fontWeight: 900 }}>
+                      {final ? "FINAL" : formatKickoff(g.kickoffAt)}
+                    </div>
+                    <div style={{ opacity: 0.9 }}>
+                      {g.canPick ? (isSaving ? "Saving..." : "Open") : "Locked"}
+                    </div>
                   </div>
 
                   <button
@@ -202,23 +280,35 @@ export default function WeeklyPickEm() {
                     }}
                     disabled={!canPick}
                     onClick={() => pick(g.id, g.homeTeam)}
-                    title={!g.canPick ? "Kickoff után nem módosítható" : "Válaszd a győztest"}
+                    title={
+                      !g.canPick
+                        ? "Kickoff után nem módosítható"
+                        : "Válaszd a győztest"
+                    }
                   >
                     <span style={{ fontWeight: 900 }}>{rightScore}</span>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 10,
+                      }}
+                    >
                       <span style={{ fontWeight: 900 }}>{g.homeTeam}</span>
                       <TeamLogo team={g.homeTeam} size={22} />
                     </span>
                   </button>
                 </div>
 
-                {verdict && <div style={{ fontWeight: 900, fontSize: 13 }}>{verdict}</div>}
+                {verdict && (
+                  <div style={{ fontWeight: 900, fontSize: 13 }}>{verdict}</div>
+                )}
               </div>
             </div>
           );
         })}
 
-        {!games.length && !err && (
+        {!loadingGames && !games.length && !err && (
           <div className="card" style={{ padding: 14 }}>
             <div className="muted">Ehhez a héthez nincs schedule adat.</div>
           </div>

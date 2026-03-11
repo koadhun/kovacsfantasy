@@ -1,11 +1,21 @@
-import { NavLink, Outlet, Navigate } from "react-router-dom";
+import { NavLink, Outlet, Navigate, useLocation } from "react-router-dom";
+
+function readStoredUser() {
+  try {
+    return JSON.parse(localStorage.getItem("user") || "null");
+  } catch {
+    return null;
+  }
+}
 
 export default function AdminLayout() {
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  const isAdmin = user?.role === "ADMIN";
+  const location = useLocation();
+  const token = localStorage.getItem("token");
+  const user = readStoredUser();
+  const isAdmin = !!token && user?.role === "ADMIN";
 
   if (!isAdmin) {
-    return <Navigate to="/schedule" replace />;
+    return <Navigate to="/schedule" replace state={{ from: location }} />;
   }
 
   return (
@@ -15,18 +25,26 @@ export default function AdminLayout() {
         <p className="admin-side-sub">Kezelő felületek</p>
 
         <nav className="admin-nav">
-          <NavLink to="/admin/users" className={({ isActive }) => (isActive ? "active" : "")}>
+          <NavLink
+            to="/admin/users"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
             <span className="admin-icon">👥</span>
             Users
           </NavLink>
 
-          {/* ✅ FONTOS: ez /admin/standings legyen, nem /standings */}
-          <NavLink to="/admin/standings" className={({ isActive }) => (isActive ? "active" : "")}>
+          <NavLink
+            to="/admin/standings"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
             <span className="admin-icon">🏈</span>
             Standings Admin
           </NavLink>
 
-          <NavLink to="/admin/schedule-results" className={({ isActive }) => (isActive ? "active" : "")}>
+          <NavLink
+            to="/admin/schedule-results"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
             <span className="admin-icon">📝</span>
             Schedule Results
           </NavLink>

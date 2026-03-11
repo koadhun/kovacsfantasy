@@ -20,19 +20,20 @@ import PickEmLeaderboard from "./pages/PickEmLeaderboard";
 import PickEmUserPicks from "./pages/PickEmUserPicks";
 
 import Users from "./pages/Users";
-
-// ✅ Admin oldalak
 import ScheduleResultsEditor from "./pages/admin/ScheduleResultsEditor";
 import AdminStandings from "./pages/AdminStandings.jsx";
+
+function hasToken() {
+  return !!localStorage.getItem("token");
+}
 
 export default function App() {
   return (
     <Routes>
-      {/* "/" → login ha nincs token, különben schedule */}
       <Route
         path="/"
         element={
-          localStorage.getItem("token") ? (
+          hasToken() ? (
             <Navigate to="/schedule" replace />
           ) : (
             <Navigate to="/login" replace />
@@ -40,13 +41,11 @@ export default function App() {
         }
       />
 
-      {/* Auth */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* App pages */}
       <Route
         path="/schedule"
         element={
@@ -57,6 +56,7 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/standings"
         element={
@@ -67,6 +67,7 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/stats"
         element={
@@ -77,6 +78,7 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/fantasy"
         element={
@@ -88,7 +90,6 @@ export default function App() {
         }
       />
 
-      {/* Profile: navbarból a user badge-re kattintva */}
       <Route
         path="/profile"
         element={
@@ -100,7 +101,6 @@ export default function App() {
         }
       />
 
-      {/* Weekly Pick'Em */}
       <Route
         path="/fantasy/weekly-pickem"
         element={
@@ -111,6 +111,7 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/fantasy/weekly-pickem/leaderboard"
         element={
@@ -121,6 +122,7 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/fantasy/weekly-pickem/user/:userId"
         element={
@@ -132,23 +134,22 @@ export default function App() {
         }
       />
 
-      {/* ✅ Admin area (sidebar + content) */}
       <Route
-  path="/admin"
-  element={
-    <ProtectedRoute>
-      <Layout>
-        <AdminLayout />
-      </Layout>
-    </ProtectedRoute>
-  }
->
-  <Route path="users" element={<Users />} />
-  <Route path="standings" element={<AdminStandings />} />
-  <Route path="schedule-results" element={<ScheduleResultsEditor />} />
-</Route>
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <AdminLayout />
+            </Layout>
+          </ProtectedRoute>
+        }
+      >
+        <Route path="users" element={<Users />} />
+        <Route path="standings" element={<AdminStandings />} />
+        <Route path="schedule-results" element={<ScheduleResultsEditor />} />
+        <Route index element={<Navigate to="users" replace />} />
+      </Route>
 
-      {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
