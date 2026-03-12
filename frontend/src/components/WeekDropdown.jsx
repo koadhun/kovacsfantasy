@@ -34,13 +34,14 @@ export default function WeekDropdown({
 
   return (
     <div
-      ref={rootRef}
-      className="filters-group"
-      style={{
-        position: "relative",
-        minWidth: width,
-      }}
-    >
+  ref={rootRef}
+  className="filters-group"
+  style={{
+    position: "relative",
+    minWidth: width,
+    zIndex: 60,
+  }}
+>
       <span className="filters-label">{label}</span>
 
       <button
