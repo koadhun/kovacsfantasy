@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import TeamLogo from "../TeamLogo";
 
 const LABELS = {
@@ -96,6 +96,11 @@ export default function PerfectChallengeCard({
   onSelect,
 }) {
   const [flipped, setFlipped] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
+
+  useEffect(() => {
+    setImgFailed(false);
+  }, [player?.id]);
 
   const weeklyRows = useMemo(
     () => orderedStatRows(player?.position, player?.weeklyStats),
@@ -111,6 +116,8 @@ export default function PerfectChallengeCard({
     player?.displayName ||
     `${player?.firstName || ""} ${player?.lastName || ""}`.trim();
 
+  const showHeadshot = !!player?.headshotUrl && !imgFailed;
+
   return (
     <div className="pc-card-wrap">
       <div className={`pc-card ${flipped ? "is-flipped" : ""}`}>
@@ -122,8 +129,12 @@ export default function PerfectChallengeCard({
               <div className="pc-front-content">
                 <div className="pc-headshot-wrap">
                   <div className="pc-headshot">
-                    {player.headshotUrl ? (
-                      <img src={player.headshotUrl} alt={displayName} />
+                    {showHeadshot ? (
+                      <img
+                        src={player.headshotUrl}
+                        alt={displayName}
+                        onError={() => setImgFailed(true)}
+                      />
                     ) : (
                       <div className="pc-headshot-fallback">
                         <TeamLogo team={player.teamCode} size={52} />
