@@ -1,32 +1,101 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
 
+function ProfileCard({ title, subtitle, children }) {
+  return (
+    <div
+      className="card"
+      style={{
+        padding: 18,
+        minHeight: 220,
+        background:
+          "linear-gradient(180deg, rgba(12,24,54,.96), rgba(7,14,32,.96))",
+      }}
+    >
+      <h3 style={{ marginTop: 0, marginBottom: 8 }}>{title}</h3>
+      {subtitle && (
+        <p className="muted" style={{ marginTop: 0, marginBottom: 16 }}>
+          {subtitle}
+        </p>
+      )}
+      {children}
+    </div>
+  );
+}
+
+function InfoRow({ label, value }) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "110px 1fr",
+        gap: 10,
+        padding: "10px 0",
+        borderBottom: "1px solid rgba(255,255,255,.06)",
+      }}
+    >
+      <div className="muted" style={{ fontWeight: 700 }}>
+        {label}
+      </div>
+      <div style={{ fontWeight: 800 }}>{value}</div>
+    </div>
+  );
+}
+
 export default function Profile() {
   const [user, setUser] = useState(null);
+
   const [email, setEmail] = useState("");
-  const [msg, setMsg] = useState("");
-  const [err, setErr] = useState("");
+  const [emailMsg, setEmailMsg] = useState("");
+  const [emailErr, setEmailErr] = useState("");
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordMsg, setPasswordMsg] = useState("");
+  const [passwordErr, setPasswordErr] = useState("");
 
   async function load() {
-    setErr("");
+    setEmailErr("");
     const res = await api.get("/users/me");
     setUser(res.data.user);
     setEmail(res.data.user.email);
   }
 
   useEffect(() => {
-    load().catch(() => setErr("Nem sikerült betölteni a profilt."));
+    load().catch(() => setEmailErr("Nem sikerült betölteni a profilt."));
   }, []);
 
-  async function save() {
-    setMsg("");
-    setErr("");
+  async function saveEmail() {
+    setEmailMsg("");
+    setEmailErr("");
+
     try {
       const res = await api.put("/users/me", { email });
       setUser(res.data.user);
-      setMsg("Profil frissítve.");
+      setEmailMsg("Email cím sikeresen frissítve.");
     } catch (e) {
-      setErr(e?.response?.data?.error || "Hiba történt.");
+      setEmailErr(e?.response?.data?.error || "Hiba történt.");
+    }
+  }
+
+  async function changePassword() {
+    setPasswordMsg("");
+    setPasswordErr("");
+
+    try {
+      const res = await api.put("/users/me/password", {
+        currentPassword,
+        newPassword,
+        confirmPassword,
+      });
+
+      setPasswordMsg(res.data.message || "Jelszó sikeresen módosítva.");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (e) {
+      setPasswordErr(e?.response?.data?.error || "Hiba történt.");
     }
   }
 
@@ -37,37 +106,106 @@ export default function Profile() {
           <span className="tag">PROFILE</span>
           <span>Saját adatok kezelése</span>
         </div>
+
         <h1 className="h1">Profile</h1>
-        <p className="sub">Itt módosíthatod az email címedet.</p>
+
+        <p className="sub">
+          Itt módosíthatod az email címedet és a jelszavadat.
+        </p>
       </div>
 
-      <div className="grid">
-        <div className="col-4 card">
-          <h3 className="card-title">Account</h3>
+      <div
+        style={{
+          marginTop: 18,
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)",
+          gap: 16,
+          alignItems: "stretch",
+        }}
+      >
+        <ProfileCard title="Account" subtitle="Felhasználói adatok">
           {!user ? (
-            <p className="muted">Betöltés…</p>
+            <div className="muted">Betöltés…</div>
           ) : (
             <>
-              <p className="muted" style={{ margin: "8px 0 0" }}><b>Username:</b> {user.username}</p>
-              <p className="muted" style={{ margin: "8px 0 0" }}><b>Role:</b> {user.role}</p>
-              <p className="muted" style={{ margin: "8px 0 0" }}><b>Created:</b> {new Date(user.createdAt).toLocaleString()}</p>
+              <InfoRow label="Username" value={user.username} />
+              <InfoRow label="Role" value={user.role} />
+              <InfoRow label="Email" value={user.email} />
+              <InfoRow
+                label="Created"
+                value={new Date(user.createdAt).toLocaleString()}
+              />
             </>
           )}
-        </div>
+        </ProfileCard>
 
-        <div className="col-8 card">
-          <h3 className="card-title">Update Email</h3>
-          <p className="muted" style={{ marginTop: 0 }}>Adj meg egy új email címet és mentsd.</p>
+        <ProfileCard
+          title="Update Email"
+          subtitle="Adj meg egy új email címet és mentsd."
+        >
+          <div style={{ display: "grid", gap: 12 }}>
+            <input
+              className="input-dark"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Új email cím"
+            />
 
-          <div className="field">
-            <input className="input" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <button className="btn primary" onClick={saveEmail}>
+              Mentés
+            </button>
+
+            {emailErr && <div className="error">{emailErr}</div>}
+            {emailMsg && (
+              <div className="muted" style={{ color: "#86efac" }}>
+                {emailMsg}
+              </div>
+            )}
           </div>
+        </ProfileCard>
 
-          <button className="btn primary" onClick={save}>Mentés</button>
+        <ProfileCard
+          title="Change Password"
+          subtitle="Itt biztonságosan módosíthatod a jelszavadat."
+        >
+          <div style={{ display: "grid", gap: 12 }}>
+            <input
+              className="input-dark"
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="Jelenlegi jelszó"
+            />
 
-          {err && <p className="error">{err}</p>}
-          {msg && <p className="success">{msg}</p>}
-        </div>
+            <input
+              className="input-dark"
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Új jelszó"
+            />
+
+            <input
+              className="input-dark"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Új jelszó megerősítése"
+            />
+
+            <button className="btn primary" onClick={changePassword}>
+              Jelszó módosítása
+            </button>
+
+            {passwordErr && <div className="error">{passwordErr}</div>}
+            {passwordMsg && (
+              <div className="muted" style={{ color: "#86efac" }}>
+                {passwordMsg}
+              </div>
+            )}
+          </div>
+        </ProfileCard>
       </div>
     </div>
   );

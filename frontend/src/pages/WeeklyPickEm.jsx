@@ -24,6 +24,50 @@ function readStoredUser() {
   }
 }
 
+function ScoreCard({ title, value, sub }) {
+  return (
+    <div
+      style={{
+        minWidth: 180,
+        padding: "14px 16px",
+        borderRadius: 18,
+        border: "1px solid rgba(59,130,246,.22)",
+        background:
+          "linear-gradient(180deg, rgba(15,30,68,.96), rgba(9,18,42,.96))",
+        boxShadow: "0 12px 28px rgba(0,0,0,.22)",
+      }}
+    >
+      <div
+        className="muted"
+        style={{
+          fontSize: 12,
+          fontWeight: 800,
+          textTransform: "uppercase",
+          letterSpacing: ".06em",
+          marginBottom: 8,
+        }}
+      >
+        {title}
+      </div>
+
+      <div
+        style={{
+          fontSize: 28,
+          fontWeight: 900,
+          lineHeight: 1,
+          marginBottom: 8,
+        }}
+      >
+        {value}
+      </div>
+
+      <div className="muted" style={{ fontSize: 13, fontWeight: 700 }}>
+        {sub}
+      </div>
+    </div>
+  );
+}
+
 export default function WeeklyPickEm() {
   const [sp, setSp] = useSearchParams();
   const requestedWeek = Number(sp.get("week") || 1);
@@ -109,7 +153,7 @@ export default function WeeklyPickEm() {
           : {
               points: 0,
               correct: 0,
-              totalGames: games.length || 0,
+              totalGames: 0,
             }
       );
 
@@ -140,7 +184,6 @@ export default function WeeklyPickEm() {
     loadWeeks()
       .catch(() => setErr("Nem sikerült betölteni a heteket."))
       .finally(() => setLoadingWeeks(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -154,7 +197,6 @@ export default function WeeklyPickEm() {
     refreshPageData(week).catch(() =>
       setErr("Nem sikerült betölteni a meccseket.")
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [week]);
 
   async function pick(gameId, team) {
@@ -178,19 +220,55 @@ export default function WeeklyPickEm() {
   return (
     <div className="container page">
       <div className="hero">
-        <div className="kicker">
-          <span className="tag">FANTASY</span>
-          <span>Weekly Pick&apos;Em</span>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0,1fr) auto",
+            gap: 18,
+            alignItems: "start",
+          }}
+        >
+          <div>
+            <div className="kicker">
+              <span className="tag">FANTASY</span>
+              <span>Weekly Pick&apos;Em</span>
+            </div>
+
+            <h1 className="h1">Weekly Pick&apos;Em</h1>
+
+            <p className="sub">
+              Tippeld meg a meccsek győztesét kickoff előtt. Kickoff után a
+              választás tiltva.
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
+            }}
+          >
+            {myWeeklyScore && (
+              <ScoreCard
+                title="Weekly points"
+                value={myWeeklyScore.points}
+                sub={`${myWeeklyScore.correct}/${myWeeklyScore.totalGames} correct`}
+              />
+            )}
+
+            {mySeasonScore && (
+              <ScoreCard
+                title="Season total"
+                value={mySeasonScore.points}
+                sub={`${mySeasonScore.correct}/${mySeasonScore.totalGames} correct`}
+              />
+            )}
+          </div>
         </div>
 
-        <h1 className="h1">Weekly Pick&apos;Em</h1>
-
-        <p className="sub">
-          Tippeld meg a meccsek győztesét kickoff előtt. Kickoff után a választás
-          tiltva.
-        </p>
-
-        <div className="filters-bar" style={{ marginTop: 14 }}>
+        <div className="filters-bar" style={{ marginTop: 16 }}>
           <WeekDropdown
             value={week}
             options={weeks}
@@ -200,20 +278,6 @@ export default function WeeklyPickEm() {
           />
 
           <div className="filters-spacer" />
-
-          {myWeeklyScore && (
-            <span className="pill" title="Saját heti pontszám">
-              <span className="dot" />
-              Week points: {myWeeklyScore.points}
-            </span>
-          )}
-
-          {mySeasonScore && (
-            <span className="pill" title="Saját szezon összpontszám">
-              <span className="dot" />
-              Total points: {mySeasonScore.points}
-            </span>
-          )}
 
           <span className="pill">
             <span className="dot" />
@@ -227,31 +291,6 @@ export default function WeeklyPickEm() {
             Leaderboard
           </Link>
         </div>
-
-        {(myWeeklyScore || mySeasonScore) && (
-          <div
-            style={{
-              marginTop: 12,
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 10,
-            }}
-          >
-            {myWeeklyScore && (
-              <span className="pill">
-                <span className="dot" />
-                This week: {myWeeklyScore.correct}/{myWeeklyScore.totalGames} correct
-              </span>
-            )}
-
-            {mySeasonScore && (
-              <span className="pill">
-                <span className="dot" />
-                Season total: {mySeasonScore.correct}/{mySeasonScore.totalGames} correct
-              </span>
-            )}
-          </div>
-        )}
       </div>
 
       {err && (
