@@ -75,21 +75,6 @@ function winnerSide(game) {
   return game.homeScore > game.awayScore ? "HOME" : "AWAY";
 }
 
-const TEAM_COLOR = {
-  LAR: "#2563EB",
-  DET: "#60A5FA",
-  KC: "#EF4444",
-  SF: "#F59E0B",
-  PHI: "#10B981",
-  DAL: "#38BDF8",
-  BUF: "#3B82F6",
-  NYJ: "#22C55E",
-};
-
-function teamBar(team) {
-  return TEAM_COLOR[(team || "").toUpperCase()] || "rgba(99,102,241,.9)";
-}
-
 function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
   return (
     <div
@@ -100,19 +85,19 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
         justifyContent: "space-between",
         gap: 14,
         padding: "0 16px",
-        minHeight: 56,
+        minHeight: 58,
         borderColor: winner
-          ? "rgba(34,197,94,.60)"
+          ? "rgba(255,255,255,.16)"
           : highlighted
-          ? "rgba(59,130,246,.45)"
-          : "rgba(255,255,255,.12)",
+          ? "rgba(59,130,246,.24)"
+          : "rgba(255,255,255,.10)",
         background: winner
-          ? "linear-gradient(180deg, rgba(34,197,94,.18), rgba(34,197,94,.08))"
+          ? "linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02))"
           : highlighted
-          ? "rgba(20,40,90,.28)"
-          : undefined,
+          ? "rgba(20,40,90,.14)"
+          : "rgba(255,255,255,.015)",
         boxShadow: winner
-          ? "inset 0 0 0 1px rgba(34,197,94,.28)"
+          ? "inset 0 0 0 1px rgba(255,255,255,.025)"
           : undefined,
       }}
     >
@@ -130,7 +115,7 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
           style={{
             fontWeight: winner ? 900 : 800,
             fontSize: 18,
-            lineHeight: 1.2,
+            lineHeight: 1.15,
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -144,9 +129,10 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
         style={{
           fontWeight: 900,
           fontSize: 18,
-          minWidth: 24,
+          minWidth: 26,
           textAlign: "right",
           flexShrink: 0,
+          color: winner ? "rgba(255,255,255,.98)" : "rgba(255,255,255,.9)",
         }}
       >
         {score}
@@ -235,19 +221,21 @@ export default function Schedule() {
         {games.map((g) => {
           const final = isFinal(g);
           const win = winnerSide(g);
-          const leftColor = teamBar(g.awayTeam);
 
           return (
-            <div key={g.id} className="scheduleRow">
+            <div
+              key={g.id}
+              className="card"
+              style={{
+                padding: 14,
+                background:
+                  "linear-gradient(180deg, rgba(8,16,36,.96), rgba(5,11,26,.96))",
+              }}
+            >
               <div
-                className="scheduleRowBar"
-                style={{ background: leftColor }}
-              />
-
-              <div
-                className="scheduleRowMain"
                 style={{
-                  gridTemplateColumns: "1.45fr 220px",
+                  display: "grid",
+                  gridTemplateColumns: "minmax(0, 1fr) 180px",
                   gap: 16,
                   alignItems: "center",
                 }}
@@ -280,8 +268,8 @@ export default function Schedule() {
                   style={{
                     display: "grid",
                     justifyItems: "end",
+                    alignContent: "center",
                     gap: 10,
-                    minWidth: 0,
                   }}
                 >
                   <span className="pill" style={{ fontWeight: 800 }}>
