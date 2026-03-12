@@ -16,6 +16,14 @@ function formatKickoff(iso) {
   return `${day} ${time}`;
 }
 
+function readStoredUser() {
+  try {
+    return JSON.parse(localStorage.getItem("user") || "null");
+  } catch {
+    return null;
+  }
+}
+
 export default function WeeklyPickEm() {
   const [sp, setSp] = useSearchParams();
   const requestedWeek = Number(sp.get("week") || 1);
@@ -27,6 +35,12 @@ export default function WeeklyPickEm() {
   const [savingId, setSavingId] = useState(null);
   const [loadingWeeks, setLoadingWeeks] = useState(true);
   const [loadingGames, setLoadingGames] = useState(false);
+
+  const [myWeeklyScore, setMyWeeklyScore] = useState(null);
+  const [mySeasonScore, setMySeasonScore] = useState(null);
+
+  const currentUser = useMemo(() => readStoredUser(), []);
+  const currentUserId = currentUser?.id || null;
 
   async function loadWeeks() {
     setLoadingWeeks(true);
@@ -68,6 +82,60 @@ export default function WeeklyPickEm() {
     }
   }
 
+  async function loadMyScores(w) {
+    try {
+      const res = await api.get("/pickem/leaderboard", {
+        params: { season: SEASON, week: w },
+      });
+
+      const weekly = Array.isArray(res.data?.weekly) ? res.data.weekly : [];
+      const totals = Array.isArray(res.data?.totals) ? res.data.totals : [];
+
+      const myWeekly =
+        weekly.find((row) => String(row?.user?.id) === String(currentUserId)) ||
+        null;
+
+      const myTotal =
+        totals.find((row) => String(row?.userId) === String(currentUserId)) ||
+        null;
+
+      setMyWeeklyScore(
+        myWeekly
+          ? {
+              points: myWeekly.points ?? 0,
+              correct: myWeekly.correct ?? 0,
+              totalGames: myWeekly.totalGames ?? 0,
+            }
+          : {
+              points: 0,
+              correct: 0,
+              totalGames: games.length || 0,
+            }
+      );
+
+      setMySeasonScore(
+        myTotal
+          ? {
+              points: myTotal.points ?? 0,
+              correct: myTotal.correct ?? 0,
+              totalGames: myTotal.totalGames ?? 0,
+            }
+          : {
+              points: 0,
+              correct: 0,
+              totalGames: 0,
+            }
+      );
+    } catch {
+      setMyWeeklyScore(null);
+      setMySeasonScore(null);
+    }
+  }
+
+  async function refreshPageData(targetWeek) {
+    await Promise.all([loadWeek(targetWeek), loadMyScores(targetWeek)]);
+  }
+
   useEffect(() => {
     loadWeeks()
       .catch(() => setErr("Nem sikerült betölteni a heteket."))
@@ -83,7 +151,7 @@ export default function WeeklyPickEm() {
       setSp({ week: String(week) }, { replace: true });
     }
 
-    loadWeek(week).catch(() =>
+    refreshPageData(week).catch(() =>
       setErr("Nem sikerült betölteni a meccseket.")
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,7 +162,7 @@ export default function WeeklyPickEm() {
       setErr("");
       setSavingId(gameId);
       await api.post("/pickem/pick", { gameId, picked: team });
-      await loadWeek(week);
+      await refreshPageData(week);
     } catch (e) {
       setErr(e?.response?.data?.error || "Hiba történt a mentésnél.");
     } finally {
@@ -133,6 +201,20 @@ export default function WeeklyPickEm() {
 
           <div className="filters-spacer" />
 
+          {myWeeklyScore && (
+            <span className="pill" title="Saját heti pontszám">
+              <span className="dot" />
+              Week points: {myWeeklyScore.points}
+            </span>
+          )}
+
+          {mySeasonScore && (
+            <span className="pill" title="Saját szezon összpontszám">
+              <span className="dot" />
+              Total points: {mySeasonScore.points}
+            </span>
+          )}
+
           <span className="pill">
             <span className="dot" />
             {pickedCount}/{games.length} picked
@@ -145,6 +227,31 @@ export default function WeeklyPickEm() {
             Leaderboard
           </Link>
         </div>
+
+        {(myWeeklyScore || mySeasonScore) && (
+          <div
+            style={{
+              marginTop: 12,
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 10,
+            }}
+          >
+            {myWeeklyScore && (
+              <span className="pill">
+                <span className="dot" />
+                This week: {myWeeklyScore.correct}/{myWeeklyScore.totalGames} correct
+              </span>
+            )}
+
+            {mySeasonScore && (
+              <span className="pill">
+                <span className="dot" />
+                Season total: {mySeasonScore.correct}/{mySeasonScore.totalGames} correct
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {err && (
