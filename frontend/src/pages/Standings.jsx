@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
+import SeasonDropdown from "../components/SeasonDropdown";
 
 const DEFAULT_SEASON = 2025;
+const SEASONS = [2026, 2025, 2024, 2023, 2022, 2021, 2020];
 
 function Pill({ text }) {
   return (
@@ -131,18 +133,13 @@ export default function Standings() {
         </p>
 
         <div className="filters-bar">
-          <div className="filters-group">
-            <span className="filters-label">SEASON</span>
-            <input
-              className="input-dark"
-              type="number"
-              min="2000"
-              max="2100"
-              value={season}
-              onChange={(e) => setSeason(Number(e.target.value || DEFAULT_SEASON))}
-              style={{ width: 120 }}
-            />
-          </div>
+          <SeasonDropdown
+            value={season}
+            options={SEASONS}
+            onChange={setSeason}
+            label="SEASON"
+            width={170}
+          />
 
           <div className="filters-group">
             <span className="filters-label">CONFERENCE</span>
