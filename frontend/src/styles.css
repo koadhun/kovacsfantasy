@@ -1877,6 +1877,18 @@ th.col-active {
   overflow: hidden;
 }
 
+.pc-card-face {
+  pointer-events: none;
+}
+
+.pc-card:not(.is-flipped) .pc-card-front {
+  pointer-events: auto;
+}
+
+.pc-card.is-flipped .pc-card-back {
+  pointer-events: auto;
+}
+
 .pc-card-front {
   display: flex;
   flex-direction: column;
@@ -2030,6 +2042,14 @@ th.col-active {
   transition:
     opacity 0.22s ease,
     background 0.22s ease;
+}
+
+.pc-change-overlay {
+  pointer-events: none;
+}
+
+.pc-card:not(.is-flipped) .pc-headshot-wrap:hover .pc-change-overlay {
+  pointer-events: auto;
 }
 
 .pc-headshot-wrap:hover .pc-change-overlay {
