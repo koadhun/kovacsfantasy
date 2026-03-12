@@ -1323,3 +1323,56 @@ th.col-active {
   border-color: rgba(96, 165, 250, 0.26);
   color: #ffffff;
 }
+
+
+.input-dark {
+  width: 100%;
+  min-height: 44px;
+
+  border-radius: 14px;
+  border: 1px solid rgba(59, 130, 246, 0.30);
+
+  background: linear-gradient(
+    180deg,
+    rgba(20, 35, 75, 0.96),
+    rgba(11, 22, 48, 0.96)
+  );
+
+  color: #ffffff;
+
+  padding: 0 14px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  outline: none;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(59,130,246,.05),
+    0 6px 18px rgba(0,0,0,.18);
+
+  transition:
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease;
+}
+
+
+.input-dark::placeholder {
+  color: rgba(255,255,255,.45);
+  font-weight: 500;
+}
+
+
+.input-dark:hover {
+  border-color: rgba(96,165,250,.45);
+}
+
+
+.input-dark:focus {
+  border-color: rgba(96,165,250,.65);
+
+  box-shadow:
+    0 0 0 3px rgba(59,130,246,.18),
+    0 8px 24px rgba(0,0,0,.25);
+}
