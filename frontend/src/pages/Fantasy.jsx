@@ -73,16 +73,12 @@ function GameCard({
         flexDirection: "column",
         justifyContent: "space-between",
         padding: 22,
-        border:
-          featured
-            ? "1px solid rgba(59,130,246,.34)"
-            : "1px solid rgba(255,255,255,.08)",
+        border: featured
+          ? "1px solid rgba(59,130,246,.34)"
+          : "1px solid rgba(255,255,255,.08)",
         background: featured
           ? "linear-gradient(180deg, rgba(18,32,72,.96), rgba(7,16,38,.96))"
           : "linear-gradient(180deg, rgba(11,22,48,.92), rgba(7,13,30,.92))",
-        boxShadow: featured
-          ? "0 10px 34px rgba(0,0,0,.28), inset 0 0 0 1px rgba(59,130,246,.08)"
-          : "0 10px 28px rgba(0,0,0,.18)",
       }}
     >
       <div
@@ -148,14 +144,7 @@ function GameCard({
         </p>
 
         {!!features.length && (
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 10,
-              marginTop: 18,
-            }}
-          >
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 18 }}>
             {features.map((item) => (
               <FeaturePill key={item}>{item}</FeaturePill>
             ))}
@@ -174,10 +163,7 @@ function GameCard({
           marginTop: 24,
         }}
       >
-        <div
-          className="muted"
-          style={{ fontSize: 13, fontWeight: 700 }}
-        >
+        <div className="muted" style={{ fontSize: 13, fontWeight: 700 }}>
           {featured
             ? "Aktív fantasy játék"
             : disabled
@@ -186,14 +172,7 @@ function GameCard({
         </div>
 
         {disabled ? (
-          <button
-            className="btn"
-            disabled
-            style={{
-              opacity: 0.72,
-              minWidth: 132,
-            }}
-          >
+          <button className="btn" disabled style={{ opacity: 0.72, minWidth: 132 }}>
             {cta}
           </button>
         ) : (
@@ -222,22 +201,16 @@ export default function Fantasy() {
         <h1 className="h1">Fantasy Game Center</h1>
 
         <p className="sub" style={{ maxWidth: 760 }}>
-          Válassz egy fantasy játékmódot. A Weekly Pick&apos;Em már használható,
-          a többi mód későbbi bővítésként érkezik.
+          Válassz egy fantasy játékmódot. A Weekly Pick&apos;Em és a Perfect
+          Challenge már tesztelhető UI/DB alapon, a végleges szabályok később
+          finomíthatók.
         </p>
 
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 10,
-            marginTop: 16,
-          }}
-        >
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 16 }}>
           <FeaturePill>Weekly picks</FeaturePill>
           <FeaturePill>Leaderboard</FeaturePill>
-          <FeaturePill>Hidden picks before kickoff</FeaturePill>
-          <FeaturePill>Admin-ready expansion</FeaturePill>
+          <FeaturePill>Perfect Challenge roster</FeaturePill>
+          <FeaturePill>Card flip stats</FeaturePill>
         </div>
       </div>
 
@@ -245,7 +218,7 @@ export default function Fantasy() {
         style={{
           marginTop: 18,
           display: "grid",
-          gridTemplateColumns: "minmax(0, 1.25fr) minmax(0, .9fr) minmax(0, .9fr)",
+          gridTemplateColumns: "minmax(0, 1.05fr) minmax(0, 1.05fr) minmax(0, .9fr)",
           gap: 18,
           alignItems: "stretch",
         }}
@@ -259,27 +232,19 @@ export default function Fantasy() {
           statusTone="primary"
           href="/fantasy/weekly-pickem"
           cta="Open game"
-          features={[
-            "Weekly picks",
-            "Leaderboard",
-            "User picks view",
-            "Kickoff lock",
-          ]}
+          features={["Weekly picks", "Leaderboard", "Kickoff lock", "User picks view"]}
         />
 
         <GameCard
+          featured
           title="Perfect Challenge"
-          subtitle="Future mode"
-          description="Egy magasabb kockázatú játékmód, ahol a cél a tökéletes heti tippsor összeállítása extra jutalmazással."
-          status="Coming soon"
-          href="#"
-          cta="Coming soon"
-          disabled
-          features={[
-            "Perfect week target",
-            "Bonus scoring",
-            "Future expansion",
-          ]}
+          subtitle="UI demo"
+          description="Állíts össze heti 8 fős fantasy csapatot fix pozíciókra bontva. A játékos kártyák front/back nézetben mutatják a pontot és a szezon statokat."
+          status="New"
+          statusTone="primary"
+          href="/fantasy/perfect-challenge"
+          cta="Open game"
+          features={["8 fixed slots", "Player swap", "Overall stats", "Dummy data"]}
         />
 
         <GameCard
@@ -290,11 +255,7 @@ export default function Fantasy() {
           href="#"
           cta="Coming soon"
           disabled
-          features={[
-            "Playoff bracket",
-            "Special scoring",
-            "Postseason mode",
-          ]}
+          features={["Playoff bracket", "Special scoring", "Postseason mode"]}
         />
       </div>
     </div>

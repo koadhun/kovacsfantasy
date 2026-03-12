@@ -18,6 +18,7 @@ import Profile from "./pages/Profile";
 import WeeklyPickEm from "./pages/WeeklyPickEm";
 import PickEmLeaderboard from "./pages/PickEmLeaderboard";
 import PickEmUserPicks from "./pages/PickEmUserPicks";
+import PerfectChallenge from "./pages/PerfectChallenge";
 
 import Users from "./pages/Users";
 import ScheduleResultsEditor from "./pages/admin/ScheduleResultsEditor";
@@ -91,17 +92,6 @@ export default function App() {
       />
 
       <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <Profile />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
         path="/fantasy/weekly-pickem"
         element={
           <ProtectedRoute>
@@ -129,6 +119,28 @@ export default function App() {
           <ProtectedRoute>
             <Layout>
               <PickEmUserPicks />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/fantasy/perfect-challenge"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <PerfectChallenge />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Profile />
             </Layout>
           </ProtectedRoute>
         }

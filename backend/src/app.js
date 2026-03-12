@@ -11,6 +11,7 @@ import statsRoutes from "./routes/statsRoutes.js";
 import scheduleRoutes from "./routes/scheduleRoutes.js";
 import pickemRoutes from "./routes/pickemRoutes.js";
 import adminScheduleRoutes from "./routes/adminScheduleRoutes.js";
+import perfectChallengeRoutes from "./routes/perfectChallengeRoutes.js";
 
 dotenv.config();
 
@@ -31,8 +32,8 @@ app.use("/api/admin", adminStandingsRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/schedule", scheduleRoutes);
 app.use("/api/pickem", pickemRoutes);
+app.use("/api/perfect-challenge", perfectChallengeRoutes);
 app.use("/api/admin", adminScheduleRoutes);
-
 
 const PORT = process.env.PORT || 5000;
 
