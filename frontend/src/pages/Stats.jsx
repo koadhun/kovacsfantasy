@@ -5,13 +5,6 @@ import SeasonDropdown from "../components/SeasonDropdown";
 
 const YEARS = [2026, 2025, 2024, 2023, 2022, 2021, 2020];
 
-function initials(name) {
-  const parts = String(name || "").trim().split(/\s+/);
-  const a = parts[0]?.[0] || "";
-  const b = parts[1]?.[0] || "";
-  return (a + b).toUpperCase();
-}
-
 export default function Stats() {
   const [season, setSeason] = useState(2025);
   const [category, setCategory] = useState("passing");
@@ -20,7 +13,7 @@ export default function Stats() {
   const [rows, setRows] = useState([]);
   const [err, setErr] = useState("");
   const [page, setPage] = useState(1);
-  const [limit] = useState(20);
+  const [limit] = useState(10);
   const [sortKey, setSortKey] = useState("passYds");
   const [sortDir, setSortDir] = useState("desc");
   const [hoverKey, setHoverKey] = useState(null);
@@ -29,6 +22,14 @@ export default function Stats() {
     { key: "passing", label: "Passing" },
     { key: "rushing", label: "Rushing" },
     { key: "receiving", label: "Receiving" },
+    { key: "fumbles", label: "Fumbles" },
+    { key: "tackles", label: "Tackles" },
+    { key: "interceptions", label: "Interceptions" },
+    { key: "field_goals", label: "Field Goals" },
+    { key: "kickoffs", label: "Kickoffs" },
+    { key: "kickoff_returns", label: "Kickoff Returns" },
+    { key: "punting", label: "Punting" },
+    { key: "punt_returns", label: "Punt Returns" },
   ];
 
   const columns = meta?.columns || [{ key: "player", label: "Player" }];
@@ -75,7 +76,9 @@ export default function Stats() {
 
   const sortBadge = useMemo(() => {
     const col = columns.find((c) => c.key === sortKey);
-    return col ? `${col.label} · ${sortDir.toUpperCase()}` : `${sortKey} · ${sortDir.toUpperCase()}`;
+    return col
+      ? `${col.label} · ${sortDir.toUpperCase()}`
+      : `${sortKey} · ${sortDir.toUpperCase()}`;
   }, [columns, sortKey, sortDir]);
 
   const currentPage = meta?.page || page;
@@ -92,8 +95,7 @@ export default function Stats() {
         <h1 className="h1">Stats</h1>
 
         <p className="sub">
-          NFL-szerű player statisztika nézet: tabok, év, keresés, rendezés,
-          rangsor.
+          NFL-szerű player statisztika nézet: tabok, év, keresés, rendezés, rangsor.
         </p>
 
         <div className="filters-bar">
@@ -124,7 +126,7 @@ export default function Stats() {
             width={170}
           />
 
-          <div className="filters-group" style={{ minWidth: 260 }}>
+          <div className="filters-group" style={{ minWidth: 310 }}>
             <span className="filters-label">SEARCH</span>
             <input
               className="input-dark"
@@ -228,23 +230,7 @@ export default function Stats() {
                           {rank}
                         </div>
 
-                        <div
-                          style={{
-                            width: 34,
-                            height: 34,
-                            borderRadius: "50%",
-                            display: "grid",
-                            placeItems: "center",
-                            fontSize: 12,
-                            fontWeight: 900,
-                            border: "1px solid rgba(255,255,255,.12)",
-                            background: "rgba(255,255,255,.04)",
-                            color: "rgba(255,255,255,.85)",
-                            flexShrink: 0,
-                          }}
-                        >
-                          {initials(r.player)}
-                        </div>
+                        <TeamLogoMini team={team} size={26} />
 
                         <div style={{ minWidth: 0 }}>
                           <div style={{ fontWeight: 800 }}>{r.player ?? "-"}</div>
@@ -257,7 +243,6 @@ export default function Stats() {
                               fontSize: 12,
                             }}
                           >
-                            <TeamLogoMini team={team} size={14} />
                             <span>
                               {team}
                               {pos ? ` · ${pos}` : ""}
