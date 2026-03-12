@@ -1,9 +1,49 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
+import TeamLogo from "../components/TeamLogo";
 import SeasonDropdown from "../components/SeasonDropdown";
 
 const DEFAULT_SEASON = 2025;
 const SEASONS = [2026, 2025, 2024, 2023, 2022, 2021, 2020];
+
+const TEAM_NAME_TO_CODE = {
+  "Arizona Cardinals": "ARI",
+  "Atlanta Falcons": "ATL",
+  "Baltimore Ravens": "BAL",
+  "Buffalo Bills": "BUF",
+  "Carolina Panthers": "CAR",
+  "Chicago Bears": "CHI",
+  "Cincinnati Bengals": "CIN",
+  "Cleveland Browns": "CLE",
+  "Dallas Cowboys": "DAL",
+  "Denver Broncos": "DEN",
+  "Detroit Lions": "DET",
+  "Green Bay Packers": "GB",
+  "Houston Texans": "HOU",
+  "Indianapolis Colts": "IND",
+  "Jacksonville Jaguars": "JAX",
+  "Kansas City Chiefs": "KC",
+  "Las Vegas Raiders": "LV",
+  "Los Angeles Chargers": "LAC",
+  "Los Angeles Rams": "LAR",
+  "Miami Dolphins": "MIA",
+  "Minnesota Vikings": "MIN",
+  "New England Patriots": "NE",
+  "New Orleans Saints": "NO",
+  "New York Giants": "NYG",
+  "New York Jets": "NYJ",
+  "Philadelphia Eagles": "PHI",
+  "Pittsburgh Steelers": "PIT",
+  "San Francisco 49ers": "SF",
+  "Seattle Seahawks": "SEA",
+  "Tampa Bay Buccaneers": "TB",
+  "Tennessee Titans": "TEN",
+  "Washington Commanders": "WAS",
+};
+
+function teamCodeFromName(name) {
+  return TEAM_NAME_TO_CODE[name] || "";
+}
 
 function Pill({ text }) {
   return (
@@ -16,15 +56,15 @@ function Pill({ text }) {
 
 function DivisionTable({ title, rows }) {
   return (
-    <div className="card">
+    <div className="card" style={{ padding: 14 }}>
       <h3 className="card-title" style={{ marginBottom: 12 }}>
         {title}
       </h3>
 
-      <table className="table">
+      <table className="table standings-table" style={{ width: "100%" }}>
         <thead>
           <tr>
-            <th>Team</th>
+            <th style={{ width: 360 }}>Team</th>
             <th>W</th>
             <th>L</th>
             <th>T</th>
@@ -35,10 +75,26 @@ function DivisionTable({ title, rows }) {
             <th>Clinched</th>
           </tr>
         </thead>
+
         <tbody>
           {rows.map((r) => (
             <tr key={r.team}>
-              <td style={{ fontWeight: 800 }}>{r.team}</td>
+              <td style={{ width: 360 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <TeamLogo team={teamCodeFromName(r.team)} size={22} />
+                  <span style={{ fontWeight: 800, whiteSpace: "nowrap" }}>
+                    {r.team}
+                  </span>
+                </div>
+              </td>
+
               <td>{r.w}</td>
               <td>{r.l}</td>
               <td>{r.t}</td>
@@ -203,7 +259,13 @@ export default function Standings() {
       )}
 
       {data && hasAnyRows && division === "ALL" && (
-        <div className="standings-grid-2x2">
+        <div
+          className="standings-grid-2x2"
+          style={{
+            gridTemplateColumns: "1fr",
+            gap: 16,
+          }}
+        >
           {allDivisionData.map((d) => (
             <DivisionTable key={d.name} title={d.name} rows={d.rows} />
           ))}
