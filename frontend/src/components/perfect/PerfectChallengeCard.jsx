@@ -97,11 +97,6 @@ export default function PerfectChallengeCard({
 }) {
   const [flipped, setFlipped] = useState(false);
 
-  const overallRows = useMemo(
-    () => orderedStatRows(player?.position, player?.overallStats),
-    [player]
-  );
-
   const weeklyRows = useMemo(
     () => orderedStatRows(player?.position, player?.weeklyStats),
     [player]
@@ -124,33 +119,46 @@ export default function PerfectChallengeCard({
 
           {player ? (
             <>
-              <div className="pc-headshot">
-                {player.headshotUrl ? (
-                  <img src={player.headshotUrl} alt={displayName} />
-                ) : (
-                  <div className="pc-headshot-fallback">
-                    <TeamLogo team={player.teamCode} size={52} />
+              <div className="pc-front-content">
+                <div className="pc-headshot-wrap">
+                  <div className="pc-headshot">
+                    {player.headshotUrl ? (
+                      <img src={player.headshotUrl} alt={displayName} />
+                    ) : (
+                      <div className="pc-headshot-fallback">
+                        <TeamLogo team={player.teamCode} size={52} />
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              <div className="pc-player-topline">
-                <TeamLogo team={player.teamCode} size={20} />
-                <span>{player.teamCode}</span>
-              </div>
+                  <button
+                    type="button"
+                    className="pc-change-overlay"
+                    onClick={onSelect}
+                    title="Change player"
+                  >
+                    <span className="pc-change-overlay-text">Change player</span>
+                  </button>
+                </div>
 
-              <div className="pc-name-block">
-                <div className="pc-first-name">{player.firstName}</div>
-                <div className="pc-last-name">{player.lastName}</div>
-              </div>
+                <div className="pc-player-topline">
+                  <TeamLogo team={player.teamCode} size={20} />
+                  <span>{player.teamCode}</span>
+                </div>
 
-              <div className="pc-score">{score}</div>
+                <div className="pc-name-block">
+                  <div className="pc-first-name">{player.firstName}</div>
+                  <div className="pc-last-name">{player.lastName}</div>
+                </div>
+
+                <div className="pc-score">{score}</div>
+              </div>
 
               <button
                 type="button"
                 className="pc-info-btn"
                 onClick={() => setFlipped(true)}
-                title="Overall stats"
+                title="Weekly stats"
               >
                 i
               </button>
@@ -159,7 +167,9 @@ export default function PerfectChallengeCard({
             <>
               <div className="pc-empty-state">
                 <div className="pc-empty-title">No player selected</div>
-                <div className="pc-empty-sub">Choose a {slot} player for this slot.</div>
+                <div className="pc-empty-sub">
+                  Choose a {slot} player for this slot.
+                </div>
               </div>
 
               <button
@@ -175,7 +185,7 @@ export default function PerfectChallengeCard({
         </div>
 
         <div className="pc-card-face pc-card-back">
-          <div className="pc-slot-badge">{slot} · OVERALL STATS</div>
+          <div className="pc-slot-badge">{slot} · WEEKLY STATS</div>
 
           {player ? (
             <>
@@ -185,7 +195,7 @@ export default function PerfectChallengeCard({
               </div>
 
               <div className="pc-stats-grid">
-                {overallRows.map((row) => (
+                {weeklyRows.map((row) => (
                   <div key={row.key} className="pc-stat-row">
                     <span className="pc-stat-label">{row.label}</span>
                     <span className="pc-stat-value">{row.value}</span>
@@ -204,32 +214,11 @@ export default function PerfectChallengeCard({
             </>
           ) : (
             <div className="pc-empty-state">
-              <div className="pc-empty-title">OVERALL STATS</div>
+              <div className="pc-empty-title">WEEKLY STATS</div>
               <div className="pc-empty-sub">Select a player first.</div>
             </div>
           )}
         </div>
-      </div>
-
-      <div className="pc-stats-mini">
-        <div className="pc-stats-mini-title">STATS</div>
-
-        {player ? (
-          weeklyRows.map((row) => (
-            <div key={row.key} className="pc-mini-stat-row">
-              <span className="pc-mini-stat-label">{row.label}</span>
-              <span className="pc-mini-stat-value">{row.value}</span>
-            </div>
-          ))
-        ) : (
-          <div>No stats yet.</div>
-        )}
-      </div>
-
-      <div style={{ marginTop: 10, display: "flex", justifyContent: "center" }}>
-        <button className="btn" onClick={onSelect}>
-          {player ? "Change player" : "Select player"}
-        </button>
       </div>
     </div>
   );
