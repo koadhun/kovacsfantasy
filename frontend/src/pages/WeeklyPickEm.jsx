@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import { Link, useSearchParams } from "react-router-dom";
 import TeamLogo from "../components/TeamLogo";
+import WeekDropdown from "../components/WeekDropdown";
 
 const SEASON = 2025;
 
@@ -17,7 +18,6 @@ function formatKickoff(iso) {
 
 export default function WeeklyPickEm() {
   const [sp, setSp] = useSearchParams();
-
   const requestedWeek = Number(sp.get("week") || 1);
 
   const [week, setWeek] = useState(requestedWeek);
@@ -30,6 +30,7 @@ export default function WeeklyPickEm() {
 
   async function loadWeeks() {
     setLoadingWeeks(true);
+
     const res = await api.get("/schedule/weeks", {
       params: { season: SEASON },
     });
@@ -48,6 +49,8 @@ export default function WeeklyPickEm() {
 
   async function loadWeek(w) {
     setErr("");
+    setLoadingGames(true);
+
     try {
       const res = await api.get("/pickem/week", {
         params: { season: SEASON, week: w },
@@ -55,7 +58,13 @@ export default function WeeklyPickEm() {
       setGames(res.data.games || []);
     } catch (e) {
       setGames([]);
-      setErr(e?.response?.data?.error || e?.message || "Nem sikerült betölteni a meccseket.");
+      setErr(
+        e?.response?.data?.error ||
+          e?.message ||
+          "Nem sikerült betölteni a meccseket."
+      );
+    } finally {
+      setLoadingGames(false);
     }
   }
 
@@ -74,7 +83,9 @@ export default function WeeklyPickEm() {
       setSp({ week: String(week) }, { replace: true });
     }
 
-    loadWeek(week).catch(() => setErr("Nem sikerült betölteni a meccseket."));
+    loadWeek(week).catch(() =>
+      setErr("Nem sikerült betölteni a meccseket.")
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [week]);
 
@@ -112,21 +123,13 @@ export default function WeeklyPickEm() {
         </p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
-          <div className="filters-group">
-            <span className="filters-label">WEEK</span>
-            <select
-              className="select-dark"
-              value={week}
-              onChange={(e) => setWeek(Number(e.target.value))}
-              disabled={loadingWeeks || !weeks.length}
-            >
-              {weeks.map((w) => (
-                <option key={w} value={w}>
-                  Week {w}
-                </option>
-              ))}
-            </select>
-          </div>
+          <WeekDropdown
+            value={week}
+            options={weeks}
+            onChange={setWeek}
+            label="WEEK"
+            width={170}
+          />
 
           <div className="filters-spacer" />
 

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import TeamLogo from "../components/TeamLogo";
+import WeekDropdown from "../components/WeekDropdown";
 
 const SEASON = 2025;
 
@@ -61,7 +62,11 @@ function formatKickoff(iso) {
 }
 
 function isFinal(game) {
-  return game.status === "FINAL" && game.homeScore != null && game.awayScore != null;
+  return (
+    game.status === "FINAL" &&
+    game.homeScore != null &&
+    game.awayScore != null
+  );
 }
 
 function winnerSide(game) {
@@ -203,21 +208,13 @@ export default function Schedule() {
         </p>
 
         <div className="filters-bar">
-          <div className="filters-group">
-            <span className="filters-label">WEEK</span>
-            <select
-              className="select-dark"
-              value={week}
-              onChange={(e) => setWeek(Number(e.target.value))}
-              disabled={!weeks.length}
-            >
-              {weeks.map((w) => (
-                <option key={w} value={w}>
-                  Week {w}
-                </option>
-              ))}
-            </select>
-          </div>
+          <WeekDropdown
+            value={week}
+            options={weeks}
+            onChange={setWeek}
+            label="WEEK"
+            width={170}
+          />
 
           <div className="filters-spacer" />
 
