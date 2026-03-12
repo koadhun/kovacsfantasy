@@ -346,7 +346,7 @@ export const perfectChallengePlayers = [
     teamCode: "DET",
     firstName: "Amon-Ra",
     lastName: "St. Brown",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(4374302),
     currentScore: 16.9,
     overallStats: {
       receivedYards: 1174.6,
@@ -369,7 +369,7 @@ export const perfectChallengePlayers = [
     teamCode: "CAR",
     firstName: "Kelvin",
     lastName: "Benjamin",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(16730),
     currentScore: 6.7,
     overallStats: {
       receivedYards: 611.6,
@@ -440,7 +440,7 @@ export const perfectChallengePlayers = [
     teamCode: "DET",
     firstName: "Sam",
     lastName: "LaPorta",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(4430027),
     currentScore: 12.1,
     overallStats: {
       receivedYards: 722.7,
@@ -463,7 +463,7 @@ export const perfectChallengePlayers = [
     teamCode: "NO",
     firstName: "Jimmy",
     lastName: "Graham",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(13232),
     currentScore: 14.6,
     overallStats: {
       receivedYards: 702.4,
@@ -507,7 +507,7 @@ export const perfectChallengePlayers = [
     teamCode: "CAR",
     firstName: "Graham",
     lastName: "Gano",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(12460),
     currentScore: 7.3,
     overallStats: {
       fg0to49Yards: 18,
@@ -526,7 +526,7 @@ export const perfectChallengePlayers = [
     teamCode: "KC",
     firstName: "Harrison",
     lastName: "Butker",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(3055899),
     currentScore: 8.7,
     overallStats: {
       fg0to49Yards: 21,
