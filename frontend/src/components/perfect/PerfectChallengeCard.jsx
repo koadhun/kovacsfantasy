@@ -1,11 +1,46 @@
 import { useMemo, useState } from "react";
 import TeamLogo from "../TeamLogo";
 
-function prettyLabel(key) {
-  return String(key)
-    .replace(/([A-Z])/g, " $1")
-    .replace(/^./, (m) => m.toUpperCase())
-    .trim();
+const LABELS = {
+  passingYards: "Passing yards",
+  passingTDs: "Passing TDs",
+  interceptions: "Interceptions",
+  rushingYards: "Rushing yards",
+  rushingTDs: "Rushing TDs",
+  fumble: "Fumble",
+  receivedYards: "Received yards",
+  receivedTDs: "Received TDs",
+  fumbles: "Fumbles",
+  fg0to49Yards: "0-49 yards",
+  fg50plusYards: "50+ yards",
+  xp: "XP",
+  interception: "Interception",
+  forcedFumble: "Forced fumble",
+  sack: "Sack",
+  safety: "Safety",
+  returnTD: "Return TD",
+  allowedPoints: "Allowed points",
+};
+
+const DECIMAL_KEYS = new Set([
+  "passingYards",
+  "rushingYards",
+  "receivedYards",
+]);
+
+function formatValue(key, value) {
+  if (value == null) return "-";
+  if (DECIMAL_KEYS.has(key)) return Number(value).toFixed(1);
+  return value;
+}
+
+function statRows(stats) {
+  if (!stats) return [];
+  return Object.entries(stats).map(([key, value]) => ({
+    key,
+    label: LABELS[key] || key,
+    value: formatValue(key, value),
+  }));
 }
 
 export default function PerfectChallengeCard({
@@ -15,17 +50,24 @@ export default function PerfectChallengeCard({
 }) {
   const [flipped, setFlipped] = useState(false);
 
+  const overallRows = useMemo(
+    () => statRows(player?.overallStats),
+    [player]
+  );
+
+  const weeklyRows = useMemo(
+    () => statRows(player?.weeklyStats),
+    [player]
+  );
+
   const score = useMemo(() => {
     if (!player) return "0.0";
     return Number(player.currentScore || 0).toFixed(1);
   }, [player]);
 
-  const statsRows = useMemo(() => {
-    if (!player?.overallStats) return [];
-    return Object.entries(player.overallStats);
-  }, [player]);
-
-  const displayName = player?.displayName || `${player?.firstName || ""} ${player?.lastName || ""}`.trim();
+  const displayName =
+    player?.displayName ||
+    `${player?.firstName || ""} ${player?.lastName || ""}`.trim();
 
   return (
     <div className="pc-card-wrap">
@@ -40,7 +82,7 @@ export default function PerfectChallengeCard({
                   <img src={player.headshotUrl} alt={displayName} />
                 ) : (
                   <div className="pc-headshot-fallback">
-                    <TeamLogo team={player.teamCode} size={46} />
+                    <TeamLogo team={player.teamCode} size={52} />
                   </div>
                 )}
               </div>
@@ -70,7 +112,7 @@ export default function PerfectChallengeCard({
             <>
               <div className="pc-empty-state">
                 <div className="pc-empty-title">No player selected</div>
-                <div className="pc-empty-sub">Choose a {slot} option for this slot.</div>
+                <div className="pc-empty-sub">Choose a {slot} player for this slot.</div>
               </div>
 
               <button
@@ -86,22 +128,22 @@ export default function PerfectChallengeCard({
         </div>
 
         <div className="pc-card-face pc-card-back">
-          <div className="pc-slot-badge">{slot}</div>
+          <div className="pc-slot-badge">
+            {slot} · OVERALL STATS
+          </div>
 
           {player ? (
             <>
-              <div className="pc-back-title">OVERALL STATS</div>
-
               <div className="pc-back-player">
                 <TeamLogo team={player.teamCode} size={18} />
                 <span>{displayName}</span>
               </div>
 
               <div className="pc-stats-grid">
-                {statsRows.map(([key, value]) => (
-                  <div key={key} className="pc-stat-row">
-                    <span className="pc-stat-label">{prettyLabel(key)}</span>
-                    <span className="pc-stat-value">{value}</span>
+                {overallRows.map((row) => (
+                  <div key={row.key} className="pc-stat-row">
+                    <span className="pc-stat-label">{row.label}</span>
+                    <span className="pc-stat-value">{row.value}</span>
                   </div>
                 ))}
               </div>
@@ -126,12 +168,14 @@ export default function PerfectChallengeCard({
 
       <div className="pc-stats-mini">
         <div className="pc-stats-mini-title">STATS</div>
-        {player?.statsSummary ? (
-          <>
-            <div>{player.statsSummary.line1}</div>
-            <div>{player.statsSummary.line2}</div>
-            <div>{player.statsSummary.line3}</div>
-          </>
+
+        {player ? (
+          weeklyRows.map((row) => (
+            <div key={row.key} className="pc-mini-stat-row">
+              <span className="pc-mini-stat-label">{row.label}</span>
+              <span className="pc-mini-stat-value">{row.value}</span>
+            </div>
+          ))
         ) : (
           <div>No stats yet.</div>
         )}

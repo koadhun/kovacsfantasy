@@ -12,17 +12,20 @@ const players = [
     headshotUrl: "https://static.www.nfl.com/image/private/t_headshot_desktop/league/sb8whj4z5m8q4rj2sqiy",
     currentScore: 24.8,
     overallStats: {
-      passingYards: 3285.4,
+      passingYards: 3285.2,
       passingTDs: 27,
       interceptions: 9,
-      rushingYards: 421.7,
+      rushingYards: 421.4,
       rushingTDs: 6,
       fumble: 2,
     },
-    statsSummary: {
-      line1: "Passing 3285.4 yds",
-      line2: "27 TD · 9 INT",
-      line3: "Rush 421.7 yds · 6 TD",
+    weeklyStats: {
+      passingYards: 325.2,
+      passingTDs: 4,
+      interceptions: 1,
+      rushingYards: 15.2,
+      rushingTDs: 0,
+      fumble: 0,
     },
   },
   {
@@ -41,10 +44,13 @@ const players = [
       rushingTDs: 2,
       fumble: 1,
     },
-    statsSummary: {
-      line1: "Passing 3176.9 yds",
-      line2: "24 TD · 8 INT",
-      line3: "Rush 236.4 yds · 2 TD",
+    weeklyStats: {
+      passingYards: 286.7,
+      passingTDs: 3,
+      interceptions: 0,
+      rushingYards: 21.5,
+      rushingTDs: 1,
+      fumble: 0,
     },
   },
 
@@ -63,31 +69,12 @@ const players = [
       receivedTDs: 4,
       fumble: 1,
     },
-    statsSummary: {
-      line1: "Rush 1184.2 yds · 11 TD",
-      line2: "Rec 412.5 yds · 4 TD",
-      line3: "Fumble 1",
-    },
-  },
-  {
-    season: SEASON,
-    position: "RB",
-    teamCode: "NO",
-    firstName: "Cam",
-    lastName: "Ingram",
-    headshotUrl: "https://static.www.nfl.com/image/private/t_headshot_desktop/league/owjd2u0z6ru2nypgvtmx",
-    currentScore: 8.2,
-    overallStats: {
-      rushingYards: 644.1,
-      rushingTDs: 5,
-      receivedYards: 188.7,
+    weeklyStats: {
+      rushingYards: 95.6,
+      rushingTDs: 1,
+      receivedYards: 42.3,
       receivedTDs: 1,
-      fumble: 1,
-    },
-    statsSummary: {
-      line1: "Rush 644.1 yds · 5 TD",
-      line2: "Rec 188.7 yds · 1 TD",
-      line3: "Fumble 1",
+      fumble: 0,
     },
   },
   {
@@ -105,10 +92,35 @@ const players = [
       receivedTDs: 3,
       fumble: 0,
     },
-    statsSummary: {
-      line1: "Rush 902.8 yds · 8 TD",
-      line2: "Rec 356.2 yds · 3 TD",
-      line3: "Fumble 0",
+    weeklyStats: {
+      rushingYards: 78.1,
+      rushingTDs: 1,
+      receivedYards: 50.5,
+      receivedTDs: 1,
+      fumble: 0,
+    },
+  },
+  {
+    season: SEASON,
+    position: "RB",
+    teamCode: "NO",
+    firstName: "Cam",
+    lastName: "Ingram",
+    headshotUrl: "https://static.www.nfl.com/image/private/t_headshot_desktop/league/owjd2u0z6ru2nypgvtmx",
+    currentScore: 8.2,
+    overallStats: {
+      rushingYards: 644.1,
+      rushingTDs: 5,
+      receivedYards: 188.7,
+      receivedTDs: 1,
+      fumble: 1,
+    },
+    weeklyStats: {
+      rushingYards: 48.9,
+      rushingTDs: 0,
+      receivedYards: 19.4,
+      receivedTDs: 0,
+      fumble: 1,
     },
   },
 
@@ -127,10 +139,12 @@ const players = [
       rushingTDs: 1,
       fumbles: 1,
     },
-    statsSummary: {
-      line1: "Rec 1322.5 yds · 10 TD",
-      line2: "Rush 41.2 yds · 1 TD",
-      line3: "Fumble 1",
+    weeklyStats: {
+      receivedYards: 108.5,
+      receivedTDs: 1,
+      rushingYards: 6.2,
+      rushingTDs: 0,
+      fumbles: 0,
     },
   },
   {
@@ -148,10 +162,12 @@ const players = [
       rushingTDs: 0,
       fumbles: 0,
     },
-    statsSummary: {
-      line1: "Rec 1288.3 yds · 9 TD",
-      line2: "Rush 22.4 yds · 0 TD",
-      line3: "Fumble 0",
+    weeklyStats: {
+      receivedYards: 97.6,
+      receivedTDs: 1,
+      rushingYards: 4.3,
+      rushingTDs: 0,
+      fumbles: 0,
     },
   },
   {
@@ -169,10 +185,12 @@ const players = [
       rushingTDs: 0,
       fumbles: 1,
     },
-    statsSummary: {
-      line1: "Rec 611.6 yds · 4 TD",
-      line2: "Rush 9.5 yds · 0 TD",
-      line3: "Fumble 1",
+    weeklyStats: {
+      receivedYards: 43.8,
+      receivedTDs: 0,
+      rushingYards: 2.0,
+      rushingTDs: 0,
+      fumbles: 1,
     },
   },
 
@@ -191,10 +209,12 @@ const players = [
       rushingTDs: 0,
       fumbles: 0,
     },
-    statsSummary: {
-      line1: "Rec 702.4 yds · 7 TD",
-      line2: "Rush 0.0 yds · 0 TD",
-      line3: "Fumble 0",
+    weeklyStats: {
+      receivedYards: 56.4,
+      receivedTDs: 1,
+      rushingYards: 0.0,
+      rushingTDs: 0,
+      fumbles: 0,
     },
   },
   {
@@ -212,10 +232,12 @@ const players = [
       rushingTDs: 0,
       fumbles: 0,
     },
-    statsSummary: {
-      line1: "Rec 884.9 yds · 6 TD",
-      line2: "Rush 0.0 yds · 0 TD",
-      line3: "Fumble 0",
+    weeklyStats: {
+      receivedYards: 68.9,
+      receivedTDs: 1,
+      rushingYards: 0.0,
+      rushingTDs: 0,
+      fumbles: 0,
     },
   },
 
@@ -228,14 +250,14 @@ const players = [
     headshotUrl: "https://static.www.nfl.com/image/private/t_headshot_desktop/league/ugntqz8u8rj9o7c7o9ji",
     currentScore: 7.3,
     overallStats: {
-      fg0to49: 18,
-      fg50plus: 4,
+      fg0to49Yards: 18,
+      fg50plusYards: 4,
       xp: 29,
     },
-    statsSummary: {
-      line1: "0-49 yds: 18",
-      line2: "50+ yds: 4",
-      line3: "XP: 29",
+    weeklyStats: {
+      fg0to49Yards: 3,
+      fg50plusYards: 1,
+      xp: 5,
     },
   },
   {
@@ -247,14 +269,14 @@ const players = [
     headshotUrl: "https://static.www.nfl.com/image/private/t_headshot_desktop/league/yrh3wdclx8p8wz0tqeq7",
     currentScore: 9.1,
     overallStats: {
-      fg0to49: 22,
-      fg50plus: 6,
+      fg0to49Yards: 22,
+      fg50plusYards: 6,
       xp: 31,
     },
-    statsSummary: {
-      line1: "0-49 yds: 22",
-      line2: "50+ yds: 6",
-      line3: "XP: 31",
+    weeklyStats: {
+      fg0to49Yards: 2,
+      fg50plusYards: 1,
+      xp: 4,
     },
   },
 
@@ -276,10 +298,13 @@ const players = [
       returnTD: 2,
       allowedPoints: 24,
     },
-    statsSummary: {
-      line1: "INT 8 · FF 7 · Sack 31",
-      line2: "Safety 1 · Return TD 2",
-      line3: "Allowed points 24",
+    weeklyStats: {
+      interception: 2,
+      forcedFumble: 1,
+      sack: 4,
+      safety: 0,
+      returnTD: 1,
+      allowedPoints: 24,
     },
   },
   {
@@ -300,10 +325,13 @@ const players = [
       returnTD: 1,
       allowedPoints: 19,
     },
-    statsSummary: {
-      line1: "INT 10 · FF 6 · Sack 35",
-      line2: "Safety 0 · Return TD 1",
-      line3: "Allowed points 19",
+    weeklyStats: {
+      interception: 1,
+      forcedFumble: 2,
+      sack: 5,
+      safety: 0,
+      returnTD: 0,
+      allowedPoints: 17,
     },
   },
 ];

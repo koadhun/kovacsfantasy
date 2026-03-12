@@ -147,7 +147,7 @@ model PerfectChallengePlayer {
   isDefense      Boolean  @default(false)
   currentScore   Float    @default(0)
   overallStats   Json
-  statsSummary   Json
+  weeklyStats    Json
   isActive       Boolean  @default(true)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt

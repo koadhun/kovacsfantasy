@@ -34,11 +34,30 @@ function normalizePlayer(player) {
     isDefense: player.isDefense,
     currentScore: player.currentScore,
     overallStats: player.overallStats,
-    statsSummary: player.statsSummary,
+    weeklyStats: player.weeklyStats,
   };
 }
 
+async function ensureUserExists(userId) {
+  if (!userId) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true, username: true, role: true },
+  });
+
+  return user;
+}
+
 async function getOrCreateRoster(userId, season, week) {
+  const existingUser = await ensureUserExists(userId);
+
+  if (!existingUser) {
+    const err = new Error("Authenticated user not found in database.");
+    err.statusCode = 401;
+    throw err;
+  }
+
   let roster = await prisma.perfectChallengeRoster.findUnique({
     where: {
       userId_season_week: {
@@ -87,7 +106,7 @@ router.get("/week", requireAuth, async (req, res) => {
   try {
     const season = Number(req.query.season || DEFAULT_SEASON);
     const week = Number(req.query.week || 1);
-    const userId = req.user.id;
+    const userId = req.user?.id;
 
     const roster = await getOrCreateRoster(userId, season, week);
 
@@ -131,6 +150,13 @@ router.get("/week", requireAuth, async (req, res) => {
     });
   } catch (error) {
     console.error("GET /api/perfect-challenge/week error:", error);
+
+    if (error.statusCode === 401) {
+      return res.status(401).json({
+        error: "A bejelentkezett felhasználó nem található az adatbázisban. Jelentkezz ki, majd be újra.",
+      });
+    }
+
     return res.status(500).json({
       error: "Nem sikerült betölteni a Perfect Challenge heti adatokat.",
     });
@@ -139,8 +165,15 @@ router.get("/week", requireAuth, async (req, res) => {
 
 router.put("/slot", requireAuth, async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.id;
     const { season, week, slot, playerId } = req.body || {};
+
+    const existingUser = await ensureUserExists(userId);
+    if (!existingUser) {
+      return res.status(401).json({
+        error: "A bejelentkezett felhasználó nem található az adatbázisban. Jelentkezz ki, majd be újra.",
+      });
+    }
 
     if (!season || !week || !slot || !playerId) {
       return res.status(400).json({
