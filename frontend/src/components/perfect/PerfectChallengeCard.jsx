@@ -118,6 +118,15 @@ export default function PerfectChallengeCard({
 
   const showHeadshot = !!player?.headshotUrl && !imgFailed;
 
+  function handleImgError() {
+    console.warn(
+      "[PerfectChallengeCard] Headshot failed:",
+      displayName,
+      player?.headshotUrl
+    );
+    setImgFailed(true);
+  }
+
   return (
     <div className="pc-card-wrap">
       <div className={`pc-card ${flipped ? "is-flipped" : ""}`}>
@@ -133,7 +142,7 @@ export default function PerfectChallengeCard({
                       <img
                         src={player.headshotUrl}
                         alt={displayName}
-                        onError={() => setImgFailed(true)}
+                        onError={handleImgError}
                       />
                     ) : (
                       <div className="pc-headshot-fallback">
