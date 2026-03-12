@@ -28,18 +28,65 @@ const DECIMAL_KEYS = new Set([
   "receivedYards",
 ]);
 
+const STAT_ORDER_BY_POSITION = {
+  QB: [
+    "passingYards",
+    "passingTDs",
+    "interceptions",
+    "rushingYards",
+    "rushingTDs",
+    "fumble",
+  ],
+  RB: [
+    "rushingYards",
+    "rushingTDs",
+    "receivedYards",
+    "receivedTDs",
+    "fumble",
+  ],
+  WR: [
+    "receivedYards",
+    "receivedTDs",
+    "rushingYards",
+    "rushingTDs",
+    "fumbles",
+  ],
+  TE: [
+    "receivedYards",
+    "receivedTDs",
+    "rushingYards",
+    "rushingTDs",
+    "fumbles",
+  ],
+  K: [
+    "fg0to49Yards",
+    "fg50plusYards",
+    "xp",
+  ],
+  DEF: [
+    "interception",
+    "forcedFumble",
+    "sack",
+    "safety",
+    "returnTD",
+    "allowedPoints",
+  ],
+};
+
 function formatValue(key, value) {
   if (value == null) return "-";
   if (DECIMAL_KEYS.has(key)) return Number(value).toFixed(1);
   return value;
 }
 
-function statRows(stats) {
-  if (!stats) return [];
-  return Object.entries(stats).map(([key, value]) => ({
+function orderedStatRows(position, stats) {
+  if (!stats || !position) return [];
+
+  const order = STAT_ORDER_BY_POSITION[position] || [];
+  return order.map((key) => ({
     key,
     label: LABELS[key] || key,
-    value: formatValue(key, value),
+    value: formatValue(key, stats[key]),
   }));
 }
 
@@ -51,12 +98,12 @@ export default function PerfectChallengeCard({
   const [flipped, setFlipped] = useState(false);
 
   const overallRows = useMemo(
-    () => statRows(player?.overallStats),
+    () => orderedStatRows(player?.position, player?.overallStats),
     [player]
   );
 
   const weeklyRows = useMemo(
-    () => statRows(player?.weeklyStats),
+    () => orderedStatRows(player?.position, player?.weeklyStats),
     [player]
   );
 
@@ -128,9 +175,7 @@ export default function PerfectChallengeCard({
         </div>
 
         <div className="pc-card-face pc-card-back">
-          <div className="pc-slot-badge">
-            {slot} · OVERALL STATS
-          </div>
+          <div className="pc-slot-badge">{slot} · OVERALL STATS</div>
 
           {player ? (
             <>
