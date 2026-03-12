@@ -87,17 +87,17 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
         padding: "0 16px",
         minHeight: 58,
         borderColor: winner
-          ? "rgba(255,255,255,.16)"
+          ? "rgba(255,255,255,.24)"
           : highlighted
           ? "rgba(59,130,246,.24)"
           : "rgba(255,255,255,.10)",
         background: winner
-          ? "linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02))"
+          ? "linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.03))"
           : highlighted
           ? "rgba(20,40,90,.14)"
           : "rgba(255,255,255,.015)",
         boxShadow: winner
-          ? "inset 0 0 0 1px rgba(255,255,255,.025)"
+          ? "inset 3px 0 0 rgba(255,255,255,.18), inset 0 0 0 1px rgba(255,255,255,.035)"
           : undefined,
       }}
     >
@@ -119,6 +119,7 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            color: winner ? "#ffffff" : "rgba(255,255,255,.94)",
           }}
         >
           {teamName(team)}
@@ -128,11 +129,11 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
       <div
         style={{
           fontWeight: 900,
-          fontSize: 18,
+          fontSize: winner ? 19 : 18,
           minWidth: 26,
           textAlign: "right",
           flexShrink: 0,
-          color: winner ? "rgba(255,255,255,.98)" : "rgba(255,255,255,.9)",
+          color: winner ? "#ffffff" : "rgba(255,255,255,.9)",
         }}
       >
         {score}
