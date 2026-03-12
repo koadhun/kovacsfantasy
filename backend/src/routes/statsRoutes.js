@@ -142,13 +142,6 @@ const COLUMNS_BY_CATEGORY = {
   ],
 };
 
-const SEARCH_COLUMNS = [
-  { key: "player", label: "Player" },
-  { key: "statCategoryLabel", label: "Category" },
-  { key: "team", label: "Team" },
-  { key: "pos", label: "Pos" },
-];
-
 function compare(a, b, dir) {
   if (a === b) return 0;
   if (a === undefined || a === null) return 1;
@@ -199,49 +192,75 @@ router.get("/player", (req, res) => {
   const page = Math.max(1, Number(req.query.page || 1));
   const limit = Math.min(50, Math.max(5, Number(req.query.limit || 10)));
 
-  const searchMode = !!q;
-  const requestedSortKey = String(
-    req.query.sortKey ||
-      (searchMode ? "player" : defaultSortKeyForCategory(category))
-  );
-  const sortDir =
-    req.query.sortDir === "asc" ? "asc" : searchMode ? "asc" : "desc";
-
   const seasonData = PLAYER_STATS_SEED[season] || {};
+  const searchMode = !!q;
 
   let rows = [];
   let columns = [];
+  let requestedSortKey = String(
+    req.query.sortKey ||
+      (searchMode ? "player" : defaultSortKeyForCategory(category))
+  );
+  let sortDir =
+    req.query.sortDir === "asc" ? "asc" : searchMode ? "asc" : "desc";
 
   if (searchMode) {
-    rows = CATEGORIES.flatMap((cat) => {
+    const results = [];
+
+    for (const cat of CATEGORIES) {
       const sourceRows = Array.isArray(seasonData[cat.key]) ? seasonData[cat.key] : [];
-      return sourceRows
-        .filter((r) =>
-          String(r.player || "").toLowerCase().includes(q)
-        )
-        .map((r) => ({
-          player: r.player,
-          team: r.team,
-          pos: r.pos,
+      const categoryColumns = COLUMNS_BY_CATEGORY[cat.key] || [
+        { key: "player", label: "Player" },
+      ];
+
+      for (const row of sourceRows) {
+        if (!String(row.player || "").toLowerCase().includes(q)) continue;
+
+        results.push({
+          ...row,
           statCategory: cat.key,
           statCategoryLabel: cat.label,
-        }));
-    });
+        });
 
-    columns = SEARCH_COLUMNS;
+        for (const col of categoryColumns) {
+          if (col.key === "player") continue;
+
+          if (!columns.some((existing) => existing.key === col.key)) {
+            columns.push(col);
+          }
+        }
+      }
+    }
+
+    rows = results;
+
+    columns = [
+      { key: "player", label: "Player" },
+      { key: "statCategoryLabel", label: "Category" },
+      { key: "team", label: "Team" },
+      { key: "pos", label: "Pos" },
+      ...columns.filter(
+        (col) =>
+          !["team", "pos", "statCategoryLabel"].includes(col.key)
+      ),
+    ];
+
+    const validSearchKeys = new Set(columns.map((c) => c.key));
+    if (!validSearchKeys.has(requestedSortKey)) {
+      requestedSortKey = "player";
+      sortDir = "asc";
+    }
   } else {
     rows = Array.isArray(seasonData[category]) ? seasonData[category] : [];
     columns = COLUMNS_BY_CATEGORY[category] || [{ key: "player", label: "Player" }];
+
+    const validKeys = new Set(columns.map((c) => c.key));
+    if (!validKeys.has(requestedSortKey)) {
+      requestedSortKey = defaultSortKeyForCategory(category);
+    }
   }
 
-  const validColumnKeys = new Set(columns.map((c) => c.key));
-  const sortKey = validColumnKeys.has(requestedSortKey)
-    ? requestedSortKey
-    : searchMode
-    ? "player"
-    : defaultSortKeyForCategory(category);
-
-  rows = [...rows].sort((ra, rb) => compare(ra[sortKey], rb[sortKey], sortDir));
+  rows = [...rows].sort((ra, rb) => compare(ra[requestedSortKey], rb[requestedSortKey], sortDir));
 
   const total = rows.length;
   const totalPages = Math.max(1, Math.ceil(total / limit));
@@ -259,7 +278,7 @@ router.get("/player", (req, res) => {
       page: safePage,
       totalPages,
       limit,
-      sortKey,
+      sortKey: requestedSortKey,
       sortDir,
       q,
       searchMode,

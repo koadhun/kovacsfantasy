@@ -168,7 +168,7 @@ export default function Stats() {
           <h3 style={{ margin: 0 }}>
             {meta?.season || season} ·{" "}
             {searchMode
-              ? `Search results${q ? ` for "${q}"` : ""}`
+              ? `Search results for "${q}"`
               : categories.find((c) => c.key === category)?.label || category}
           </h3>
           <div className="muted">{meta ? `${meta.total} results` : ""}</div>
@@ -253,7 +253,6 @@ export default function Stats() {
                             <span>
                               {team}
                               {pos ? ` · ${pos}` : ""}
-                              {r.statCategoryLabel ? ` · ${r.statCategoryLabel}` : ""}
                             </span>
                           </div>
                         </div>
