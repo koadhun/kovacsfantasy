@@ -1,5 +1,9 @@
 const SEASON = 2025;
 
+function espnHeadshot(id) {
+  return `https://a.espncdn.com/i/headshots/nfl/players/full/${id}.png`;
+}
+
 export const perfectChallengePlayers = [
   // QB
   {
@@ -8,8 +12,7 @@ export const perfectChallengePlayers = [
     teamCode: "BUF",
     firstName: "Josh",
     lastName: "Allen",
-    headshotUrl:
-      "https://static.www.nfl.com/image/private/t_headshot_desktop/league/sb8whj4z5m8q4rj2sqiy",
+    headshotUrl: espnHeadshot(3918298),
     currentScore: 24.8,
     overallStats: {
       passingYards: 3285.2,
@@ -34,8 +37,7 @@ export const perfectChallengePlayers = [
     teamCode: "KC",
     firstName: "Patrick",
     lastName: "Mahomes",
-    headshotUrl:
-      "https://static.www.nfl.com/image/private/t_headshot_desktop/league/qw9fzh4usx1dx3vgtpga",
+    headshotUrl: espnHeadshot(3139477),
     currentScore: 22.1,
     overallStats: {
       passingYards: 3176.9,
@@ -60,7 +62,7 @@ export const perfectChallengePlayers = [
     teamCode: "PHI",
     firstName: "Jalen",
     lastName: "Hurts",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(4040715),
     currentScore: 23.4,
     overallStats: {
       passingYards: 2950.8,
@@ -85,7 +87,7 @@ export const perfectChallengePlayers = [
     teamCode: "DET",
     firstName: "Jared",
     lastName: "Goff",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(3046779),
     currentScore: 20.9,
     overallStats: {
       passingYards: 3441.7,
@@ -112,8 +114,7 @@ export const perfectChallengePlayers = [
     teamCode: "SF",
     firstName: "Christian",
     lastName: "McCaffrey",
-    headshotUrl:
-      "https://static.www.nfl.com/image/private/t_headshot_desktop/league/jl8ahwht6tmivuxqzqdg",
+    headshotUrl: espnHeadshot(3117251),
     currentScore: 19.6,
     overallStats: {
       rushingYards: 1184.2,
@@ -136,8 +137,7 @@ export const perfectChallengePlayers = [
     teamCode: "DET",
     firstName: "Jahmyr",
     lastName: "Gibbs",
-    headshotUrl:
-      "https://static.www.nfl.com/image/private/t_headshot_desktop/league/krg0q5e4ybxkschjwhdx",
+    headshotUrl: espnHeadshot(4429795),
     currentScore: 16.4,
     overallStats: {
       rushingYards: 902.8,
@@ -160,8 +160,7 @@ export const perfectChallengePlayers = [
     teamCode: "NO",
     firstName: "Cam",
     lastName: "Ingram",
-    headshotUrl:
-      "https://static.www.nfl.com/image/private/t_headshot_desktop/league/owjd2u0z6ru2nypgvtmx",
+    headshotUrl: null,
     currentScore: 8.2,
     overallStats: {
       rushingYards: 644.1,
@@ -184,7 +183,7 @@ export const perfectChallengePlayers = [
     teamCode: "ATL",
     firstName: "Bijan",
     lastName: "Robinson",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(4430807),
     currentScore: 17.1,
     overallStats: {
       rushingYards: 1018.3,
@@ -207,7 +206,7 @@ export const perfectChallengePlayers = [
     teamCode: "PHI",
     firstName: "Saquon",
     lastName: "Barkley",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(3929630),
     currentScore: 18.3,
     overallStats: {
       rushingYards: 1097.5,
@@ -230,7 +229,7 @@ export const perfectChallengePlayers = [
     teamCode: "GB",
     firstName: "Josh",
     lastName: "Jacobs",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(4047365),
     currentScore: 15.0,
     overallStats: {
       rushingYards: 963.7,
@@ -255,8 +254,7 @@ export const perfectChallengePlayers = [
     teamCode: "MIA",
     firstName: "Tyreek",
     lastName: "Hill",
-    headshotUrl:
-      "https://static.www.nfl.com/image/private/t_headshot_desktop/league/df3s3j4w7kqf4m0o5q8r",
+    headshotUrl: espnHeadshot(3116406),
     currentScore: 18.5,
     overallStats: {
       receivedYards: 1322.5,
@@ -279,8 +277,7 @@ export const perfectChallengePlayers = [
     teamCode: "DAL",
     firstName: "CeeDee",
     lastName: "Lamb",
-    headshotUrl:
-      "https://static.www.nfl.com/image/private/t_headshot_desktop/league/j0hyn9w5w6byh9vxqth8",
+    headshotUrl: espnHeadshot(4241389),
     currentScore: 17.9,
     overallStats: {
       receivedYards: 1288.3,
@@ -303,7 +300,7 @@ export const perfectChallengePlayers = [
     teamCode: "MIN",
     firstName: "Justin",
     lastName: "Jefferson",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(4262921),
     currentScore: 18.1,
     overallStats: {
       receivedYards: 1264.4,
@@ -326,7 +323,7 @@ export const perfectChallengePlayers = [
     teamCode: "CIN",
     firstName: "Ja'Marr",
     lastName: "Chase",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(4362628),
     currentScore: 17.4,
     overallStats: {
       receivedYards: 1186.9,
@@ -372,8 +369,7 @@ export const perfectChallengePlayers = [
     teamCode: "CAR",
     firstName: "Kelvin",
     lastName: "Benjamin",
-    headshotUrl:
-      "https://static.www.nfl.com/image/private/t_headshot_desktop/league/yrk6rj3byc2hfa7b5cxe",
+    headshotUrl: null,
     currentScore: 6.7,
     overallStats: {
       receivedYards: 611.6,
@@ -398,8 +394,7 @@ export const perfectChallengePlayers = [
     teamCode: "KC",
     firstName: "Travis",
     lastName: "Kelce",
-    headshotUrl:
-      "https://static.www.nfl.com/image/private/t_headshot_desktop/league/yy4ax1xihm8kwv4n4h9a",
+    headshotUrl: espnHeadshot(15847),
     currentScore: 13.2,
     overallStats: {
       receivedYards: 884.9,
@@ -422,7 +417,7 @@ export const perfectChallengePlayers = [
     teamCode: "SF",
     firstName: "George",
     lastName: "Kittle",
-    headshotUrl: null,
+    headshotUrl: espnHeadshot(3040151),
     currentScore: 12.7,
     overallStats: {
       receivedYards: 761.5,
@@ -468,8 +463,7 @@ export const perfectChallengePlayers = [
     teamCode: "NO",
     firstName: "Jimmy",
     lastName: "Graham",
-    headshotUrl:
-      "https://static.www.nfl.com/image/private/t_headshot_desktop/league/s6wn6gijv3t6x7r0v9qx",
+    headshotUrl: null,
     currentScore: 14.6,
     overallStats: {
       receivedYards: 702.4,
@@ -494,8 +488,7 @@ export const perfectChallengePlayers = [
     teamCode: "BAL",
     firstName: "Justin",
     lastName: "Tucker",
-    headshotUrl:
-      "https://static.www.nfl.com/image/private/t_headshot_desktop/league/yrh3wdclx8p8wz0tqeq7",
+    headshotUrl: espnHeadshot(15683),
     currentScore: 9.1,
     overallStats: {
       fg0to49Yards: 22,
@@ -514,8 +507,7 @@ export const perfectChallengePlayers = [
     teamCode: "CAR",
     firstName: "Graham",
     lastName: "Gano",
-    headshotUrl:
-      "https://static.www.nfl.com/image/private/t_headshot_desktop/league/ugntqz8u8rj9o7c7o9ji",
+    headshotUrl: null,
     currentScore: 7.3,
     overallStats: {
       fg0to49Yards: 18,

@@ -1,4 +1,29 @@
+import { useEffect, useState } from "react";
 import TeamLogo from "../TeamLogo";
+
+function PlayerOptionImage({ player, displayName }) {
+  const [imgFailed, setImgFailed] = useState(false);
+
+  useEffect(() => {
+    setImgFailed(false);
+  }, [player?.id]);
+
+  const showHeadshot = !!player?.headshotUrl && !imgFailed;
+
+  return (
+    <div className="pc-player-option-image">
+      {showHeadshot ? (
+        <img
+          src={player.headshotUrl}
+          alt={displayName}
+          onError={() => setImgFailed(true)}
+        />
+      ) : (
+        <TeamLogo team={player.teamCode} size={34} />
+      )}
+    </div>
+  );
+}
 
 export default function PerfectChallengeSelectorModal({
   open,
@@ -36,13 +61,7 @@ export default function PerfectChallengeSelectorModal({
                 onClick={() => onPick(player.id)}
               >
                 <div className="pc-player-option-left">
-                  <div className="pc-player-option-image">
-                    {player.headshotUrl ? (
-                      <img src={player.headshotUrl} alt={displayName} />
-                    ) : (
-                      <TeamLogo team={player.teamCode} size={34} />
-                    )}
-                  </div>
+                  <PlayerOptionImage player={player} displayName={displayName} />
 
                   <div>
                     <div className="pc-player-option-name">{displayName}</div>
@@ -59,7 +78,9 @@ export default function PerfectChallengeSelectorModal({
                   <div className="pc-player-option-score">
                     {Number(player.currentScore || 0).toFixed(1)}
                   </div>
-                  <div className="muted" style={{ fontSize: 12 }}>pts</div>
+                  <div className="muted" style={{ fontSize: 12 }}>
+                    pts
+                  </div>
                 </div>
               </button>
             );
