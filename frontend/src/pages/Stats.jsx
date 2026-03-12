@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
-import TeamLogoMini from "../components/TeamLogoMini";
+import TeamLogo from "../components/TeamLogo";
 import SeasonDropdown from "../components/SeasonDropdown";
 
 const YEARS = [2026, 2025, 2024, 2023, 2022, 2021, 2020];
@@ -33,6 +33,7 @@ export default function Stats() {
   ];
 
   const columns = meta?.columns || [{ key: "player", label: "Player" }];
+  const searchMode = !!meta?.searchMode;
 
   const displayColumns = useMemo(() => {
     return (columns || []).filter((c) => c.key !== "player");
@@ -67,7 +68,7 @@ export default function Stats() {
       setSortDir((d) => (d === "asc" ? "desc" : "asc"));
     } else {
       setSortKey(key);
-      setSortDir("desc");
+      setSortDir(key === "player" ? "asc" : "desc");
     }
     setPage(1);
   }
@@ -166,7 +167,9 @@ export default function Stats() {
         >
           <h3 style={{ margin: 0 }}>
             {meta?.season || season} ·{" "}
-            {categories.find((c) => c.key === category)?.label || category}
+            {searchMode
+              ? `Search results${q ? ` for "${q}"` : ""}`
+              : categories.find((c) => c.key === category)?.label || category}
           </h3>
           <div className="muted">{meta ? `${meta.total} results` : ""}</div>
         </div>
@@ -179,7 +182,9 @@ export default function Stats() {
                   onClick={() => toggleSort("player")}
                   onMouseEnter={() => setHoverKey("player")}
                   onMouseLeave={() => setHoverKey(null)}
-                  className={`${sortKey === "player" ? "col-active" : ""} ${hoverKey === "player" ? "col-hover" : ""}`}
+                  className={`${sortKey === "player" ? "col-active" : ""} ${
+                    hoverKey === "player" ? "col-hover" : ""
+                  }`}
                   title="Click to sort"
                   style={{ cursor: "pointer" }}
                 >
@@ -192,7 +197,9 @@ export default function Stats() {
                     onClick={() => toggleSort(c.key)}
                     onMouseEnter={() => setHoverKey(c.key)}
                     onMouseLeave={() => setHoverKey(null)}
-                    className={`${sortKey === c.key ? "col-active" : ""} ${hoverKey === c.key ? "col-hover" : ""}`}
+                    className={`${sortKey === c.key ? "col-active" : ""} ${
+                      hoverKey === c.key ? "col-hover" : ""
+                    }`}
                     title="Click to sort"
                     style={{ cursor: "pointer" }}
                   >
@@ -209,7 +216,7 @@ export default function Stats() {
                 const pos = r.pos || "";
 
                 return (
-                  <tr key={`${r.player}-${index}`}>
+                  <tr key={`${r.player}-${r.statCategory || category}-${index}`}>
                     <td>
                       <div
                         style={{
@@ -230,7 +237,7 @@ export default function Stats() {
                           {rank}
                         </div>
 
-                        <TeamLogoMini team={team} size={26} />
+                        <TeamLogo team={team} size={26} />
 
                         <div style={{ minWidth: 0 }}>
                           <div style={{ fontWeight: 800 }}>{r.player ?? "-"}</div>
@@ -246,6 +253,7 @@ export default function Stats() {
                             <span>
                               {team}
                               {pos ? ` · ${pos}` : ""}
+                              {r.statCategoryLabel ? ` · ${r.statCategoryLabel}` : ""}
                             </span>
                           </div>
                         </div>

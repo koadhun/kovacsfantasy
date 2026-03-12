@@ -36,7 +36,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "sck", label: "Sck" },
     { key: "sckY", label: "SckY" },
   ],
-
   rushing: [
     { key: "player", label: "Player" },
     { key: "rushYds", label: "Rush Yds" },
@@ -50,7 +49,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "lng", label: "Lng" },
     { key: "fum", label: "Fum" },
   ],
-
   receiving: [
     { key: "player", label: "Player" },
     { key: "rec", label: "Rec" },
@@ -65,7 +63,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "lng", label: "Lng" },
     { key: "fum", label: "Fum" },
   ],
-
   fumbles: [
     { key: "player", label: "Player" },
     { key: "fum", label: "Fum" },
@@ -75,7 +72,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "ownRec", label: "Own Rec" },
     { key: "oppRec", label: "Opp Rec" },
   ],
-
   tackles: [
     { key: "player", label: "Player" },
     { key: "comb", label: "Comb" },
@@ -87,7 +83,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "ff", label: "FF" },
     { key: "fr", label: "FR" },
   ],
-
   interceptions: [
     { key: "player", label: "Player" },
     { key: "int", label: "INT" },
@@ -96,7 +91,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "lng", label: "Lng" },
     { key: "pd", label: "PD" },
   ],
-
   field_goals: [
     { key: "player", label: "Player" },
     { key: "fgm", label: "FGM" },
@@ -107,7 +101,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "xpa", label: "XPA" },
     { key: "pts", label: "Pts" },
   ],
-
   kickoffs: [
     { key: "player", label: "Player" },
     { key: "ko", label: "KO" },
@@ -117,7 +110,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "ret", label: "Ret" },
     { key: "retYds", label: "Ret Yds" },
   ],
-
   kickoff_returns: [
     { key: "player", label: "Player" },
     { key: "ret", label: "Ret" },
@@ -128,7 +120,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "fc", label: "FC" },
     { key: "fum", label: "Fum" },
   ],
-
   punting: [
     { key: "player", label: "Player" },
     { key: "punts", label: "Punts" },
@@ -139,7 +130,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "in20", label: "In20" },
     { key: "tb", label: "TB" },
   ],
-
   punt_returns: [
     { key: "player", label: "Player" },
     { key: "ret", label: "Ret" },
@@ -151,6 +141,13 @@ const COLUMNS_BY_CATEGORY = {
     { key: "fum", label: "Fum" },
   ],
 };
+
+const SEARCH_COLUMNS = [
+  { key: "player", label: "Player" },
+  { key: "statCategoryLabel", label: "Category" },
+  { key: "team", label: "Team" },
+  { key: "pos", label: "Pos" },
+];
 
 function compare(a, b, dir) {
   if (a === b) return 0;
@@ -201,20 +198,48 @@ router.get("/player", (req, res) => {
   const q = String(req.query.q || "").toLowerCase().trim();
   const page = Math.max(1, Number(req.query.page || 1));
   const limit = Math.min(50, Math.max(5, Number(req.query.limit || 10)));
-  const sortKey = String(req.query.sortKey || defaultSortKeyForCategory(category));
-  const sortDir = req.query.sortDir === "asc" ? "asc" : "desc";
+
+  const searchMode = !!q;
+  const requestedSortKey = String(
+    req.query.sortKey ||
+      (searchMode ? "player" : defaultSortKeyForCategory(category))
+  );
+  const sortDir =
+    req.query.sortDir === "asc" ? "asc" : searchMode ? "asc" : "desc";
 
   const seasonData = PLAYER_STATS_SEED[season] || {};
-  const rowsRaw = Array.isArray(seasonData[category]) ? seasonData[category] : [];
-  const columns = COLUMNS_BY_CATEGORY[category] || [{ key: "player", label: "Player" }];
 
-  let rows = rowsRaw;
+  let rows = [];
+  let columns = [];
 
-  if (q) {
-    rows = rows.filter((r) =>
-      String(r.player || "").toLowerCase().includes(q)
-    );
+  if (searchMode) {
+    rows = CATEGORIES.flatMap((cat) => {
+      const sourceRows = Array.isArray(seasonData[cat.key]) ? seasonData[cat.key] : [];
+      return sourceRows
+        .filter((r) =>
+          String(r.player || "").toLowerCase().includes(q)
+        )
+        .map((r) => ({
+          player: r.player,
+          team: r.team,
+          pos: r.pos,
+          statCategory: cat.key,
+          statCategoryLabel: cat.label,
+        }));
+    });
+
+    columns = SEARCH_COLUMNS;
+  } else {
+    rows = Array.isArray(seasonData[category]) ? seasonData[category] : [];
+    columns = COLUMNS_BY_CATEGORY[category] || [{ key: "player", label: "Player" }];
   }
+
+  const validColumnKeys = new Set(columns.map((c) => c.key));
+  const sortKey = validColumnKeys.has(requestedSortKey)
+    ? requestedSortKey
+    : searchMode
+    ? "player"
+    : defaultSortKeyForCategory(category);
 
   rows = [...rows].sort((ra, rb) => compare(ra[sortKey], rb[sortKey], sortDir));
 
@@ -237,6 +262,7 @@ router.get("/player", (req, res) => {
       sortKey,
       sortDir,
       q,
+      searchMode,
     },
     rows: paged,
   });
