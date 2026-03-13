@@ -47,21 +47,29 @@ function normalizePlayer(player) {
     headshotUrl: player.headshotUrl,
     isDefense: player.isDefense,
     currentScore,
+    avgScore: player.avgScore,
     overallStats: player.overallStats,
     weeklyStats: player.weeklyStats,
     weeklyScoreBreakdown,
+    lastWeekOpponentTeam: player.lastWeekOpponentTeam,
+    opponentDefenseTeamCode: player.opponentDefenseTeamCode,
+    allowedPassingYards: player.allowedPassingYards,
+    allowedRushingYards: player.allowedRushingYards,
+    week: player.week,
   };
+}
+
+function sortByAvgScoreDesc(players) {
+  return [...players].sort((a, b) => Number(b.avgScore || 0) - Number(a.avgScore || 0));
 }
 
 async function ensureUserExists(userId) {
   if (!userId) return null;
 
-  const user = await prisma.user.findUnique({
+  return prisma.user.findUnique({
     where: { id: userId },
     select: { id: true, username: true, role: true },
   });
-
-  return user;
 }
 
 async function getOrCreateRoster(userId, season, week) {
@@ -128,6 +136,7 @@ router.get("/week", requireAuth, async (req, res) => {
     const pool = await prisma.perfectChallengePlayer.findMany({
       where: {
         season,
+        week,
         isActive: true,
       },
       orderBy: [
@@ -151,12 +160,12 @@ router.get("/week", requireAuth, async (req, res) => {
     const normalizedPool = pool.map(normalizePlayer);
 
     const poolByPosition = {
-      QB: normalizedPool.filter((p) => p.position === "QB"),
-      RB: normalizedPool.filter((p) => p.position === "RB"),
-      WR: normalizedPool.filter((p) => p.position === "WR"),
-      TE: normalizedPool.filter((p) => p.position === "TE"),
-      K: normalizedPool.filter((p) => p.position === "K"),
-      DEF: normalizedPool.filter((p) => p.position === "DEF"),
+      QB: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "QB")),
+      RB: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "RB")),
+      WR: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "WR")),
+      TE: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "TE")),
+      K: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "K")),
+      DEF: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "DEF")),
     };
 
     return res.json({
@@ -211,9 +220,9 @@ router.put("/slot", requireAuth, async (req, res) => {
       return res.status(404).json({ error: "Játékos nem található." });
     }
 
-    if (player.season !== Number(season)) {
+    if (player.season !== Number(season) || player.week !== Number(week)) {
       return res.status(400).json({
-        error: "A játékos nem ehhez a szezonhoz tartozik.",
+        error: "A játékos nem ehhez a szezonhoz / héthez tartozik.",
       });
     }
 

@@ -138,6 +138,7 @@ enum PerfectChallengeSlot {
 model PerfectChallengePlayer {
   id                      String   @id @default(uuid())
   season                  Int
+  week                    Int
   position                String
   teamCode                String
   firstName               String
@@ -164,7 +165,7 @@ model PerfectChallengePlayer {
 
   rosterSlots             PerfectChallengeRosterSlot[]
 
-  @@index([season, position])
+  @@index([season, week, position])
   @@index([teamCode])
 }
 

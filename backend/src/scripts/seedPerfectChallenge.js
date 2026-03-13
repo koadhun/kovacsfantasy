@@ -5,7 +5,7 @@ import { calculatePerfectChallengeScore } from "../lib/perfectChallengeScoring.j
 const SEASON = 2025;
 
 async function main() {
-  console.log("Seeding Perfect Challenge dummy players with business logic scores...");
+  console.log("Seeding Perfect Challenge weeks 1-3 with calculated scores...");
 
   const preparedPlayers = perfectChallengePlayers.map((player) => ({
     ...player,
@@ -28,7 +28,7 @@ async function main() {
   });
 
   console.log(
-    `Inserted ${preparedPlayers.length} Perfect Challenge players for season ${SEASON}.`
+    `Inserted ${preparedPlayers.length} Perfect Challenge player-week rows.`
   );
 }
 
