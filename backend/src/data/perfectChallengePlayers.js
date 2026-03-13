@@ -5,7 +5,6 @@ function espnHeadshot(id) {
 }
 
 export const perfectChallengePlayers = [
-  // QB
   {
     season: SEASON,
     position: "QB",
@@ -13,7 +12,6 @@ export const perfectChallengePlayers = [
     firstName: "Josh",
     lastName: "Allen",
     headshotUrl: espnHeadshot(3918298),
-    currentScore: 24.8,
     overallStats: {
       passingYards: 3285.2,
       passingTDs: 27,
@@ -38,7 +36,6 @@ export const perfectChallengePlayers = [
     firstName: "Patrick",
     lastName: "Mahomes",
     headshotUrl: espnHeadshot(3139477),
-    currentScore: 22.1,
     overallStats: {
       passingYards: 3176.9,
       passingTDs: 24,
@@ -63,7 +60,6 @@ export const perfectChallengePlayers = [
     firstName: "Jalen",
     lastName: "Hurts",
     headshotUrl: espnHeadshot(4040715),
-    currentScore: 23.4,
     overallStats: {
       passingYards: 2950.8,
       passingTDs: 22,
@@ -88,7 +84,6 @@ export const perfectChallengePlayers = [
     firstName: "Jared",
     lastName: "Goff",
     headshotUrl: espnHeadshot(3046779),
-    currentScore: 20.9,
     overallStats: {
       passingYards: 3441.7,
       passingTDs: 26,
@@ -101,13 +96,12 @@ export const perfectChallengePlayers = [
       passingYards: 301.6,
       passingTDs: 3,
       interceptions: 1,
-      rushingYards: 3.1,
+      rushingYards: -10,
       rushingTDs: 0,
-      fumble: 0,
+      fumble: 1,
     },
   },
 
-  // RB
   {
     season: SEASON,
     position: "RB",
@@ -115,7 +109,6 @@ export const perfectChallengePlayers = [
     firstName: "Christian",
     lastName: "McCaffrey",
     headshotUrl: espnHeadshot(3117251),
-    currentScore: 19.6,
     overallStats: {
       rushingYards: 1184.2,
       rushingTDs: 11,
@@ -138,7 +131,6 @@ export const perfectChallengePlayers = [
     firstName: "Jahmyr",
     lastName: "Gibbs",
     headshotUrl: espnHeadshot(4429795),
-    currentScore: 16.4,
     overallStats: {
       rushingYards: 902.8,
       rushingTDs: 8,
@@ -161,7 +153,6 @@ export const perfectChallengePlayers = [
     firstName: "Cam",
     lastName: "Ingram",
     headshotUrl: null,
-    currentScore: 8.2,
     overallStats: {
       rushingYards: 644.1,
       rushingTDs: 5,
@@ -184,7 +175,6 @@ export const perfectChallengePlayers = [
     firstName: "Bijan",
     lastName: "Robinson",
     headshotUrl: espnHeadshot(4430807),
-    currentScore: 17.1,
     overallStats: {
       rushingYards: 1018.3,
       rushingTDs: 7,
@@ -207,7 +197,6 @@ export const perfectChallengePlayers = [
     firstName: "Saquon",
     lastName: "Barkley",
     headshotUrl: espnHeadshot(3929630),
-    currentScore: 18.3,
     overallStats: {
       rushingYards: 1097.5,
       rushingTDs: 8,
@@ -230,7 +219,6 @@ export const perfectChallengePlayers = [
     firstName: "Josh",
     lastName: "Jacobs",
     headshotUrl: espnHeadshot(4047365),
-    currentScore: 15.0,
     overallStats: {
       rushingYards: 963.7,
       rushingTDs: 7,
@@ -247,7 +235,6 @@ export const perfectChallengePlayers = [
     },
   },
 
-  // WR
   {
     season: SEASON,
     position: "WR",
@@ -255,7 +242,6 @@ export const perfectChallengePlayers = [
     firstName: "Tyreek",
     lastName: "Hill",
     headshotUrl: espnHeadshot(3116406),
-    currentScore: 18.5,
     overallStats: {
       receivedYards: 1322.5,
       receivedTDs: 10,
@@ -278,7 +264,6 @@ export const perfectChallengePlayers = [
     firstName: "CeeDee",
     lastName: "Lamb",
     headshotUrl: espnHeadshot(4241389),
-    currentScore: 17.9,
     overallStats: {
       receivedYards: 1288.3,
       receivedTDs: 9,
@@ -301,7 +286,6 @@ export const perfectChallengePlayers = [
     firstName: "Justin",
     lastName: "Jefferson",
     headshotUrl: espnHeadshot(4262921),
-    currentScore: 18.1,
     overallStats: {
       receivedYards: 1264.4,
       receivedTDs: 9,
@@ -324,7 +308,6 @@ export const perfectChallengePlayers = [
     firstName: "Ja'Marr",
     lastName: "Chase",
     headshotUrl: espnHeadshot(4362628),
-    currentScore: 17.4,
     overallStats: {
       receivedYards: 1186.9,
       receivedTDs: 8,
@@ -347,7 +330,6 @@ export const perfectChallengePlayers = [
     firstName: "Amon-Ra",
     lastName: "St. Brown",
     headshotUrl: espnHeadshot(4374302),
-    currentScore: 16.9,
     overallStats: {
       receivedYards: 1174.6,
       receivedTDs: 8,
@@ -370,7 +352,6 @@ export const perfectChallengePlayers = [
     firstName: "Kelvin",
     lastName: "Benjamin",
     headshotUrl: espnHeadshot(16730),
-    currentScore: 6.7,
     overallStats: {
       receivedYards: 611.6,
       receivedTDs: 4,
@@ -387,7 +368,6 @@ export const perfectChallengePlayers = [
     },
   },
 
-  // TE
   {
     season: SEASON,
     position: "TE",
@@ -395,7 +375,6 @@ export const perfectChallengePlayers = [
     firstName: "Travis",
     lastName: "Kelce",
     headshotUrl: espnHeadshot(15847),
-    currentScore: 13.2,
     overallStats: {
       receivedYards: 884.9,
       receivedTDs: 6,
@@ -418,7 +397,6 @@ export const perfectChallengePlayers = [
     firstName: "George",
     lastName: "Kittle",
     headshotUrl: espnHeadshot(3040151),
-    currentScore: 12.7,
     overallStats: {
       receivedYards: 761.5,
       receivedTDs: 6,
@@ -441,7 +419,6 @@ export const perfectChallengePlayers = [
     firstName: "Sam",
     lastName: "LaPorta",
     headshotUrl: espnHeadshot(4430027),
-    currentScore: 12.1,
     overallStats: {
       receivedYards: 722.7,
       receivedTDs: 5,
@@ -464,7 +441,6 @@ export const perfectChallengePlayers = [
     firstName: "Jimmy",
     lastName: "Graham",
     headshotUrl: espnHeadshot(13232),
-    currentScore: 14.6,
     overallStats: {
       receivedYards: 702.4,
       receivedTDs: 7,
@@ -481,7 +457,6 @@ export const perfectChallengePlayers = [
     },
   },
 
-  // K
   {
     season: SEASON,
     position: "K",
@@ -489,7 +464,6 @@ export const perfectChallengePlayers = [
     firstName: "Justin",
     lastName: "Tucker",
     headshotUrl: espnHeadshot(15683),
-    currentScore: 9.1,
     overallStats: {
       fg0to49Yards: 22,
       fg50plusYards: 6,
@@ -508,7 +482,6 @@ export const perfectChallengePlayers = [
     firstName: "Graham",
     lastName: "Gano",
     headshotUrl: espnHeadshot(12460),
-    currentScore: 7.3,
     overallStats: {
       fg0to49Yards: 18,
       fg50plusYards: 4,
@@ -527,7 +500,6 @@ export const perfectChallengePlayers = [
     firstName: "Harrison",
     lastName: "Butker",
     headshotUrl: espnHeadshot(3055899),
-    currentScore: 8.7,
     overallStats: {
       fg0to49Yards: 21,
       fg50plusYards: 5,
@@ -540,7 +512,6 @@ export const perfectChallengePlayers = [
     },
   },
 
-  // DEF
   {
     season: SEASON,
     position: "DEF",
@@ -550,7 +521,6 @@ export const perfectChallengePlayers = [
     displayName: "New Orleans Saints",
     isDefense: true,
     headshotUrl: null,
-    currentScore: 6.8,
     overallStats: {
       interception: 8,
       forcedFumble: 7,
@@ -577,7 +547,6 @@ export const perfectChallengePlayers = [
     displayName: "Buffalo Bills",
     isDefense: true,
     headshotUrl: null,
-    currentScore: 8.4,
     overallStats: {
       interception: 10,
       forcedFumble: 6,
@@ -604,7 +573,6 @@ export const perfectChallengePlayers = [
     displayName: "Baltimore Ravens",
     isDefense: true,
     headshotUrl: null,
-    currentScore: 7.9,
     overallStats: {
       interception: 9,
       forcedFumble: 8,
@@ -619,7 +587,7 @@ export const perfectChallengePlayers = [
       sack: 3,
       safety: 0,
       returnTD: 0,
-      allowedPoints: 21,
+      allowedPoints: 6,
     },
   },
   {
@@ -631,7 +599,6 @@ export const perfectChallengePlayers = [
     displayName: "San Francisco 49ers",
     isDefense: true,
     headshotUrl: null,
-    currentScore: 8.1,
     overallStats: {
       interception: 11,
       forcedFumble: 6,
@@ -646,7 +613,7 @@ export const perfectChallengePlayers = [
       sack: 4,
       safety: 0,
       returnTD: 1,
-      allowedPoints: 20,
+      allowedPoints: 35,
     },
   },
 ];

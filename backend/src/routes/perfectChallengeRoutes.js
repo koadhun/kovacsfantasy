@@ -1,6 +1,10 @@
 import { Router } from "express";
 import { prisma } from "../lib/prisma.js";
 import { requireAuth } from "../middleware/requireAuth.js";
+import {
+  calculatePerfectChallengeBreakdown,
+  calculatePerfectChallengeScore,
+} from "../lib/perfectChallengeScoring.js";
 
 const router = Router();
 
@@ -23,6 +27,16 @@ const SLOT_ORDER = ["QB", "RB1", "RB2", "WR1", "WR2", "TE", "K", "DEF"];
 function normalizePlayer(player) {
   if (!player) return null;
 
+  const currentScore = calculatePerfectChallengeScore(
+    player.position,
+    player.weeklyStats || {}
+  );
+
+  const weeklyScoreBreakdown = calculatePerfectChallengeBreakdown(
+    player.position,
+    player.weeklyStats || {}
+  );
+
   return {
     id: player.id,
     position: player.position,
@@ -32,9 +46,10 @@ function normalizePlayer(player) {
     displayName: player.displayName,
     headshotUrl: player.headshotUrl,
     isDefense: player.isDefense,
-    currentScore: player.currentScore,
+    currentScore,
     overallStats: player.overallStats,
     weeklyStats: player.weeklyStats,
+    weeklyScoreBreakdown,
   };
 }
 
@@ -133,13 +148,15 @@ router.get("/week", requireAuth, async (req, res) => {
       canSwap: true,
     }));
 
+    const normalizedPool = pool.map(normalizePlayer);
+
     const poolByPosition = {
-      QB: pool.filter((p) => p.position === "QB").map(normalizePlayer),
-      RB: pool.filter((p) => p.position === "RB").map(normalizePlayer),
-      WR: pool.filter((p) => p.position === "WR").map(normalizePlayer),
-      TE: pool.filter((p) => p.position === "TE").map(normalizePlayer),
-      K: pool.filter((p) => p.position === "K").map(normalizePlayer),
-      DEF: pool.filter((p) => p.position === "DEF").map(normalizePlayer),
+      QB: normalizedPool.filter((p) => p.position === "QB"),
+      RB: normalizedPool.filter((p) => p.position === "RB"),
+      WR: normalizedPool.filter((p) => p.position === "WR"),
+      TE: normalizedPool.filter((p) => p.position === "TE"),
+      K: normalizedPool.filter((p) => p.position === "K"),
+      DEF: normalizedPool.filter((p) => p.position === "DEF"),
     };
 
     return res.json({

@@ -1,10 +1,19 @@
 import { prisma } from "../lib/prisma.js";
 import { perfectChallengePlayers } from "../data/perfectChallengePlayers.js";
+import { calculatePerfectChallengeScore } from "../lib/perfectChallengeScoring.js";
 
 const SEASON = 2025;
 
 async function main() {
-  console.log("Seeding Perfect Challenge dummy players...");
+  console.log("Seeding Perfect Challenge dummy players with business logic scores...");
+
+  const preparedPlayers = perfectChallengePlayers.map((player) => ({
+    ...player,
+    currentScore: calculatePerfectChallengeScore(
+      player.position,
+      player.weeklyStats
+    ),
+  }));
 
   await prisma.perfectChallengeRosterSlot.deleteMany();
   await prisma.perfectChallengeRoster.deleteMany({
@@ -15,11 +24,11 @@ async function main() {
   });
 
   await prisma.perfectChallengePlayer.createMany({
-    data: perfectChallengePlayers,
+    data: preparedPlayers,
   });
 
   console.log(
-    `Inserted ${perfectChallengePlayers.length} Perfect Challenge players for season ${SEASON}.`
+    `Inserted ${preparedPlayers.length} Perfect Challenge players for season ${SEASON}.`
   );
 }
 

@@ -20,12 +20,21 @@ const LABELS = {
   safety: "Safety",
   returnTD: "Return TD",
   allowedPoints: "Allowed points",
+  base: "Base",
+  allowedPointsPenalty: "Allowed points penalty",
 };
 
 const DECIMAL_KEYS = new Set([
   "passingYards",
   "rushingYards",
   "receivedYards",
+]);
+
+const SCORE_DECIMAL_KEYS = new Set([
+  "passingYards",
+  "rushingYards",
+  "receivedYards",
+  "allowedPointsPenalty",
 ]);
 
 const STAT_ORDER_BY_POSITION = {
@@ -73,10 +82,62 @@ const STAT_ORDER_BY_POSITION = {
   ],
 };
 
-function formatValue(key, value) {
+const BREAKDOWN_ORDER_BY_POSITION = {
+  QB: [
+    "passingYards",
+    "passingTDs",
+    "interceptions",
+    "rushingYards",
+    "rushingTDs",
+    "fumble",
+  ],
+  RB: [
+    "rushingYards",
+    "rushingTDs",
+    "receivedYards",
+    "receivedTDs",
+    "fumble",
+  ],
+  WR: [
+    "receivedYards",
+    "receivedTDs",
+    "rushingYards",
+    "rushingTDs",
+    "fumbles",
+  ],
+  TE: [
+    "receivedYards",
+    "receivedTDs",
+    "rushingYards",
+    "rushingTDs",
+    "fumbles",
+  ],
+  K: [
+    "fg0to49Yards",
+    "fg50plusYards",
+    "xp",
+  ],
+  DEF: [
+    "base",
+    "interception",
+    "forcedFumble",
+    "sack",
+    "safety",
+    "returnTD",
+    "allowedPointsPenalty",
+  ],
+};
+
+function formatStatValue(key, value) {
   if (value == null) return "-";
   if (DECIMAL_KEYS.has(key)) return Number(value).toFixed(1);
   return value;
+}
+
+function formatBreakdownValue(key, value) {
+  if (value == null) return "-";
+  if (SCORE_DECIMAL_KEYS.has(key)) return Number(value).toFixed(2);
+  return Number(value).toFixed(2);
 }
 
 function orderedStatRows(position, stats) {
@@ -86,7 +147,18 @@ function orderedStatRows(position, stats) {
   return order.map((key) => ({
     key,
     label: LABELS[key] || key,
-    value: formatValue(key, stats[key]),
+    value: formatStatValue(key, stats[key]),
+  }));
+}
+
+function orderedBreakdownRows(position, breakdown) {
+  if (!breakdown || !position) return [];
+
+  const order = BREAKDOWN_ORDER_BY_POSITION[position] || [];
+  return order.map((key) => ({
+    key,
+    label: LABELS[key] || key,
+    value: formatBreakdownValue(key, breakdown[key]),
   }));
 }
 
@@ -97,19 +169,36 @@ export default function PerfectChallengeCard({
 }) {
   const [flipped, setFlipped] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
+  const [backView, setBackView] = useState("stats");
 
   useEffect(() => {
     setImgFailed(false);
-  }, [player?.id]);
+    setBackView("stats");
+    setFlipped(false);
+  }, [player?.id, slot]);
 
   const weeklyRows = useMemo(
     () => orderedStatRows(player?.position, player?.weeklyStats),
     [player]
   );
 
+  const breakdownRows = useMemo(
+    () =>
+      orderedBreakdownRows(
+        player?.position,
+        player?.weeklyScoreBreakdown?.breakdown
+      ),
+    [player]
+  );
+
+  const breakdownTotal = useMemo(() => {
+    const total = player?.weeklyScoreBreakdown?.total;
+    return total == null ? "0.00" : Number(total).toFixed(2);
+  }, [player]);
+
   const score = useMemo(() => {
     if (!player) return "0.0";
-    return Number(player.currentScore || 0).toFixed(1);
+    return Number(player.currentScore || 0).toFixed(2);
   }, [player]);
 
   const displayName =
@@ -178,7 +267,7 @@ export default function PerfectChallengeCard({
                 type="button"
                 className="pc-info-btn"
                 onClick={() => setFlipped(true)}
-                title="Weekly stats"
+                title="Weekly details"
               >
                 i
               </button>
@@ -205,7 +294,9 @@ export default function PerfectChallengeCard({
         </div>
 
         <div className="pc-card-face pc-card-back">
-          <div className="pc-slot-badge">{slot} · WEEKLY STATS</div>
+          <div className="pc-slot-badge">
+            {slot} · {backView === "stats" ? "WEEKLY STATS" : "FANTASY POINTS"}
+          </div>
 
           {player ? (
             <>
@@ -214,14 +305,51 @@ export default function PerfectChallengeCard({
                 <span>{displayName}</span>
               </div>
 
-              <div className="pc-stats-grid">
-                {weeklyRows.map((row) => (
-                  <div key={row.key} className="pc-stat-row">
-                    <span className="pc-stat-label">{row.label}</span>
-                    <span className="pc-stat-value">{row.value}</span>
-                  </div>
-                ))}
+              <div className="pc-back-toggle">
+                <button
+                  type="button"
+                  className={`pc-back-toggle-btn ${
+                    backView === "stats" ? "active" : ""
+                  }`}
+                  onClick={() => setBackView("stats")}
+                >
+                  WEEKLY STATS
+                </button>
+                <button
+                  type="button"
+                  className={`pc-back-toggle-btn ${
+                    backView === "points" ? "active" : ""
+                  }`}
+                  onClick={() => setBackView("points")}
+                >
+                  FANTASY POINTS
+                </button>
               </div>
+
+              {backView === "stats" ? (
+                <div className="pc-stats-grid">
+                  {weeklyRows.map((row) => (
+                    <div key={row.key} className="pc-stat-row">
+                      <span className="pc-stat-label">{row.label}</span>
+                      <span className="pc-stat-value">{row.value}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="pc-stats-grid">
+                  {breakdownRows.map((row) => (
+                    <div key={row.key} className="pc-stat-row">
+                      <span className="pc-stat-label">{row.label}</span>
+                      <span className="pc-stat-value">{row.value}</span>
+                    </div>
+                  ))}
+
+                  <div className="pc-stat-row pc-stat-row-total">
+                    <span className="pc-stat-label">Total</span>
+                    <span className="pc-stat-value">{breakdownTotal}</span>
+                  </div>
+                </div>
+              )}
 
               <button
                 type="button"
