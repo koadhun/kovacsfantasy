@@ -302,8 +302,7 @@ export default function PerfectChallengeSelectorModal({
                   <div className="pc-side-section-title">
                     {selectedPlayer.position === "DEF"
                       ? "Defense season stats"
-                      : `Opponent defense stats vs ${selectedPlayer.currentWeekOpponentTeam || "-"}`
-                    }
+                      : "Opponent's defense stats"}
                   </div>
 
                   {opponentDefense ? (

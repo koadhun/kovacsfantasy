@@ -21,18 +21,9 @@ const basePlayers = [
       fumble: 2,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "New England Patriots", def: "NE" },
-        currentWeek: { name: "Miami Dolphins", def: "MIA" },
-      },
-      2: {
-        lastWeek: { name: "Miami Dolphins", def: "MIA" },
-        currentWeek: { name: "New York Jets", def: "NYJ" },
-      },
-      3: {
-        lastWeek: { name: "New York Jets", def: "NYJ" },
-        currentWeek: { name: "Kansas City Chiefs", def: "KC" },
-      },
+      1: { lastWeek: { name: "New England Patriots", def: "NE" }, currentWeek: { name: "Miami Dolphins", def: "MIA" } },
+      2: { lastWeek: { name: "Miami Dolphins", def: "MIA" }, currentWeek: { name: "New York Jets", def: "NYJ" } },
+      3: { lastWeek: { name: "New York Jets", def: "NYJ" }, currentWeek: { name: "Kansas City Chiefs", def: "KC" } },
     },
     weeklyByWeek: {
       1: { passingYards: 325.2, passingTDs: 4, interceptions: 1, rushingYards: 15.2, rushingTDs: 0, fumble: 0 },
@@ -56,18 +47,9 @@ const basePlayers = [
       fumble: 2,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Cincinnati Bengals", def: "CIN" },
-        currentWeek: { name: "Pittsburgh Steelers", def: "PIT" },
-      },
-      2: {
-        lastWeek: { name: "Pittsburgh Steelers", def: "PIT" },
-        currentWeek: { name: "Cleveland Browns", def: "CLE" },
-      },
-      3: {
-        lastWeek: { name: "Cleveland Browns", def: "CLE" },
-        currentWeek: { name: "Buffalo Bills", def: "BUF" },
-      },
+      1: { lastWeek: { name: "Cincinnati Bengals", def: "CIN" }, currentWeek: { name: "Pittsburgh Steelers", def: "PIT" } },
+      2: { lastWeek: { name: "Pittsburgh Steelers", def: "PIT" }, currentWeek: { name: "Cleveland Browns", def: "CLE" } },
+      3: { lastWeek: { name: "Cleveland Browns", def: "CLE" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
     },
     weeklyByWeek: {
       1: { passingYards: 223.8, passingTDs: 2, interceptions: 0, rushingYards: 84.1, rushingTDs: 1, fumble: 0 },
@@ -91,18 +73,9 @@ const basePlayers = [
       fumble: 3,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Dallas Cowboys", def: "DAL" },
-        currentWeek: { name: "New York Giants", def: "NYG" },
-      },
-      2: {
-        lastWeek: { name: "New York Giants", def: "NYG" },
-        currentWeek: { name: "Washington Commanders", def: "WAS" },
-      },
-      3: {
-        lastWeek: { name: "Washington Commanders", def: "WAS" },
-        currentWeek: { name: "Dallas Cowboys", def: "DAL" },
-      },
+      1: { lastWeek: { name: "Dallas Cowboys", def: "DAL" }, currentWeek: { name: "New York Giants", def: "NYG" } },
+      2: { lastWeek: { name: "New York Giants", def: "NYG" }, currentWeek: { name: "Washington Commanders", def: "WAS" } },
+      3: { lastWeek: { name: "Washington Commanders", def: "WAS" }, currentWeek: { name: "Dallas Cowboys", def: "DAL" } },
     },
     weeklyByWeek: {
       1: { passingYards: 248.4, passingTDs: 2, interceptions: 1, rushingYards: 48.6, rushingTDs: 1, fumble: 0 },
@@ -126,18 +99,9 @@ const basePlayers = [
       fumble: 1,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Las Vegas Raiders", def: "LV" },
-        currentWeek: { name: "Denver Broncos", def: "DEN" },
-      },
-      2: {
-        lastWeek: { name: "Denver Broncos", def: "DEN" },
-        currentWeek: { name: "Los Angeles Chargers", def: "LAC" },
-      },
-      3: {
-        lastWeek: { name: "Los Angeles Chargers", def: "LAC" },
-        currentWeek: { name: "Buffalo Bills", def: "BUF" },
-      },
+      1: { lastWeek: { name: "Las Vegas Raiders", def: "LV" }, currentWeek: { name: "Denver Broncos", def: "DEN" } },
+      2: { lastWeek: { name: "Denver Broncos", def: "DEN" }, currentWeek: { name: "Los Angeles Chargers", def: "LAC" } },
+      3: { lastWeek: { name: "Los Angeles Chargers", def: "LAC" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
     },
     weeklyByWeek: {
       1: { passingYards: 286.7, passingTDs: 3, interceptions: 0, rushingYards: 21.5, rushingTDs: 1, fumble: 0 },
@@ -161,18 +125,9 @@ const basePlayers = [
       fumble: 1,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Chicago Bears", def: "CHI" },
-        currentWeek: { name: "Green Bay Packers", def: "GB" },
-      },
-      2: {
-        lastWeek: { name: "Green Bay Packers", def: "GB" },
-        currentWeek: { name: "Minnesota Vikings", def: "MIN" },
-      },
-      3: {
-        lastWeek: { name: "Minnesota Vikings", def: "MIN" },
-        currentWeek: { name: "Chicago Bears", def: "CHI" },
-      },
+      1: { lastWeek: { name: "Chicago Bears", def: "CHI" }, currentWeek: { name: "Green Bay Packers", def: "GB" } },
+      2: { lastWeek: { name: "Green Bay Packers", def: "GB" }, currentWeek: { name: "Minnesota Vikings", def: "MIN" } },
+      3: { lastWeek: { name: "Minnesota Vikings", def: "MIN" }, currentWeek: { name: "Chicago Bears", def: "CHI" } },
     },
     weeklyByWeek: {
       1: { passingYards: 301.6, passingTDs: 3, interceptions: 1, rushingYards: -10.0, rushingTDs: 0, fumble: 1 },
@@ -196,18 +151,9 @@ const basePlayers = [
       fumble: 2,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Philadelphia Eagles", def: "PHI" },
-        currentWeek: { name: "New York Giants", def: "NYG" },
-      },
-      2: {
-        lastWeek: { name: "New York Giants", def: "NYG" },
-        currentWeek: { name: "Washington Commanders", def: "WAS" },
-      },
-      3: {
-        lastWeek: { name: "Washington Commanders", def: "WAS" },
-        currentWeek: { name: "Philadelphia Eagles", def: "PHI" },
-      },
+      1: { lastWeek: { name: "Philadelphia Eagles", def: "PHI" }, currentWeek: { name: "New York Giants", def: "NYG" } },
+      2: { lastWeek: { name: "New York Giants", def: "NYG" }, currentWeek: { name: "Washington Commanders", def: "WAS" } },
+      3: { lastWeek: { name: "Washington Commanders", def: "WAS" }, currentWeek: { name: "Philadelphia Eagles", def: "PHI" } },
     },
     weeklyByWeek: {
       1: { passingYards: 264.5, passingTDs: 2, interceptions: 1, rushingYards: 8.4, rushingTDs: 0, fumble: 0 },
@@ -231,18 +177,9 @@ const basePlayers = [
       fumble: 1,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Seattle Seahawks", def: "SEA" },
-        currentWeek: { name: "Los Angeles Rams", def: "LAR" },
-      },
-      2: {
-        lastWeek: { name: "Los Angeles Rams", def: "LAR" },
-        currentWeek: { name: "Arizona Cardinals", def: "ARI" },
-      },
-      3: {
-        lastWeek: { name: "Arizona Cardinals", def: "ARI" },
-        currentWeek: { name: "Seattle Seahawks", def: "SEA" },
-      },
+      1: { lastWeek: { name: "Seattle Seahawks", def: "SEA" }, currentWeek: { name: "Los Angeles Rams", def: "LAR" } },
+      2: { lastWeek: { name: "Los Angeles Rams", def: "LAR" }, currentWeek: { name: "Arizona Cardinals", def: "ARI" } },
+      3: { lastWeek: { name: "Arizona Cardinals", def: "ARI" }, currentWeek: { name: "Seattle Seahawks", def: "SEA" } },
     },
     weeklyByWeek: {
       1: { rushingYards: 95.6, rushingTDs: 1, receivedYards: 42.3, receivedTDs: 1, fumble: 0 },
@@ -265,18 +202,9 @@ const basePlayers = [
       fumble: 0,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Chicago Bears", def: "CHI" },
-        currentWeek: { name: "Green Bay Packers", def: "GB" },
-      },
-      2: {
-        lastWeek: { name: "Green Bay Packers", def: "GB" },
-        currentWeek: { name: "Minnesota Vikings", def: "MIN" },
-      },
-      3: {
-        lastWeek: { name: "Minnesota Vikings", def: "MIN" },
-        currentWeek: { name: "Chicago Bears", def: "CHI" },
-      },
+      1: { lastWeek: { name: "Chicago Bears", def: "CHI" }, currentWeek: { name: "Green Bay Packers", def: "GB" } },
+      2: { lastWeek: { name: "Green Bay Packers", def: "GB" }, currentWeek: { name: "Minnesota Vikings", def: "MIN" } },
+      3: { lastWeek: { name: "Minnesota Vikings", def: "MIN" }, currentWeek: { name: "Chicago Bears", def: "CHI" } },
     },
     weeklyByWeek: {
       1: { rushingYards: 78.1, rushingTDs: 1, receivedYards: 50.5, receivedTDs: 1, fumble: 0 },
@@ -299,18 +227,9 @@ const basePlayers = [
       fumble: 1,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "New Orleans Saints", def: "NO" },
-        currentWeek: { name: "Tampa Bay Buccaneers", def: "TB" },
-      },
-      2: {
-        lastWeek: { name: "Tampa Bay Buccaneers", def: "TB" },
-        currentWeek: { name: "Carolina Panthers", def: "CAR" },
-      },
-      3: {
-        lastWeek: { name: "Carolina Panthers", def: "CAR" },
-        currentWeek: { name: "New Orleans Saints", def: "NO" },
-      },
+      1: { lastWeek: { name: "New Orleans Saints", def: "NO" }, currentWeek: { name: "Tampa Bay Buccaneers", def: "TB" } },
+      2: { lastWeek: { name: "Tampa Bay Buccaneers", def: "TB" }, currentWeek: { name: "Carolina Panthers", def: "CAR" } },
+      3: { lastWeek: { name: "Carolina Panthers", def: "CAR" }, currentWeek: { name: "New Orleans Saints", def: "NO" } },
     },
     weeklyByWeek: {
       1: { rushingYards: 84.7, rushingTDs: 1, receivedYards: 26.1, receivedTDs: 0, fumble: 0 },
@@ -333,57 +252,14 @@ const basePlayers = [
       fumble: 1,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "New York Giants", def: "NYG" },
-        currentWeek: { name: "Dallas Cowboys", def: "DAL" },
-      },
-      2: {
-        lastWeek: { name: "Dallas Cowboys", def: "DAL" },
-        currentWeek: { name: "Washington Commanders", def: "WAS" },
-      },
-      3: {
-        lastWeek: { name: "Washington Commanders", def: "WAS" },
-        currentWeek: { name: "New York Giants", def: "NYG" },
-      },
+      1: { lastWeek: { name: "New York Giants", def: "NYG" }, currentWeek: { name: "Dallas Cowboys", def: "DAL" } },
+      2: { lastWeek: { name: "Dallas Cowboys", def: "DAL" }, currentWeek: { name: "Washington Commanders", def: "WAS" } },
+      3: { lastWeek: { name: "Washington Commanders", def: "WAS" }, currentWeek: { name: "New York Giants", def: "NYG" } },
     },
     weeklyByWeek: {
       1: { rushingYards: 92.8, rushingTDs: 1, receivedYards: 21.9, receivedTDs: 0, fumble: 0 },
       2: { rushingYards: 58.2, rushingTDs: 0, receivedYards: 48.0, receivedTDs: 1, fumble: 0 },
       3: { rushingYards: 117.6, rushingTDs: 2, receivedYards: 14.5, receivedTDs: 0, fumble: 0 },
-    },
-  },
-  {
-    position: "RB",
-    teamCode: "GB",
-    firstName: "Josh",
-    lastName: "Jacobs",
-    headshotUrl: espnHeadshot(4047365),
-    avgScore: 15.0,
-    overallStats: {
-      rushingYards: 963.7,
-      rushingTDs: 7,
-      receivedYards: 214.3,
-      receivedTDs: 1,
-      fumble: 2,
-    },
-    matchupByWeek: {
-      1: {
-        lastWeek: { name: "Minnesota Vikings", def: "MIN" },
-        currentWeek: { name: "Detroit Lions", def: "DET" },
-      },
-      2: {
-        lastWeek: { name: "Detroit Lions", def: "DET" },
-        currentWeek: { name: "Chicago Bears", def: "CHI" },
-      },
-      3: {
-        lastWeek: { name: "Chicago Bears", def: "CHI" },
-        currentWeek: { name: "Minnesota Vikings", def: "MIN" },
-      },
-    },
-    weeklyByWeek: {
-      1: { rushingYards: 71.4, rushingTDs: 1, receivedYards: 18.2, receivedTDs: 0, fumble: 0 },
-      2: { rushingYards: 64.8, rushingTDs: 0, receivedYards: 36.5, receivedTDs: 1, fumble: 0 },
-      3: { rushingYards: 88.1, rushingTDs: 1, receivedYards: 22.4, receivedTDs: 0, fumble: 1 },
     },
   },
 
@@ -402,18 +278,9 @@ const basePlayers = [
       fumbles: 1,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "New York Jets", def: "NYJ" },
-        currentWeek: { name: "Buffalo Bills", def: "BUF" },
-      },
-      2: {
-        lastWeek: { name: "Buffalo Bills", def: "BUF" },
-        currentWeek: { name: "New England Patriots", def: "NE" },
-      },
-      3: {
-        lastWeek: { name: "New England Patriots", def: "NE" },
-        currentWeek: { name: "New York Jets", def: "NYJ" },
-      },
+      1: { lastWeek: { name: "New York Jets", def: "NYJ" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
+      2: { lastWeek: { name: "Buffalo Bills", def: "BUF" }, currentWeek: { name: "New England Patriots", def: "NE" } },
+      3: { lastWeek: { name: "New England Patriots", def: "NE" }, currentWeek: { name: "New York Jets", def: "NYJ" } },
     },
     weeklyByWeek: {
       1: { receivedYards: 108.5, receivedTDs: 1, rushingYards: 6.2, rushingTDs: 0, fumbles: 0 },
@@ -436,18 +303,9 @@ const basePlayers = [
       fumbles: 0,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Philadelphia Eagles", def: "PHI" },
-        currentWeek: { name: "New York Giants", def: "NYG" },
-      },
-      2: {
-        lastWeek: { name: "New York Giants", def: "NYG" },
-        currentWeek: { name: "Washington Commanders", def: "WAS" },
-      },
-      3: {
-        lastWeek: { name: "Washington Commanders", def: "WAS" },
-        currentWeek: { name: "Philadelphia Eagles", def: "PHI" },
-      },
+      1: { lastWeek: { name: "Philadelphia Eagles", def: "PHI" }, currentWeek: { name: "New York Giants", def: "NYG" } },
+      2: { lastWeek: { name: "New York Giants", def: "NYG" }, currentWeek: { name: "Washington Commanders", def: "WAS" } },
+      3: { lastWeek: { name: "Washington Commanders", def: "WAS" }, currentWeek: { name: "Philadelphia Eagles", def: "PHI" } },
     },
     weeklyByWeek: {
       1: { receivedYards: 97.6, receivedTDs: 1, rushingYards: 4.3, rushingTDs: 0, fumbles: 0 },
@@ -470,18 +328,9 @@ const basePlayers = [
       fumbles: 0,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Green Bay Packers", def: "GB" },
-        currentWeek: { name: "Detroit Lions", def: "DET" },
-      },
-      2: {
-        lastWeek: { name: "Detroit Lions", def: "DET" },
-        currentWeek: { name: "Chicago Bears", def: "CHI" },
-      },
-      3: {
-        lastWeek: { name: "Chicago Bears", def: "CHI" },
-        currentWeek: { name: "Green Bay Packers", def: "GB" },
-      },
+      1: { lastWeek: { name: "Green Bay Packers", def: "GB" }, currentWeek: { name: "Detroit Lions", def: "DET" } },
+      2: { lastWeek: { name: "Detroit Lions", def: "DET" }, currentWeek: { name: "Chicago Bears", def: "CHI" } },
+      3: { lastWeek: { name: "Chicago Bears", def: "CHI" }, currentWeek: { name: "Green Bay Packers", def: "GB" } },
     },
     weeklyByWeek: {
       1: { receivedYards: 101.7, receivedTDs: 1, rushingYards: 2.4, rushingTDs: 0, fumbles: 0 },
@@ -504,18 +353,9 @@ const basePlayers = [
       fumbles: 1,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Baltimore Ravens", def: "BAL" },
-        currentWeek: { name: "Cleveland Browns", def: "CLE" },
-      },
-      2: {
-        lastWeek: { name: "Cleveland Browns", def: "CLE" },
-        currentWeek: { name: "Pittsburgh Steelers", def: "PIT" },
-      },
-      3: {
-        lastWeek: { name: "Pittsburgh Steelers", def: "PIT" },
-        currentWeek: { name: "Baltimore Ravens", def: "BAL" },
-      },
+      1: { lastWeek: { name: "Baltimore Ravens", def: "BAL" }, currentWeek: { name: "Cleveland Browns", def: "CLE" } },
+      2: { lastWeek: { name: "Cleveland Browns", def: "CLE" }, currentWeek: { name: "Pittsburgh Steelers", def: "PIT" } },
+      3: { lastWeek: { name: "Pittsburgh Steelers", def: "PIT" }, currentWeek: { name: "Baltimore Ravens", def: "BAL" } },
     },
     weeklyByWeek: {
       1: { receivedYards: 94.2, receivedTDs: 1, rushingYards: 3.0, rushingTDs: 0, fumbles: 0 },
@@ -539,18 +379,9 @@ const basePlayers = [
       fumbles: 0,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Las Vegas Raiders", def: "LV" },
-        currentWeek: { name: "Denver Broncos", def: "DEN" },
-      },
-      2: {
-        lastWeek: { name: "Denver Broncos", def: "DEN" },
-        currentWeek: { name: "Los Angeles Chargers", def: "LAC" },
-      },
-      3: {
-        lastWeek: { name: "Los Angeles Chargers", def: "LAC" },
-        currentWeek: { name: "Buffalo Bills", def: "BUF" },
-      },
+      1: { lastWeek: { name: "Las Vegas Raiders", def: "LV" }, currentWeek: { name: "Denver Broncos", def: "DEN" } },
+      2: { lastWeek: { name: "Denver Broncos", def: "DEN" }, currentWeek: { name: "Los Angeles Chargers", def: "LAC" } },
+      3: { lastWeek: { name: "Los Angeles Chargers", def: "LAC" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
     },
     weeklyByWeek: {
       1: { receivedYards: 68.9, receivedTDs: 1, rushingYards: 0.0, rushingTDs: 0, fumbles: 0 },
@@ -573,18 +404,9 @@ const basePlayers = [
       fumbles: 0,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Seattle Seahawks", def: "SEA" },
-        currentWeek: { name: "Los Angeles Rams", def: "LAR" },
-      },
-      2: {
-        lastWeek: { name: "Los Angeles Rams", def: "LAR" },
-        currentWeek: { name: "Arizona Cardinals", def: "ARI" },
-      },
-      3: {
-        lastWeek: { name: "Arizona Cardinals", def: "ARI" },
-        currentWeek: { name: "Seattle Seahawks", def: "SEA" },
-      },
+      1: { lastWeek: { name: "Seattle Seahawks", def: "SEA" }, currentWeek: { name: "Los Angeles Rams", def: "LAR" } },
+      2: { lastWeek: { name: "Los Angeles Rams", def: "LAR" }, currentWeek: { name: "Arizona Cardinals", def: "ARI" } },
+      3: { lastWeek: { name: "Arizona Cardinals", def: "ARI" }, currentWeek: { name: "Seattle Seahawks", def: "SEA" } },
     },
     weeklyByWeek: {
       1: { receivedYards: 61.4, receivedTDs: 1, rushingYards: 0.0, rushingTDs: 0, fumbles: 0 },
@@ -607,18 +429,9 @@ const basePlayers = [
       fumbles: 0,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Chicago Bears", def: "CHI" },
-        currentWeek: { name: "Green Bay Packers", def: "GB" },
-      },
-      2: {
-        lastWeek: { name: "Green Bay Packers", def: "GB" },
-        currentWeek: { name: "Minnesota Vikings", def: "MIN" },
-      },
-      3: {
-        lastWeek: { name: "Minnesota Vikings", def: "MIN" },
-        currentWeek: { name: "Chicago Bears", def: "CHI" },
-      },
+      1: { lastWeek: { name: "Chicago Bears", def: "CHI" }, currentWeek: { name: "Green Bay Packers", def: "GB" } },
+      2: { lastWeek: { name: "Green Bay Packers", def: "GB" }, currentWeek: { name: "Minnesota Vikings", def: "MIN" } },
+      3: { lastWeek: { name: "Minnesota Vikings", def: "MIN" }, currentWeek: { name: "Chicago Bears", def: "CHI" } },
     },
     weeklyByWeek: {
       1: { receivedYards: 55.2, receivedTDs: 1, rushingYards: 0.0, rushingTDs: 0, fumbles: 0 },
@@ -640,18 +453,9 @@ const basePlayers = [
       xp: 31,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Cincinnati Bengals", def: "CIN" },
-        currentWeek: { name: "Pittsburgh Steelers", def: "PIT" },
-      },
-      2: {
-        lastWeek: { name: "Pittsburgh Steelers", def: "PIT" },
-        currentWeek: { name: "Cleveland Browns", def: "CLE" },
-      },
-      3: {
-        lastWeek: { name: "Cleveland Browns", def: "CLE" },
-        currentWeek: { name: "Buffalo Bills", def: "BUF" },
-      },
+      1: { lastWeek: { name: "Cincinnati Bengals", def: "CIN" }, currentWeek: { name: "Pittsburgh Steelers", def: "PIT" } },
+      2: { lastWeek: { name: "Pittsburgh Steelers", def: "PIT" }, currentWeek: { name: "Cleveland Browns", def: "CLE" } },
+      3: { lastWeek: { name: "Cleveland Browns", def: "CLE" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
     },
     weeklyByWeek: {
       1: { fg0to49Yards: 2, fg50plusYards: 1, xp: 4 },
@@ -672,18 +476,9 @@ const basePlayers = [
       xp: 29,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Tampa Bay Buccaneers", def: "TB" },
-        currentWeek: { name: "Atlanta Falcons", def: "ATL" },
-      },
-      2: {
-        lastWeek: { name: "Atlanta Falcons", def: "ATL" },
-        currentWeek: { name: "New Orleans Saints", def: "NO" },
-      },
-      3: {
-        lastWeek: { name: "New Orleans Saints", def: "NO" },
-        currentWeek: { name: "Tampa Bay Buccaneers", def: "TB" },
-      },
+      1: { lastWeek: { name: "Tampa Bay Buccaneers", def: "TB" }, currentWeek: { name: "Atlanta Falcons", def: "ATL" } },
+      2: { lastWeek: { name: "Atlanta Falcons", def: "ATL" }, currentWeek: { name: "New Orleans Saints", def: "NO" } },
+      3: { lastWeek: { name: "New Orleans Saints", def: "NO" }, currentWeek: { name: "Tampa Bay Buccaneers", def: "TB" } },
     },
     weeklyByWeek: {
       1: { fg0to49Yards: 3, fg50plusYards: 1, xp: 5 },
@@ -704,18 +499,9 @@ const basePlayers = [
       xp: 28,
     },
     matchupByWeek: {
-      1: {
-        lastWeek: { name: "Las Vegas Raiders", def: "LV" },
-        currentWeek: { name: "Denver Broncos", def: "DEN" },
-      },
-      2: {
-        lastWeek: { name: "Denver Broncos", def: "DEN" },
-        currentWeek: { name: "Los Angeles Chargers", def: "LAC" },
-      },
-      3: {
-        lastWeek: { name: "Los Angeles Chargers", def: "LAC" },
-        currentWeek: { name: "Buffalo Bills", def: "BUF" },
-      },
+      1: { lastWeek: { name: "Las Vegas Raiders", def: "LV" }, currentWeek: { name: "Denver Broncos", def: "DEN" } },
+      2: { lastWeek: { name: "Denver Broncos", def: "DEN" }, currentWeek: { name: "Los Angeles Chargers", def: "LAC" } },
+      3: { lastWeek: { name: "Los Angeles Chargers", def: "LAC" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
     },
     weeklyByWeek: {
       1: { fg0to49Yards: 2, fg50plusYards: 1, xp: 3 },
@@ -735,6 +521,11 @@ const basePlayers = [
     allowedPassingYards: 198.2,
     allowedRushingYards: 96.5,
     overallStats: { interception: 10, forcedFumble: 6, sack: 35, safety: 0, returnTD: 1, allowedPoints: 19 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Miami Dolphins", def: "MIA" }, currentWeek: { name: "New York Jets", def: "NYJ" } },
+      2: { lastWeek: { name: "New York Jets", def: "NYJ" }, currentWeek: { name: "Kansas City Chiefs", def: "KC" } },
+      3: { lastWeek: { name: "Kansas City Chiefs", def: "KC" }, currentWeek: { name: "Miami Dolphins", def: "MIA" } },
+    },
     weeklyByWeek: {
       1: { interception: 1, forcedFumble: 2, sack: 5, safety: 0, returnTD: 0, allowedPoints: 17 },
       2: { interception: 0, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 10 },
@@ -752,6 +543,11 @@ const basePlayers = [
     allowedPassingYards: 205.7,
     allowedRushingYards: 101.9,
     overallStats: { interception: 9, forcedFumble: 8, sack: 34, safety: 1, returnTD: 1, allowedPoints: 20 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Pittsburgh Steelers", def: "PIT" }, currentWeek: { name: "Cleveland Browns", def: "CLE" } },
+      2: { lastWeek: { name: "Cleveland Browns", def: "CLE" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
+      3: { lastWeek: { name: "Buffalo Bills", def: "BUF" }, currentWeek: { name: "Cincinnati Bengals", def: "CIN" } },
+    },
     weeklyByWeek: {
       1: { interception: 2, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 6 },
       2: { interception: 1, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 20 },
@@ -769,6 +565,11 @@ const basePlayers = [
     allowedPassingYards: 208.4,
     allowedRushingYards: 103.2,
     overallStats: { interception: 8, forcedFumble: 6, sack: 32, safety: 0, returnTD: 1, allowedPoints: 21 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Baltimore Ravens", def: "BAL" }, currentWeek: { name: "Cleveland Browns", def: "CLE" } },
+      2: { lastWeek: { name: "Cleveland Browns", def: "CLE" }, currentWeek: { name: "Cincinnati Bengals", def: "CIN" } },
+      3: { lastWeek: { name: "Cincinnati Bengals", def: "CIN" }, currentWeek: { name: "Baltimore Ravens", def: "BAL" } },
+    },
     weeklyByWeek: {
       1: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 19 },
       2: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 23 },
@@ -777,36 +578,46 @@ const basePlayers = [
   },
   {
     position: "DEF",
-    teamCode: "CLE",
-    firstName: "Cleveland",
-    lastName: "Browns",
-    displayName: "Cleveland Browns",
+    teamCode: "KC",
+    firstName: "Kansas City",
+    lastName: "Chiefs",
+    displayName: "Kansas City Chiefs",
     isDefense: true,
-    avgScore: 7.9,
-    allowedPassingYards: 220.7,
-    allowedRushingYards: 106.8,
-    overallStats: { interception: 7, forcedFumble: 5, sack: 29, safety: 0, returnTD: 1, allowedPoints: 23 },
+    avgScore: 8.8,
+    allowedPassingYards: 213.2,
+    allowedRushingYards: 101.1,
+    overallStats: { interception: 8, forcedFumble: 6, sack: 31, safety: 0, returnTD: 1, allowedPoints: 20 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Buffalo Bills", def: "BUF" }, currentWeek: { name: "Denver Broncos", def: "DEN" } },
+      2: { lastWeek: { name: "Denver Broncos", def: "DEN" }, currentWeek: { name: "Los Angeles Chargers", def: "LAC" } },
+      3: { lastWeek: { name: "Los Angeles Chargers", def: "LAC" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
+    },
     weeklyByWeek: {
-      1: { interception: 1, forcedFumble: 0, sack: 3, safety: 0, returnTD: 0, allowedPoints: 20 },
-      2: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 24 },
-      3: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 22 },
+      1: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 18 },
+      2: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 21 },
+      3: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 17 },
     },
   },
   {
     position: "DEF",
-    teamCode: "MIA",
-    firstName: "Miami",
-    lastName: "Dolphins",
-    displayName: "Miami Dolphins",
+    teamCode: "NO",
+    firstName: "New Orleans",
+    lastName: "Saints",
+    displayName: "New Orleans Saints",
     isDefense: true,
-    avgScore: 7.6,
-    allowedPassingYards: 229.4,
-    allowedRushingYards: 109.7,
-    overallStats: { interception: 6, forcedFumble: 5, sack: 27, safety: 0, returnTD: 1, allowedPoints: 24 },
+    avgScore: 8.8,
+    allowedPassingYards: 211.4,
+    allowedRushingYards: 102.8,
+    overallStats: { interception: 8, forcedFumble: 7, sack: 31, safety: 1, returnTD: 2, allowedPoints: 24 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Atlanta Falcons", def: "ATL" }, currentWeek: { name: "Tampa Bay Buccaneers", def: "TB" } },
+      2: { lastWeek: { name: "Tampa Bay Buccaneers", def: "TB" }, currentWeek: { name: "Carolina Panthers", def: "CAR" } },
+      3: { lastWeek: { name: "Carolina Panthers", def: "CAR" }, currentWeek: { name: "Atlanta Falcons", def: "ATL" } },
+    },
     weeklyByWeek: {
-      1: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 21 },
-      2: { interception: 0, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 24 },
-      3: { interception: 1, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 27 },
+      1: { interception: 2, forcedFumble: 1, sack: 4, safety: 0, returnTD: 1, allowedPoints: 24 },
+      2: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 20 },
+      3: { interception: 0, forcedFumble: 2, sack: 2, safety: 0, returnTD: 0, allowedPoints: 17 },
     },
   },
   {
@@ -820,27 +631,15 @@ const basePlayers = [
     allowedPassingYards: 209.2,
     allowedRushingYards: 101.3,
     overallStats: { interception: 8, forcedFumble: 6, sack: 32, safety: 0, returnTD: 1, allowedPoints: 21 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Buffalo Bills", def: "BUF" }, currentWeek: { name: "Miami Dolphins", def: "MIA" } },
+      2: { lastWeek: { name: "Miami Dolphins", def: "MIA" }, currentWeek: { name: "New England Patriots", def: "NE" } },
+      3: { lastWeek: { name: "New England Patriots", def: "NE" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
+    },
     weeklyByWeek: {
       1: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 20 },
       2: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 22 },
       3: { interception: 0, forcedFumble: 1, sack: 4, safety: 0, returnTD: 0, allowedPoints: 17 },
-    },
-  },
-  {
-    position: "DEF",
-    teamCode: "NE",
-    firstName: "New England",
-    lastName: "Patriots",
-    displayName: "New England Patriots",
-    isDefense: true,
-    avgScore: 7.9,
-    allowedPassingYards: 224.9,
-    allowedRushingYards: 110.3,
-    overallStats: { interception: 7, forcedFumble: 5, sack: 28, safety: 0, returnTD: 1, allowedPoints: 23 },
-    weeklyByWeek: {
-      1: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 27 },
-      2: { interception: 0, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 24 },
-      3: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 20 },
     },
   },
   {
@@ -854,6 +653,11 @@ const basePlayers = [
     allowedPassingYards: 219.8,
     allowedRushingYards: 104.2,
     overallStats: { interception: 8, forcedFumble: 6, sack: 30, safety: 0, returnTD: 1, allowedPoints: 22 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Philadelphia Eagles", def: "PHI" }, currentWeek: { name: "New York Giants", def: "NYG" } },
+      2: { lastWeek: { name: "New York Giants", def: "NYG" }, currentWeek: { name: "Washington Commanders", def: "WAS" } },
+      3: { lastWeek: { name: "Washington Commanders", def: "WAS" }, currentWeek: { name: "Philadelphia Eagles", def: "PHI" } },
+    },
     weeklyByWeek: {
       1: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 21 },
       2: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 24 },
@@ -862,70 +666,46 @@ const basePlayers = [
   },
   {
     position: "DEF",
-    teamCode: "NYG",
-    firstName: "New York",
-    lastName: "Giants",
-    displayName: "New York Giants",
+    teamCode: "PHI",
+    firstName: "Philadelphia",
+    lastName: "Eagles",
+    displayName: "Philadelphia Eagles",
     isDefense: true,
-    avgScore: 6.8,
-    allowedPassingYards: 241.2,
-    allowedRushingYards: 116.1,
-    overallStats: { interception: 5, forcedFumble: 4, sack: 26, safety: 0, returnTD: 0, allowedPoints: 27 },
+    avgScore: 8.4,
+    allowedPassingYards: 218.6,
+    allowedRushingYards: 105.5,
+    overallStats: { interception: 7, forcedFumble: 6, sack: 31, safety: 0, returnTD: 1, allowedPoints: 22 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Dallas Cowboys", def: "DAL" }, currentWeek: { name: "New York Giants", def: "NYG" } },
+      2: { lastWeek: { name: "New York Giants", def: "NYG" }, currentWeek: { name: "Washington Commanders", def: "WAS" } },
+      3: { lastWeek: { name: "Washington Commanders", def: "WAS" }, currentWeek: { name: "Dallas Cowboys", def: "DAL" } },
+    },
     weeklyByWeek: {
-      1: { interception: 0, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 28 },
-      2: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 24 },
-      3: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 31 },
+      1: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 22 },
+      2: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 20 },
+      3: { interception: 1, forcedFumble: 0, sack: 3, safety: 0, returnTD: 0, allowedPoints: 21 },
     },
   },
   {
     position: "DEF",
-    teamCode: "WAS",
-    firstName: "Washington",
-    lastName: "Commanders",
-    displayName: "Washington Commanders",
+    teamCode: "CHI",
+    firstName: "Chicago",
+    lastName: "Bears",
+    displayName: "Chicago Bears",
     isDefense: true,
-    avgScore: 6.9,
-    allowedPassingYards: 239.7,
-    allowedRushingYards: 114.4,
-    overallStats: { interception: 5, forcedFumble: 4, sack: 25, safety: 0, returnTD: 0, allowedPoints: 27 },
-    weeklyByWeek: {
-      1: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 28 },
-      2: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 24 },
-      3: { interception: 0, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 30 },
+    avgScore: 8.3,
+    allowedPassingYards: 214.1,
+    allowedRushingYards: 107.2,
+    overallStats: { interception: 8, forcedFumble: 5, sack: 31, safety: 0, returnTD: 1, allowedPoints: 22 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Detroit Lions", def: "DET" }, currentWeek: { name: "Green Bay Packers", def: "GB" } },
+      2: { lastWeek: { name: "Green Bay Packers", def: "GB" }, currentWeek: { name: "Minnesota Vikings", def: "MIN" } },
+      3: { lastWeek: { name: "Minnesota Vikings", def: "MIN" }, currentWeek: { name: "Detroit Lions", def: "DET" } },
     },
-  },
-  {
-    position: "DEF",
-    teamCode: "DEN",
-    firstName: "Denver",
-    lastName: "Broncos",
-    displayName: "Denver Broncos",
-    isDefense: true,
-    avgScore: 8.0,
-    allowedPassingYards: 221.6,
-    allowedRushingYards: 107.1,
-    overallStats: { interception: 7, forcedFumble: 5, sack: 30, safety: 0, returnTD: 1, allowedPoints: 23 },
     weeklyByWeek: {
-      1: { interception: 1, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 20 },
-      2: { interception: 1, forcedFumble: 0, sack: 3, safety: 0, returnTD: 0, allowedPoints: 17 },
-      3: { interception: 0, forcedFumble: 1, sack: 4, safety: 0, returnTD: 0, allowedPoints: 24 },
-    },
-  },
-  {
-    position: "DEF",
-    teamCode: "LAC",
-    firstName: "Los Angeles",
-    lastName: "Chargers",
-    displayName: "Los Angeles Chargers",
-    isDefense: true,
-    avgScore: 7.4,
-    allowedPassingYards: 232.8,
-    allowedRushingYards: 110.9,
-    overallStats: { interception: 6, forcedFumble: 4, sack: 28, safety: 0, returnTD: 1, allowedPoints: 25 },
-    weeklyByWeek: {
-      1: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 26 },
-      2: { interception: 1, forcedFumble: 0, sack: 3, safety: 0, returnTD: 0, allowedPoints: 23 },
-      3: { interception: 1, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 24 },
+      1: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 24 },
+      2: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 21 },
+      3: { interception: 1, forcedFumble: 0, sack: 4, safety: 0, returnTD: 0, allowedPoints: 17 },
     },
   },
   {
@@ -939,6 +719,11 @@ const basePlayers = [
     allowedPassingYards: 216.7,
     allowedRushingYards: 108.8,
     overallStats: { interception: 7, forcedFumble: 6, sack: 29, safety: 0, returnTD: 1, allowedPoints: 21 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Detroit Lions", def: "DET" }, currentWeek: { name: "Minnesota Vikings", def: "MIN" } },
+      2: { lastWeek: { name: "Minnesota Vikings", def: "MIN" }, currentWeek: { name: "Chicago Bears", def: "CHI" } },
+      3: { lastWeek: { name: "Chicago Bears", def: "CHI" }, currentWeek: { name: "Detroit Lions", def: "DET" } },
+    },
     weeklyByWeek: {
       1: { interception: 0, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 20 },
       2: { interception: 1, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 18 },
@@ -956,6 +741,11 @@ const basePlayers = [
     allowedPassingYards: 227.8,
     allowedRushingYards: 109.4,
     overallStats: { interception: 6, forcedFumble: 5, sack: 29, safety: 0, returnTD: 1, allowedPoints: 24 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Green Bay Packers", def: "GB" }, currentWeek: { name: "Detroit Lions", def: "DET" } },
+      2: { lastWeek: { name: "Detroit Lions", def: "DET" }, currentWeek: { name: "Chicago Bears", def: "CHI" } },
+      3: { lastWeek: { name: "Chicago Bears", def: "CHI" }, currentWeek: { name: "Green Bay Packers", def: "GB" } },
+    },
     weeklyByWeek: {
       1: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 24 },
       2: { interception: 0, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 23 },
@@ -964,19 +754,90 @@ const basePlayers = [
   },
   {
     position: "DEF",
-    teamCode: "CHI",
-    firstName: "Chicago",
-    lastName: "Bears",
-    displayName: "Chicago Bears",
+    teamCode: "MIA",
+    firstName: "Miami",
+    lastName: "Dolphins",
+    displayName: "Miami Dolphins",
     isDefense: true,
-    avgScore: 8.3,
-    allowedPassingYards: 214.1,
-    allowedRushingYards: 107.2,
-    overallStats: { interception: 8, forcedFumble: 5, sack: 31, safety: 0, returnTD: 1, allowedPoints: 22 },
+    avgScore: 7.6,
+    allowedPassingYards: 229.4,
+    allowedRushingYards: 109.7,
+    overallStats: { interception: 6, forcedFumble: 5, sack: 27, safety: 0, returnTD: 1, allowedPoints: 24 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Buffalo Bills", def: "BUF" }, currentWeek: { name: "New England Patriots", def: "NE" } },
+      2: { lastWeek: { name: "New England Patriots", def: "NE" }, currentWeek: { name: "New York Jets", def: "NYJ" } },
+      3: { lastWeek: { name: "New York Jets", def: "NYJ" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
+    },
     weeklyByWeek: {
-      1: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 24 },
-      2: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 21 },
-      3: { interception: 1, forcedFumble: 0, sack: 4, safety: 0, returnTD: 0, allowedPoints: 17 },
+      1: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 21 },
+      2: { interception: 0, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 24 },
+      3: { interception: 1, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 27 },
+    },
+  },
+  {
+    position: "DEF",
+    teamCode: "NE",
+    firstName: "New England",
+    lastName: "Patriots",
+    displayName: "New England Patriots",
+    isDefense: true,
+    avgScore: 7.9,
+    allowedPassingYards: 224.9,
+    allowedRushingYards: 110.3,
+    overallStats: { interception: 7, forcedFumble: 5, sack: 28, safety: 0, returnTD: 1, allowedPoints: 23 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Miami Dolphins", def: "MIA" }, currentWeek: { name: "New York Jets", def: "NYJ" } },
+      2: { lastWeek: { name: "New York Jets", def: "NYJ" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
+      3: { lastWeek: { name: "Buffalo Bills", def: "BUF" }, currentWeek: { name: "Miami Dolphins", def: "MIA" } },
+    },
+    weeklyByWeek: {
+      1: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 27 },
+      2: { interception: 0, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 24 },
+      3: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 20 },
+    },
+  },
+  {
+    position: "DEF",
+    teamCode: "DEN",
+    firstName: "Denver",
+    lastName: "Broncos",
+    displayName: "Denver Broncos",
+    isDefense: true,
+    avgScore: 8.0,
+    allowedPassingYards: 221.6,
+    allowedRushingYards: 107.1,
+    overallStats: { interception: 7, forcedFumble: 5, sack: 30, safety: 0, returnTD: 1, allowedPoints: 23 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Kansas City Chiefs", def: "KC" }, currentWeek: { name: "Los Angeles Chargers", def: "LAC" } },
+      2: { lastWeek: { name: "Los Angeles Chargers", def: "LAC" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
+      3: { lastWeek: { name: "Buffalo Bills", def: "BUF" }, currentWeek: { name: "Kansas City Chiefs", def: "KC" } },
+    },
+    weeklyByWeek: {
+      1: { interception: 1, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 20 },
+      2: { interception: 1, forcedFumble: 0, sack: 3, safety: 0, returnTD: 0, allowedPoints: 17 },
+      3: { interception: 0, forcedFumble: 1, sack: 4, safety: 0, returnTD: 0, allowedPoints: 24 },
+    },
+  },
+  {
+    position: "DEF",
+    teamCode: "LAC",
+    firstName: "Los Angeles",
+    lastName: "Chargers",
+    displayName: "Los Angeles Chargers",
+    isDefense: true,
+    avgScore: 7.4,
+    allowedPassingYards: 232.8,
+    allowedRushingYards: 110.9,
+    overallStats: { interception: 6, forcedFumble: 4, sack: 28, safety: 0, returnTD: 1, allowedPoints: 25 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Denver Broncos", def: "DEN" }, currentWeek: { name: "Buffalo Bills", def: "BUF" } },
+      2: { lastWeek: { name: "Buffalo Bills", def: "BUF" }, currentWeek: { name: "Kansas City Chiefs", def: "KC" } },
+      3: { lastWeek: { name: "Kansas City Chiefs", def: "KC" }, currentWeek: { name: "Denver Broncos", def: "DEN" } },
+    },
+    weeklyByWeek: {
+      1: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 26 },
+      2: { interception: 1, forcedFumble: 0, sack: 3, safety: 0, returnTD: 0, allowedPoints: 23 },
+      3: { interception: 1, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 24 },
     },
   },
   {
@@ -990,6 +851,11 @@ const basePlayers = [
     allowedPassingYards: 225.1,
     allowedRushingYards: 108.9,
     overallStats: { interception: 7, forcedFumble: 5, sack: 28, safety: 0, returnTD: 1, allowedPoints: 24 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "New Orleans Saints", def: "NO" }, currentWeek: { name: "Carolina Panthers", def: "CAR" } },
+      2: { lastWeek: { name: "Carolina Panthers", def: "CAR" }, currentWeek: { name: "Atlanta Falcons", def: "ATL" } },
+      3: { lastWeek: { name: "Atlanta Falcons", def: "ATL" }, currentWeek: { name: "New Orleans Saints", def: "NO" } },
+    },
     weeklyByWeek: {
       1: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 23 },
       2: { interception: 0, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 21 },
@@ -1007,6 +873,11 @@ const basePlayers = [
     allowedPassingYards: 240.3,
     allowedRushingYards: 116.8,
     overallStats: { interception: 5, forcedFumble: 4, sack: 24, safety: 0, returnTD: 0, allowedPoints: 28 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "Tampa Bay Buccaneers", def: "TB" }, currentWeek: { name: "Atlanta Falcons", def: "ATL" } },
+      2: { lastWeek: { name: "Atlanta Falcons", def: "ATL" }, currentWeek: { name: "New Orleans Saints", def: "NO" } },
+      3: { lastWeek: { name: "New Orleans Saints", def: "NO" }, currentWeek: { name: "Tampa Bay Buccaneers", def: "TB" } },
+    },
     weeklyByWeek: {
       1: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 29 },
       2: { interception: 0, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 27 },
@@ -1015,53 +886,24 @@ const basePlayers = [
   },
   {
     position: "DEF",
-    teamCode: "NO",
-    firstName: "New Orleans",
-    lastName: "Saints",
-    displayName: "New Orleans Saints",
+    teamCode: "ATL",
+    firstName: "Atlanta",
+    lastName: "Falcons",
+    displayName: "Atlanta Falcons",
     isDefense: true,
-    avgScore: 8.8,
-    allowedPassingYards: 211.4,
-    allowedRushingYards: 102.8,
-    overallStats: { interception: 8, forcedFumble: 7, sack: 31, safety: 1, returnTD: 2, allowedPoints: 24 },
-    weeklyByWeek: {
-      1: { interception: 2, forcedFumble: 1, sack: 4, safety: 0, returnTD: 1, allowedPoints: 24 },
-      2: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 20 },
-      3: { interception: 0, forcedFumble: 2, sack: 2, safety: 0, returnTD: 0, allowedPoints: 17 },
+    avgScore: 7.5,
+    allowedPassingYards: 230.5,
+    allowedRushingYards: 111.7,
+    overallStats: { interception: 6, forcedFumble: 4, sack: 28, safety: 0, returnTD: 1, allowedPoints: 25 },
+    matchupByWeek: {
+      1: { lastWeek: { name: "New Orleans Saints", def: "NO" }, currentWeek: { name: "Tampa Bay Buccaneers", def: "TB" } },
+      2: { lastWeek: { name: "Tampa Bay Buccaneers", def: "TB" }, currentWeek: { name: "Carolina Panthers", def: "CAR" } },
+      3: { lastWeek: { name: "Carolina Panthers", def: "CAR" }, currentWeek: { name: "New Orleans Saints", def: "NO" } },
     },
-  },
-  {
-    position: "DEF",
-    teamCode: "PHI",
-    firstName: "Philadelphia",
-    lastName: "Eagles",
-    displayName: "Philadelphia Eagles",
-    isDefense: true,
-    avgScore: 8.4,
-    allowedPassingYards: 218.6,
-    allowedRushingYards: 105.5,
-    overallStats: { interception: 7, forcedFumble: 6, sack: 31, safety: 0, returnTD: 1, allowedPoints: 22 },
     weeklyByWeek: {
-      1: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 22 },
-      2: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 20 },
-      3: { interception: 1, forcedFumble: 0, sack: 3, safety: 0, returnTD: 0, allowedPoints: 21 },
-    },
-  },
-  {
-    position: "DEF",
-    teamCode: "KC",
-    firstName: "Kansas City",
-    lastName: "Chiefs",
-    displayName: "Kansas City Chiefs",
-    isDefense: true,
-    avgScore: 8.8,
-    allowedPassingYards: 213.2,
-    allowedRushingYards: 101.1,
-    overallStats: { interception: 8, forcedFumble: 6, sack: 31, safety: 0, returnTD: 1, allowedPoints: 20 },
-    weeklyByWeek: {
-      1: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 18 },
-      2: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 21 },
-      3: { interception: 1, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 17 },
+      1: { interception: 0, forcedFumble: 1, sack: 2, safety: 0, returnTD: 0, allowedPoints: 26 },
+      2: { interception: 1, forcedFumble: 0, sack: 2, safety: 0, returnTD: 0, allowedPoints: 24 },
+      3: { interception: 0, forcedFumble: 1, sack: 3, safety: 0, returnTD: 0, allowedPoints: 27 },
     },
   },
 ];

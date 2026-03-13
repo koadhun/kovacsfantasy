@@ -2548,3 +2548,79 @@ th.col-active {
     overflow: auto;
   }
 }
+
+
+.pc-picker-layout-fixed {
+  min-height: 640px;
+  max-height: 640px;
+  align-items: stretch;
+}
+
+.pc-picker-left-scroll {
+  min-height: 0;
+  max-height: 640px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.pc-picker-right-fixed {
+  min-height: 0;
+  max-height: 640px;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+}
+
+.pc-picker-right-fixed .pc-side-card {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pc-picker-right-fixed .pc-side-stats {
+  overflow: hidden;
+}
+
+.pc-picker-left-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.pc-picker-left-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+}
+
+.pc-picker-left-scroll::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.55);
+  border-radius: 999px;
+}
+
+.pc-picker-left-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7);
+}
+
+@media (max-width: 1050px) {
+  .pc-picker-layout-fixed {
+    min-height: unset;
+    max-height: unset;
+  }
+
+  .pc-picker-left-scroll {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .pc-picker-right-fixed {
+    max-height: none;
+    overflow: visible;
+    grid-template-rows: auto auto;
+  }
+}
+
+.pc-player-option-opponent {
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(148, 163, 184, 0.9);
+}
