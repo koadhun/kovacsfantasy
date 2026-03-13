@@ -67,19 +67,8 @@ const STAT_ORDER_BY_POSITION = {
     "rushingTDs",
     "fumbles",
   ],
-  K: [
-    "fg0to49Yards",
-    "fg50plusYards",
-    "xp",
-  ],
-  DEF: [
-    "interception",
-    "forcedFumble",
-    "sack",
-    "safety",
-    "returnTD",
-    "allowedPoints",
-  ],
+  K: ["fg0to49Yards", "fg50plusYards", "xp"],
+  DEF: ["interception", "forcedFumble", "sack", "safety", "returnTD", "allowedPoints"],
 };
 
 const BREAKDOWN_ORDER_BY_POSITION = {
@@ -112,20 +101,8 @@ const BREAKDOWN_ORDER_BY_POSITION = {
     "rushingTDs",
     "fumbles",
   ],
-  K: [
-    "fg0to49Yards",
-    "fg50plusYards",
-    "xp",
-  ],
-  DEF: [
-    "base",
-    "interception",
-    "forcedFumble",
-    "sack",
-    "safety",
-    "returnTD",
-    "allowedPointsPenalty",
-  ],
+  K: ["fg0to49Yards", "fg50plusYards", "xp"],
+  DEF: ["base", "interception", "forcedFumble", "sack", "safety", "returnTD", "allowedPointsPenalty"],
 };
 
 function formatStatValue(key, value) {
@@ -142,8 +119,8 @@ function formatBreakdownValue(key, value) {
 
 function orderedStatRows(position, stats) {
   if (!stats || !position) return [];
-
   const order = STAT_ORDER_BY_POSITION[position] || [];
+
   return order.map((key) => ({
     key,
     label: LABELS[key] || key,
@@ -153,8 +130,8 @@ function orderedStatRows(position, stats) {
 
 function orderedBreakdownRows(position, breakdown) {
   if (!breakdown || !position) return [];
-
   const order = BREAKDOWN_ORDER_BY_POSITION[position] || [];
+
   return order.map((key) => ({
     key,
     label: LABELS[key] || key,
@@ -197,8 +174,8 @@ export default function PerfectChallengeCard({
   }, [player]);
 
   const score = useMemo(() => {
-    if (!player) return "0.00";
-    return Number(player.currentScore || 0).toFixed(2);
+    if (!player) return "0.0";
+    return Number(player.currentScore || 0).toFixed(1);
   }, [player]);
 
   const displayName =
@@ -234,37 +211,29 @@ export default function PerfectChallengeCard({
                         onError={handleImgError}
                       />
                     ) : (
-                      <div className="pc-headshot-fallback">
-                        <TeamLogo team={player.teamCode} size={52} />
-                      </div>
+                      <TeamLogo team={player.teamCode} size={68} />
                     )}
                   </div>
 
-                  <button
-                    type="button"
-                    className="pc-change-overlay"
-                    onClick={onSelect}
-                    title="Change player"
-                  >
-                    <span className="pc-change-overlay-text">Change player</span>
+                  <button className="pc-change-btn" onClick={onSelect}>
+                    Change player
                   </button>
                 </div>
 
-                <div className="pc-player-topline">
-                  <TeamLogo team={player.teamCode} size={20} />
-                  <span>{player.teamCode}</span>
-                </div>
+                <div className="pc-front-meta">
+                  <div className="pc-team-line">
+                    <TeamLogo team={player.teamCode} size={16} />
+                    <span>{player.teamCode}</span>
+                  </div>
 
-                <div className="pc-name-block">
                   <div className="pc-first-name">{player.firstName}</div>
                   <div className="pc-last-name">{player.lastName}</div>
-                </div>
 
-                <div className="pc-score">{score}</div>
+                  <div className="pc-score">{score}</div>
+                </div>
               </div>
 
               <button
-                type="button"
                 className="pc-info-btn"
                 onClick={() => setFlipped(true)}
                 title="Weekly details"
@@ -274,19 +243,11 @@ export default function PerfectChallengeCard({
             </>
           ) : (
             <>
-              <div className="pc-empty-state">
-                <div className="pc-empty-title">No player selected</div>
-                <div className="pc-empty-sub">
-                  Choose a {slot} player for this slot.
-                </div>
+              <div className="pc-empty-title">No player selected</div>
+              <div className="pc-empty-sub">
+                Choose a {slot} player for this slot.
               </div>
-
-              <button
-                type="button"
-                className="btn primary"
-                onClick={onSelect}
-                style={{ marginTop: 18 }}
-              >
+              <button className="btn primary" onClick={onSelect}>
                 Select player
               </button>
             </>
@@ -294,14 +255,13 @@ export default function PerfectChallengeCard({
         </div>
 
         <div className="pc-card-face pc-card-back">
-          <div className="pc-back-header">
+          <div className="pc-back-head">
             <div className="pc-slot-badge">
               {slot} · {backView === "stats" ? "WEEKLY STATS" : "FANTASY POINTS"}
             </div>
 
             <button
-              type="button"
-              className="pc-info-btn pc-info-btn-back"
+              className="pc-back-btn"
               onClick={() => setFlipped(false)}
               title="Back"
             >
@@ -311,26 +271,18 @@ export default function PerfectChallengeCard({
 
           {player ? (
             <>
-              <div className="pc-back-player">
-                <TeamLogo team={player.teamCode} size={18} />
-                <span>{displayName}</span>
-              </div>
+              <div className="pc-back-player-name">{displayName}</div>
 
-              <div className="pc-back-toggle pc-back-toggle-compact">
+              <div className="pc-back-tabs">
                 <button
-                  type="button"
-                  className={`pc-back-toggle-btn ${
-                    backView === "stats" ? "active" : ""
-                  }`}
+                  className={`pc-back-tab ${backView === "stats" ? "active" : ""}`}
                   onClick={() => setBackView("stats")}
                 >
                   Stats
                 </button>
+
                 <button
-                  type="button"
-                  className={`pc-back-toggle-btn ${
-                    backView === "points" ? "active" : ""
-                  }`}
+                  className={`pc-back-tab ${backView === "points" ? "active" : ""}`}
                   onClick={() => setBackView("points")}
                 >
                   Points
@@ -338,34 +290,36 @@ export default function PerfectChallengeCard({
               </div>
 
               {backView === "stats" ? (
-                <div className="pc-stats-grid pc-stats-grid-compact">
+                <div className="pc-stat-list">
                   {weeklyRows.map((row) => (
-                    <div key={row.key} className="pc-stat-row pc-stat-row-compact">
-                      <span className="pc-stat-label">{row.label}</span>
-                      <span className="pc-stat-value">{row.value}</span>
+                    <div key={row.key} className="pc-stat-row">
+                      <span>{row.label}</span>
+                      <strong>{row.value}</strong>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="pc-stats-grid pc-stats-grid-compact">
+                <div className="pc-stat-list">
                   {breakdownRows.map((row) => (
-                    <div key={row.key} className="pc-stat-row pc-stat-row-compact">
-                      <span className="pc-stat-label">{row.label}</span>
-                      <span className="pc-stat-value">{row.value}</span>
+                    <div key={row.key} className="pc-stat-row">
+                      <span>{row.label}</span>
+                      <strong>{row.value}</strong>
                     </div>
                   ))}
 
-                  <div className="pc-stat-row pc-stat-row-total pc-stat-row-compact">
-                    <span className="pc-stat-label">Total</span>
-                    <span className="pc-stat-value">{breakdownTotal}</span>
+                  <div className="pc-stat-row total">
+                    <span>Total</span>
+                    <strong>{breakdownTotal}</strong>
                   </div>
                 </div>
               )}
             </>
           ) : (
-            <div className="pc-empty-state">
-              <div className="pc-empty-title">WEEKLY STATS</div>
-              <div className="pc-empty-sub">Select a player first.</div>
+            <div className="pc-empty-back">
+              <div className="pc-slot-badge">WEEKLY STATS</div>
+              <p className="muted" style={{ marginTop: 14 }}>
+                Select a player first.
+              </p>
             </div>
           )}
         </div>

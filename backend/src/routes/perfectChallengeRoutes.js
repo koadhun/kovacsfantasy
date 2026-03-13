@@ -24,11 +24,15 @@ const SLOT_TO_POSITION = {
 
 const SLOT_ORDER = ["QB", "RB1", "RB2", "WR1", "WR2", "TE", "K", "DEF"];
 
+function roundToOne(value) {
+  return Number(Number(value || 0).toFixed(1));
+}
+
 function getPlayerScore(player) {
   if (!player) return 0;
 
-  return Number(
-    calculatePerfectChallengeScore(player.position, player.weeklyStats || {}) || 0
+  return roundToOne(
+    calculatePerfectChallengeScore(player.position, player.weeklyStats || {})
   );
 }
 
@@ -36,7 +40,6 @@ function normalizePlayer(player) {
   if (!player) return null;
 
   const currentScore = getPlayerScore(player);
-
   const weeklyScoreBreakdown = calculatePerfectChallengeBreakdown(
     player.position,
     player.weeklyStats || {}
@@ -73,11 +76,9 @@ function sortByAvgScoreDesc(players) {
 }
 
 function sumRosterScoreFromSlots(slots = []) {
-  return slots.reduce((sum, slot) => sum + getPlayerScore(slot.player), 0);
-}
-
-function roundScore(value) {
-  return Number(Number(value || 0).toFixed(1));
+  return roundToOne(
+    slots.reduce((sum, slot) => sum + getPlayerScore(slot.player), 0)
+  );
 }
 
 async function ensureUserExists(userId) {
@@ -131,12 +132,9 @@ async function getOrCreateRoster(userId, season, week) {
   return roster;
 }
 
-async function getSeasonTotalScore(userId, season) {
+async function getSeasonSummary(userId, season) {
   const rosters = await prisma.perfectChallengeRoster.findMany({
-    where: {
-      userId,
-      season,
-    },
+    where: { userId, season },
     include: {
       slots: {
         include: {
@@ -146,12 +144,21 @@ async function getSeasonTotalScore(userId, season) {
     },
   });
 
-  const total = rosters.reduce(
+  const totalPoints = rosters.reduce(
     (sum, roster) => sum + sumRosterScoreFromSlots(roster.slots),
     0
   );
 
-  return roundScore(total);
+  const selectedSlots = rosters.reduce(
+    (sum, roster) => sum + roster.slots.length,
+    0
+  );
+
+  return {
+    totalPoints: roundToOne(totalPoints),
+    selectedSlots,
+    maxSlots: rosters.length * 8,
+  };
 }
 
 router.get("/weeks", requireAuth, async (_req, res) => {
@@ -200,11 +207,11 @@ router.get("/week", requireAuth, async (req, res) => {
       DEF: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "DEF")),
     };
 
-    const weekScore = roundScore(
+    const weeklyPoints = roundToOne(
       slots.reduce((sum, slot) => sum + Number(slot.player?.currentScore || 0), 0)
     );
 
-    const seasonScore = await getSeasonTotalScore(userId, season);
+    const seasonSummary = await getSeasonSummary(userId, season);
 
     return res.json({
       season,
@@ -212,9 +219,11 @@ router.get("/week", requireAuth, async (req, res) => {
       slots,
       poolByPosition,
       summary: {
+        weeklyPoints,
+        seasonPoints: seasonSummary.totalPoints,
         selectedCount: slots.filter((slot) => !!slot.player).length,
-        weekScore,
-        seasonScore,
+        seasonSelectedCount: seasonSummary.selectedSlots,
+        seasonMaxCount: seasonSummary.maxSlots,
       },
     });
   } catch (error) {
