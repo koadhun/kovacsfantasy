@@ -136,23 +136,33 @@ enum PerfectChallengeSlot {
 }
 
 model PerfectChallengePlayer {
-  id             String   @id @default(uuid())
-  season         Int
-  position       String
-  teamCode       String
-  firstName      String
-  lastName       String
-  displayName    String?
-  headshotUrl    String?
-  isDefense      Boolean  @default(false)
-  currentScore   Float    @default(0)
-  overallStats   Json
-  weeklyStats    Json
-  isActive       Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                      String   @id @default(uuid())
+  season                  Int
+  position                String
+  teamCode                String
+  firstName               String
+  lastName                String
+  displayName             String?
+  headshotUrl             String?
+  isDefense               Boolean  @default(false)
 
-  rosterSlots    PerfectChallengeRosterSlot[]
+  currentScore            Float    @default(0)
+  avgScore                Float    @default(0)
+
+  lastWeekOpponentTeam    String?
+  opponentDefenseTeamCode String?
+
+  allowedPassingYards     Float?
+  allowedRushingYards     Float?
+
+  overallStats            Json
+  weeklyStats             Json
+
+  isActive                Boolean  @default(true)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  rosterSlots             PerfectChallengeRosterSlot[]
 
   @@index([season, position])
   @@index([teamCode])

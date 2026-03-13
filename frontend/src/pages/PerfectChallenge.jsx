@@ -79,6 +79,8 @@ export default function PerfectChallenge() {
     ? poolByPosition[SLOT_TO_POOL_KEY[modalSlot.slot]] || []
     : [];
 
+  const defensePlayers = poolByPosition.DEF || [];
+
   return (
     <div className="container page">
       <div className="hero">
@@ -91,8 +93,8 @@ export default function PerfectChallenge() {
 
         <p className="sub" style={{ maxWidth: 840 }}>
           Válassz 8 játékost fix pozíciókra bontva. A front oldalon a játékos
-          pontszáma látszik, a hátoldalon az OVERALL STATS. Ez az első körös
-          UI/DB implementáció dummy adatokkal.
+          pontszáma látszik, a hátoldalon a heti statok és a fantasy pontok
+          breakdown nézet is megtekinthető.
         </p>
 
         <div className="filters-bar" style={{ marginTop: 16 }}>
@@ -134,6 +136,8 @@ export default function PerfectChallenge() {
         open={!!modalSlot}
         title={modalSlot ? `Select player for ${modalSlot.slot}` : ""}
         players={modalPlayers}
+        defensePlayers={defensePlayers}
+        slot={modalSlot}
         onClose={() => setModalSlot(null)}
         onPick={pickPlayer}
       />
