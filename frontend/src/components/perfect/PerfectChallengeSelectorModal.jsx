@@ -68,14 +68,14 @@ const PLAYER_STAT_ORDER_BY_POSITION = {
 };
 
 const DEFENSE_STAT_ORDER = [
+  "allowedPassingYards",
+  "allowedRushingYards",
   "interception",
   "forcedFumble",
   "sack",
-  "safety",
   "returnTD",
+  "safety",
   "allowedPoints",
-  "allowedPassingYards",
-  "allowedRushingYards",
 ];
 
 const DECIMAL_KEYS = new Set([
