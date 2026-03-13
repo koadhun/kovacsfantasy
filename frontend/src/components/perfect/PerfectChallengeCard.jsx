@@ -197,7 +197,7 @@ export default function PerfectChallengeCard({
   }, [player]);
 
   const score = useMemo(() => {
-    if (!player) return "0.0";
+    if (!player) return "0.00";
     return Number(player.currentScore || 0).toFixed(2);
   }, [player]);
 
@@ -294,8 +294,19 @@ export default function PerfectChallengeCard({
         </div>
 
         <div className="pc-card-face pc-card-back">
-          <div className="pc-slot-badge">
-            {slot} · {backView === "stats" ? "WEEKLY STATS" : "FANTASY POINTS"}
+          <div className="pc-back-header">
+            <div className="pc-slot-badge">
+              {slot} · {backView === "stats" ? "WEEKLY STATS" : "FANTASY POINTS"}
+            </div>
+
+            <button
+              type="button"
+              className="pc-info-btn pc-info-btn-back"
+              onClick={() => setFlipped(false)}
+              title="Back"
+            >
+              ↺
+            </button>
           </div>
 
           {player ? (
@@ -305,7 +316,7 @@ export default function PerfectChallengeCard({
                 <span>{displayName}</span>
               </div>
 
-              <div className="pc-back-toggle">
+              <div className="pc-back-toggle pc-back-toggle-compact">
                 <button
                   type="button"
                   className={`pc-back-toggle-btn ${
@@ -313,7 +324,7 @@ export default function PerfectChallengeCard({
                   }`}
                   onClick={() => setBackView("stats")}
                 >
-                  WEEKLY STATS
+                  Stats
                 </button>
                 <button
                   type="button"
@@ -322,43 +333,34 @@ export default function PerfectChallengeCard({
                   }`}
                   onClick={() => setBackView("points")}
                 >
-                  FANTASY POINTS
+                  Points
                 </button>
               </div>
 
               {backView === "stats" ? (
-                <div className="pc-stats-grid">
+                <div className="pc-stats-grid pc-stats-grid-compact">
                   {weeklyRows.map((row) => (
-                    <div key={row.key} className="pc-stat-row">
+                    <div key={row.key} className="pc-stat-row pc-stat-row-compact">
                       <span className="pc-stat-label">{row.label}</span>
                       <span className="pc-stat-value">{row.value}</span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="pc-stats-grid">
+                <div className="pc-stats-grid pc-stats-grid-compact">
                   {breakdownRows.map((row) => (
-                    <div key={row.key} className="pc-stat-row">
+                    <div key={row.key} className="pc-stat-row pc-stat-row-compact">
                       <span className="pc-stat-label">{row.label}</span>
                       <span className="pc-stat-value">{row.value}</span>
                     </div>
                   ))}
 
-                  <div className="pc-stat-row pc-stat-row-total">
+                  <div className="pc-stat-row pc-stat-row-total pc-stat-row-compact">
                     <span className="pc-stat-label">Total</span>
                     <span className="pc-stat-value">{breakdownTotal}</span>
                   </div>
                 </div>
               )}
-
-              <button
-                type="button"
-                className="pc-info-btn"
-                onClick={() => setFlipped(false)}
-                title="Back"
-              >
-                ↺
-              </button>
             </>
           ) : (
             <div className="pc-empty-state">

@@ -1689,7 +1689,8 @@ th.col-active {
 .pc-stats-grid {
   display: grid;
   gap: 8px;
-  overflow: auto;
+  overflow: visible;
+  margin-top: 6px;
 }
 
 .pc-stat-row {
@@ -1856,7 +1857,7 @@ th.col-active {
 
 .pc-card {
   position: relative;
-  height: 390px;
+  height: 400px;
   transform-style: preserve-3d;
   transition: transform 0.45s ease;
 }
@@ -2258,6 +2259,81 @@ th.col-active {
 .pc-stat-row-total {
   margin-top: 4px;
   padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 0;
+}
+
+
+.pc-back-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.pc-info-btn-back {
+  position: static;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+.pc-back-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.pc-back-toggle-compact {
+  margin-bottom: 10px;
+}
+
+.pc-back-toggle-btn {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.72);
+  border-radius: 10px;
+  padding: 7px 8px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.pc-back-toggle-btn.active {
+  border-color: rgba(59, 130, 246, 0.34);
+  background: rgba(37, 99, 235, 0.18);
+  color: #dbeafe;
+}
+
+.pc-stats-grid-compact {
+  gap: 4px;
+  margin-top: 2px;
+  overflow: visible;
+}
+
+.pc-stat-row-compact {
+  padding-bottom: 6px;
+  padding-top: 2px;
+  min-height: 26px;
+}
+
+.pc-stat-row-compact .pc-stat-label {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.pc-stat-row-compact .pc-stat-value {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.pc-stat-row-total {
+  margin-top: 4px;
+  padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   border-bottom: 0;
 }
