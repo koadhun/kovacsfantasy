@@ -24,13 +24,18 @@ const SLOT_TO_POSITION = {
 
 const SLOT_ORDER = ["QB", "RB1", "RB2", "WR1", "WR2", "TE", "K", "DEF"];
 
+function getPlayerScore(player) {
+  if (!player) return 0;
+
+  return Number(
+    calculatePerfectChallengeScore(player.position, player.weeklyStats || {}) || 0
+  );
+}
+
 function normalizePlayer(player) {
   if (!player) return null;
 
-  const currentScore = calculatePerfectChallengeScore(
-    player.position,
-    player.weeklyStats || {}
-  );
+  const currentScore = getPlayerScore(player);
 
   const weeklyScoreBreakdown = calculatePerfectChallengeBreakdown(
     player.position,
@@ -62,7 +67,17 @@ function normalizePlayer(player) {
 }
 
 function sortByAvgScoreDesc(players) {
-  return [...players].sort((a, b) => Number(b.avgScore || 0) - Number(a.avgScore || 0));
+  return [...players].sort(
+    (a, b) => Number(b.avgScore || 0) - Number(a.avgScore || 0)
+  );
+}
+
+function sumRosterScoreFromSlots(slots = []) {
+  return slots.reduce((sum, slot) => sum + getPlayerScore(slot.player), 0);
+}
+
+function roundScore(value) {
+  return Number(Number(value || 0).toFixed(1));
 }
 
 async function ensureUserExists(userId) {
@@ -116,6 +131,29 @@ async function getOrCreateRoster(userId, season, week) {
   return roster;
 }
 
+async function getSeasonTotalScore(userId, season) {
+  const rosters = await prisma.perfectChallengeRoster.findMany({
+    where: {
+      userId,
+      season,
+    },
+    include: {
+      slots: {
+        include: {
+          player: true,
+        },
+      },
+    },
+  });
+
+  const total = rosters.reduce(
+    (sum, roster) => sum + sumRosterScoreFromSlots(roster.slots),
+    0
+  );
+
+  return roundScore(total);
+}
+
 router.get("/weeks", requireAuth, async (_req, res) => {
   return res.json({
     season: DEFAULT_SEASON,
@@ -162,11 +200,22 @@ router.get("/week", requireAuth, async (req, res) => {
       DEF: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "DEF")),
     };
 
+    const weekScore = roundScore(
+      slots.reduce((sum, slot) => sum + Number(slot.player?.currentScore || 0), 0)
+    );
+
+    const seasonScore = await getSeasonTotalScore(userId, season);
+
     return res.json({
       season,
       week,
       slots,
       poolByPosition,
+      summary: {
+        selectedCount: slots.filter((slot) => !!slot.player).length,
+        weekScore,
+        seasonScore,
+      },
     });
   } catch (error) {
     console.error("GET /api/perfect-challenge/week error:", error);

@@ -17,11 +17,20 @@ const SLOT_TO_POOL_KEY = {
   DEF: "DEF",
 };
 
+function formatScore(value) {
+  return Number(value || 0).toFixed(1);
+}
+
 export default function PerfectChallenge() {
   const [weeks, setWeeks] = useState([]);
   const [week, setWeek] = useState(1);
   const [slots, setSlots] = useState([]);
   const [poolByPosition, setPoolByPosition] = useState({});
+  const [summary, setSummary] = useState({
+    selectedCount: 0,
+    weekScore: 0,
+    seasonScore: 0,
+  });
   const [err, setErr] = useState("");
   const [modalSlot, setModalSlot] = useState(null);
 
@@ -37,8 +46,16 @@ export default function PerfectChallenge() {
     const res = await api.get("/perfect-challenge/week", {
       params: { season: SEASON, week: targetWeek },
     });
+
     setSlots(res.data?.slots || []);
     setPoolByPosition(res.data?.poolByPosition || {});
+    setSummary(
+      res.data?.summary || {
+        selectedCount: 0,
+        weekScore: 0,
+        seasonScore: 0,
+      }
+    );
   }
 
   useEffect(() => {
@@ -97,7 +114,10 @@ export default function PerfectChallenge() {
           breakdown nézet is megtekinthető.
         </p>
 
-        <div className="filters-bar" style={{ marginTop: 16 }}>
+        <div
+          className="filters-bar"
+          style={{ marginTop: 16, alignItems: "center", flexWrap: "wrap", gap: 10 }}
+        >
           <WeekDropdown
             value={week}
             options={weeks}
@@ -111,6 +131,16 @@ export default function PerfectChallenge() {
           <span className="pill">
             <span className="dot" />
             {filledCount}/8 selected
+          </span>
+
+          <span className="pill">
+            <span className="dot" />
+            Week {week} points: {formatScore(summary.weekScore)}
+          </span>
+
+          <span className="pill">
+            <span className="dot" />
+            Season total: {formatScore(summary.seasonScore)}
           </span>
         </div>
       </div>
