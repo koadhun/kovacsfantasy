@@ -136,34 +136,37 @@ enum PerfectChallengeSlot {
 }
 
 model PerfectChallengePlayer {
-  id                      String   @id @default(uuid())
-  season                  Int
-  week                    Int
-  position                String
-  teamCode                String
-  firstName               String
-  lastName                String
-  displayName             String?
-  headshotUrl             String?
-  isDefense               Boolean  @default(false)
+  id                             String   @id @default(uuid())
+  season                         Int
+  week                           Int
+  position                       String
+  teamCode                       String
+  firstName                      String
+  lastName                       String
+  displayName                    String?
+  headshotUrl                    String?
+  isDefense                      Boolean  @default(false)
 
-  currentScore            Float    @default(0)
-  avgScore                Float    @default(0)
+  currentScore                   Float    @default(0)
+  avgScore                       Float    @default(0)
 
-  lastWeekOpponentTeam    String?
-  opponentDefenseTeamCode String?
+  lastWeekOpponentTeam           String?
+  opponentDefenseTeamCode        String?
 
-  allowedPassingYards     Float?
-  allowedRushingYards     Float?
+  currentWeekOpponentTeam        String?
+  currentWeekOpponentDefenseTeamCode String?
 
-  overallStats            Json
-  weeklyStats             Json
+  allowedPassingYards            Float?
+  allowedRushingYards            Float?
 
-  isActive                Boolean  @default(true)
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
+  overallStats                   Json
+  weeklyStats                    Json
 
-  rosterSlots             PerfectChallengeRosterSlot[]
+  isActive                       Boolean  @default(true)
+  createdAt                      DateTime @default(now())
+  updatedAt                      DateTime @updatedAt
+
+  rosterSlots                    PerfectChallengeRosterSlot[]
 
   @@index([season, week, position])
   @@index([teamCode])

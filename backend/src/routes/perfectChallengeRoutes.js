@@ -53,6 +53,8 @@ function normalizePlayer(player) {
     weeklyScoreBreakdown,
     lastWeekOpponentTeam: player.lastWeekOpponentTeam,
     opponentDefenseTeamCode: player.opponentDefenseTeamCode,
+    currentWeekOpponentTeam: player.currentWeekOpponentTeam,
+    currentWeekOpponentDefenseTeamCode: player.currentWeekOpponentDefenseTeamCode,
     allowedPassingYards: player.allowedPassingYards,
     allowedRushingYards: player.allowedRushingYards,
     week: player.week,
@@ -100,11 +102,7 @@ async function getOrCreateRoster(userId, season, week) {
 
   if (!roster) {
     roster = await prisma.perfectChallengeRoster.create({
-      data: {
-        userId,
-        season,
-        week,
-      },
+      data: { userId, season, week },
       include: {
         slots: {
           include: {
@@ -118,7 +116,7 @@ async function getOrCreateRoster(userId, season, week) {
   return roster;
 }
 
-router.get("/weeks", requireAuth, async (req, res) => {
+router.get("/weeks", requireAuth, async (_req, res) => {
   return res.json({
     season: DEFAULT_SEASON,
     weeks: DEFAULT_WEEKS,
@@ -139,11 +137,7 @@ router.get("/week", requireAuth, async (req, res) => {
         week,
         isActive: true,
       },
-      orderBy: [
-        { position: "asc" },
-        { lastName: "asc" },
-        { firstName: "asc" },
-      ],
+      orderBy: [{ position: "asc" }, { lastName: "asc" }, { firstName: "asc" }],
     });
 
     const slotMap = Object.fromEntries(
@@ -179,7 +173,8 @@ router.get("/week", requireAuth, async (req, res) => {
 
     if (error.statusCode === 401) {
       return res.status(401).json({
-        error: "A bejelentkezett felhasználó nem található az adatbázisban. Jelentkezz ki, majd be újra.",
+        error:
+          "A bejelentkezett felhasználó nem található az adatbázisban. Jelentkezz ki, majd be újra.",
       });
     }
 
@@ -197,7 +192,8 @@ router.put("/slot", requireAuth, async (req, res) => {
     const existingUser = await ensureUserExists(userId);
     if (!existingUser) {
       return res.status(401).json({
-        error: "A bejelentkezett felhasználó nem található az adatbázisban. Jelentkezz ki, majd be újra.",
+        error:
+          "A bejelentkezett felhasználó nem található az adatbázisban. Jelentkezz ki, majd be újra.",
       });
     }
 
@@ -264,9 +260,7 @@ router.put("/slot", requireAuth, async (req, res) => {
       },
     });
 
-    return res.json({
-      message: "Slot sikeresen frissítve.",
-    });
+    return res.json({ message: "Slot sikeresen frissítve." });
   } catch (error) {
     console.error("PUT /api/perfect-challenge/slot error:", error);
     return res.status(500).json({

@@ -2463,3 +2463,88 @@ th.col-active {
     grid-template-columns: 1fr;
   }
 }
+
+
+.pc-modal-tight {
+  padding: 14px;
+  max-height: 92vh;
+  overflow: hidden;
+}
+
+.pc-modal-head-tight {
+  margin-bottom: 10px;
+}
+
+.pc-picker-layout-tight {
+  grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.pc-modal-list-tight {
+  gap: 10px;
+}
+
+.pc-side-card-tight {
+  padding: 12px 14px;
+}
+
+.pc-side-card-head-tight {
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.pc-preview-image-compact {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+}
+
+.pc-side-player-name-tight {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.pc-side-stats-tight {
+  gap: 2px;
+}
+
+.pc-side-stat-row-tight {
+  padding: 5px 0;
+  font-size: 12px;
+}
+
+.pc-player-option {
+  padding: 10px 12px;
+}
+
+.pc-player-option-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+}
+
+.pc-player-option-name {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.pc-player-option-meta {
+  font-size: 11px;
+}
+
+.pc-player-option-score {
+  font-size: 18px;
+  line-height: 1;
+}
+
+@media (max-width: 1050px) {
+  .pc-picker-layout-tight {
+    grid-template-columns: 1fr;
+  }
+
+  .pc-modal-tight {
+    max-height: 95vh;
+    overflow: auto;
+  }
+}
