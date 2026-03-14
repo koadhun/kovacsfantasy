@@ -28,6 +28,7 @@ function ScoreCard({ title, value, sub }) {
         background:
           "linear-gradient(180deg, rgba(15,30,68,.96), rgba(9,18,42,.96))",
         boxShadow: "0 12px 28px rgba(0,0,0,.22)",
+        textAlign: "center",
       }}
     >
       <div
@@ -49,13 +50,14 @@ function ScoreCard({ title, value, sub }) {
           fontWeight: 900,
           lineHeight: 1,
           marginBottom: sub ? 8 : 0,
+          textAlign: "center",
         }}
       >
         {value}
       </div>
 
       {sub ? (
-        <div className="muted" style={{ fontSize: 13 }}>
+        <div className="muted" style={{ fontSize: 13, textAlign: "center" }}>
           {sub}
         </div>
       ) : null}
