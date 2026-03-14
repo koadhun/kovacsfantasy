@@ -24,8 +24,49 @@ const SLOT_TO_POSITION = {
 
 const SLOT_ORDER = ["QB", "RB1", "RB2", "WR1", "WR2", "TE", "K", "DEF"];
 
+const TEAM_NAME_TO_CODE = {
+  "Arizona Cardinals": "ARI",
+  "Atlanta Falcons": "ATL",
+  "Baltimore Ravens": "BAL",
+  "Buffalo Bills": "BUF",
+  "Carolina Panthers": "CAR",
+  "Chicago Bears": "CHI",
+  "Cincinnati Bengals": "CIN",
+  "Cleveland Browns": "CLE",
+  "Dallas Cowboys": "DAL",
+  "Denver Broncos": "DEN",
+  "Detroit Lions": "DET",
+  "Green Bay Packers": "GB",
+  "Houston Texans": "HOU",
+  "Indianapolis Colts": "IND",
+  "Jacksonville Jaguars": "JAX",
+  "Kansas City Chiefs": "KC",
+  "Las Vegas Raiders": "LV",
+  "Los Angeles Chargers": "LAC",
+  "Los Angeles Rams": "LAR",
+  "Miami Dolphins": "MIA",
+  "Minnesota Vikings": "MIN",
+  "New England Patriots": "NE",
+  "New Orleans Saints": "NO",
+  "New York Giants": "NYG",
+  "New York Jets": "NYJ",
+  "Philadelphia Eagles": "PHI",
+  "Pittsburgh Steelers": "PIT",
+  "San Francisco 49ers": "SF",
+  "Seattle Seahawks": "SEA",
+  "Tampa Bay Buccaneers": "TB",
+  "Tennessee Titans": "TEN",
+  "Washington Commanders": "WAS",
+};
+
 function roundToOne(value) {
   return Number(Number(value || 0).toFixed(1));
+}
+
+function normalizeTeamKey(value) {
+  if (!value) return "";
+  const trimmed = String(value).trim();
+  return TEAM_NAME_TO_CODE[trimmed] || trimmed.toUpperCase();
 }
 
 function getPlayerScore(player) {
@@ -101,21 +142,21 @@ async function buildAverageMaps(season, currentWeek) {
 
   const defenseByTeam = new Map();
   const offenseByTeam = new Map();
-
   const countedDefenseGames = new Set();
   const countedOffenseGames = new Set();
 
   for (const player of previousWeeksPlayers) {
     const stats = player.weeklyStats || {};
+    const teamCode = normalizeTeamKey(player.teamCode);
 
     if (player.position === "DEF") {
       const defenseAcc = getOrCreate(
         defenseByTeam,
-        player.teamCode,
+        teamCode,
         createDefenseAccumulator
       );
 
-      const defenseGameKey = `${player.teamCode}-${player.week}`;
+      const defenseGameKey = `${teamCode}-${player.week}`;
       if (!countedDefenseGames.has(defenseGameKey)) {
         countedDefenseGames.add(defenseGameKey);
         defenseAcc.games += 1;
@@ -133,14 +174,15 @@ async function buildAverageMaps(season, currentWeek) {
         defenseAcc.allowedPoints += Number(stats.allowedPoints || 0);
       }
 
-      if (player.currentWeekOpponentTeam) {
+      const opponentKey = normalizeTeamKey(player.currentWeekOpponentTeam);
+      if (opponentKey) {
         const offenseAcc = getOrCreate(
           offenseByTeam,
-          player.currentWeekOpponentTeam,
+          opponentKey,
           createOffenseAccumulator
         );
 
-        const offenseGameKey = `${player.currentWeekOpponentTeam}-${player.week}`;
+        const offenseGameKey = `${opponentKey}-${player.week}`;
         if (!countedOffenseGames.has(offenseGameKey)) {
           countedOffenseGames.add(offenseGameKey);
           offenseAcc.games += 1;
@@ -151,11 +193,7 @@ async function buildAverageMaps(season, currentWeek) {
       continue;
     }
 
-    const offenseAcc = getOrCreate(
-      offenseByTeam,
-      player.teamCode,
-      createOffenseAccumulator
-    );
+    const offenseAcc = getOrCreate(offenseByTeam, teamCode, createOffenseAccumulator);
 
     if (player.position === "QB") {
       offenseAcc.passingYards += Number(stats.passingYards || 0);
@@ -179,8 +217,6 @@ async function buildAverageMaps(season, currentWeek) {
     }
 
     if (player.position === "WR" || player.position === "TE") {
-      offenseAcc.rushingYards += Number(stats.rushingYards || 0);
-      offenseAcc.rushingTDs += Number(stats.rushingTDs || 0);
       offenseAcc.fumbles += Number(
         stats.fumble != null ? stats.fumble : stats.fumbles || 0
       );
@@ -189,34 +225,32 @@ async function buildAverageMaps(season, currentWeek) {
 
   const normalizedDefenseByTeam = new Map();
   for (const [teamCode, acc] of defenseByTeam.entries()) {
-    const games = acc.games || 0;
-    if (!games) continue;
+    if (!acc.games) continue;
 
     normalizedDefenseByTeam.set(teamCode, {
-      allowedPassingYards: roundToOne(acc.allowedPassingYards / games),
-      allowedRushingYards: roundToOne(acc.allowedRushingYards / games),
-      interceptions: roundToOne(acc.interceptions / games),
-      fumbles: roundToOne(acc.fumbles / games),
-      sacks: roundToOne(acc.sacks / games),
-      returnTDs: roundToOne(acc.returnTDs / games),
-      safety: roundToOne(acc.safeties / games),
-      allowedPoints: roundToOne(acc.allowedPoints / games),
+      allowedPassingYards: roundToOne(acc.allowedPassingYards / acc.games),
+      allowedRushingYards: roundToOne(acc.allowedRushingYards / acc.games),
+      interceptions: roundToOne(acc.interceptions / acc.games),
+      fumbles: roundToOne(acc.fumbles / acc.games),
+      sacks: roundToOne(acc.sacks / acc.games),
+      returnTDs: roundToOne(acc.returnTDs / acc.games),
+      safety: roundToOne(acc.safeties / acc.games),
+      allowedPoints: roundToOne(acc.allowedPoints / acc.games),
     });
   }
 
   const normalizedOffenseByTeam = new Map();
   for (const [teamCode, acc] of offenseByTeam.entries()) {
-    const games = acc.games || 0;
-    if (!games) continue;
+    if (!acc.games) continue;
 
     normalizedOffenseByTeam.set(teamCode, {
-      passingYards: roundToOne(acc.passingYards / games),
-      passingTDs: roundToOne(acc.passingTDs / games),
-      interceptions: roundToOne(acc.interceptions / games),
-      rushingYards: roundToOne(acc.rushingYards / games),
-      rushingTDs: roundToOne(acc.rushingTDs / games),
-      fumbles: roundToOne(acc.fumbles / games),
-      avgPoints: roundToOne(acc.points / games),
+      passingYards: roundToOne(acc.passingYards / acc.games),
+      passingTDs: roundToOne(acc.passingTDs / acc.games),
+      interceptions: roundToOne(acc.interceptions / acc.games),
+      rushingYards: roundToOne(acc.rushingYards / acc.games),
+      rushingTDs: roundToOne(acc.rushingTDs / acc.games),
+      fumbles: roundToOne(acc.fumbles / acc.games),
+      avgPoints: roundToOne(acc.points / acc.games),
     });
   }
 
@@ -234,6 +268,11 @@ function normalizePlayer(player, averageMaps) {
     player.position,
     player.weeklyStats || {}
   );
+
+  const opponentDefenseKey = normalizeTeamKey(
+    player.currentWeekOpponentDefenseTeamCode || player.currentWeekOpponentTeam
+  );
+  const opponentOffenseKey = normalizeTeamKey(player.currentWeekOpponentTeam);
 
   return {
     id: player.id,
@@ -256,11 +295,9 @@ function normalizePlayer(player, averageMaps) {
     allowedPassingYards: player.allowedPassingYards,
     allowedRushingYards: player.allowedRushingYards,
     currentWeekOpponentDefenseStats:
-      averageMaps.defenseByTeam.get(
-        player.currentWeekOpponentDefenseTeamCode
-      ) || null,
+      averageMaps.defenseByTeam.get(opponentDefenseKey) || null,
     currentWeekOpponentOffenseStats:
-      averageMaps.offenseByTeam.get(player.currentWeekOpponentTeam) || null,
+      averageMaps.offenseByTeam.get(opponentOffenseKey) || null,
     week: player.week,
   };
 }

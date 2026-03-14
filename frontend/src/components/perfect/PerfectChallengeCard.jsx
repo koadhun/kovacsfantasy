@@ -122,15 +122,35 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
           <div
             style={{
               position: "relative",
+              height: "100%",
+              padding: "14px 14px 18px",
               display: "flex",
               flexDirection: "column",
-              height: "100%",
-              minHeight: 0,
-              padding: 18,
             }}
           >
-            <div style={{ position: "absolute", top: 18, left: 18, zIndex: 2 }}>
-              <div className="pc-slot-badge">{slot}</div>
+            <div
+              style={{
+                position: "absolute",
+                top: 14,
+                left: 14,
+                zIndex: 3,
+              }}
+            >
+              <div
+                className="pc-slot-badge"
+                style={{
+                  minWidth: 42,
+                  height: 30,
+                  padding: "0 12px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 12,
+                  fontWeight: 900,
+                }}
+              >
+                {slot}
+              </div>
             </div>
 
             {player ? (
@@ -138,99 +158,92 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                 <div
                   style={{
                     flex: 1,
-                    display: "grid",
-                    gridTemplateRows: "1fr auto auto auto",
-                    alignItems: "start",
-                    justifyItems: "center",
-                    paddingTop: 34,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingTop: 26,
+                    paddingBottom: 56,
+                    textAlign: "center",
                   }}
                 >
                   <div
                     style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      minHeight: 0,
+                      position: "relative",
+                      width: 140,
+                      height: 140,
+                      borderRadius: 22,
+                      overflow: "hidden",
+                      background:
+                        "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
+                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
+                      marginBottom: 14,
                     }}
+                    onMouseEnter={() => setHovered(true)}
+                    onMouseLeave={() => setHovered(false)}
                   >
-                    <div
-                      style={{
-                        position: "relative",
-                        width: 138,
-                        height: 138,
-                        borderRadius: 22,
-                        overflow: "hidden",
-                        background:
-                          "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
-                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
-                      }}
-                      onMouseEnter={() => setHovered(true)}
-                      onMouseLeave={() => setHovered(false)}
-                    >
-                      {showHeadshot ? (
-                        <img
-                          src={player.headshotUrl}
-                          alt={displayName}
-                          onError={() => setImgFailed(true)}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            display: "block",
-                          }}
-                        />
-                      ) : (
-                        <div
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            display: "grid",
-                            placeItems: "center",
-                          }}
-                        >
-                          <TeamLogo team={player.teamCode} size={74} />
-                        </div>
-                      )}
-
-                      <div
+                    {showHeadshot ? (
+                      <img
+                        src={player.headshotUrl}
+                        alt={displayName}
+                        onError={() => setImgFailed(true)}
                         style={{
-                          position: "absolute",
-                          inset: 0,
-                          background: hovered
-                            ? "linear-gradient(180deg, rgba(2,6,23,0.08), rgba(2,6,23,0.58))"
-                            : "transparent",
-                          transition: "0.18s ease",
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: "block",
                         }}
                       />
-
-                      <button
-                        type="button"
-                        onClick={onSelect}
+                    ) : (
+                      <div
                         style={{
-                          position: "absolute",
-                          left: "50%",
-                          bottom: 12,
-                          transform: hovered
-                            ? "translateX(-50%) translateY(0)"
-                            : "translateX(-50%) translateY(8px)",
-                          opacity: hovered ? 1 : 0,
-                          pointerEvents: hovered ? "auto" : "none",
-                          transition: "all 0.18s ease",
-                          border: "1px solid rgba(59,130,246,.55)",
-                          background: "rgba(8,18,44,.95)",
-                          color: "#fff",
-                          borderRadius: 10,
-                          padding: "8px 12px",
-                          fontSize: 12,
-                          fontWeight: 800,
-                          whiteSpace: "nowrap",
-                          cursor: "pointer",
+                          width: "100%",
+                          height: "100%",
+                          display: "grid",
+                          placeItems: "center",
                         }}
                       >
-                        Change player
-                      </button>
-                    </div>
+                        <TeamLogo team={player.teamCode} size={76} />
+                      </div>
+                    )}
+
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        background: hovered
+                          ? "linear-gradient(180deg, rgba(2,6,23,0.08), rgba(2,6,23,0.58))"
+                          : "transparent",
+                        transition: "0.18s ease",
+                      }}
+                    />
+
+                    <button
+                      type="button"
+                      onClick={onSelect}
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        bottom: 12,
+                        transform: hovered
+                          ? "translateX(-50%) translateY(0)"
+                          : "translateX(-50%) translateY(8px)",
+                        opacity: hovered ? 1 : 0,
+                        pointerEvents: hovered ? "auto" : "none",
+                        transition: "all 0.18s ease",
+                        border: "1px solid rgba(59,130,246,.55)",
+                        background: "rgba(8,18,44,.95)",
+                        color: "#fff",
+                        borderRadius: 10,
+                        padding: "8px 12px",
+                        fontSize: 12,
+                        fontWeight: 800,
+                        whiteSpace: "nowrap",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Change player
+                    </button>
                   </div>
 
                   <div
@@ -238,7 +251,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                       display: "flex",
                       alignItems: "center",
                       gap: 6,
-                      marginTop: 10,
+                      marginBottom: 10,
                       fontSize: 13,
                       fontWeight: 700,
                       color: "rgba(255,255,255,.78)",
@@ -248,16 +261,10 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                     <span>{player.teamCode}</span>
                   </div>
 
-                  <div
-                    style={{
-                      marginTop: 10,
-                      textAlign: "center",
-                      lineHeight: 1.02,
-                    }}
-                  >
+                  <div style={{ lineHeight: 1.02 }}>
                     <div
                       style={{
-                        fontSize: 18,
+                        fontSize: 17,
                         fontWeight: 800,
                         color: "rgba(255,255,255,.92)",
                       }}
@@ -266,7 +273,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                     </div>
                     <div
                       style={{
-                        fontSize: 30,
+                        fontSize: 31,
                         fontWeight: 900,
                         color: "#f8fbff",
                         letterSpacing: "-0.02em",
@@ -278,23 +285,15 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
 
                   <div
                     style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "flex-start",
-                      alignItems: "flex-end",
                       marginTop: 14,
+                      alignSelf: "flex-start",
+                      fontSize: 35,
+                      fontWeight: 900,
+                      lineHeight: 1,
+                      color: "#f8fbff",
                     }}
                   >
-                    <div
-                      style={{
-                        fontSize: 34,
-                        fontWeight: 900,
-                        lineHeight: 1,
-                        color: "#f8fbff",
-                      }}
-                    >
-                      {score}
-                    </div>
+                    {score}
                   </div>
                 </div>
 
@@ -304,20 +303,20 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                   title="Weekly details"
                   style={{
                     position: "absolute",
-                    right: 18,
-                    bottom: 18,
-                    width: 40,
-                    height: 40,
+                    right: 14,
+                    bottom: 14,
+                    width: 34,
+                    height: 34,
                     borderRadius: "50%",
                     border: "1px solid rgba(255,255,255,.14)",
                     background: "rgba(255,255,255,.06)",
                     color: "#fff",
-                    fontSize: 18,
+                    fontSize: 17,
                     fontWeight: 800,
                     display: "grid",
                     placeItems: "center",
                     cursor: "pointer",
-                    zIndex: 2,
+                    zIndex: 3,
                   }}
                 >
                   i
@@ -400,8 +399,8 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                 onClick={() => setFlipped(false)}
                 title="Back"
                 style={{
-                  width: 32,
-                  height: 32,
+                  width: 30,
+                  height: 30,
                   borderRadius: 10,
                   border: "1px solid rgba(255,255,255,.14)",
                   background: "rgba(255,255,255,.06)",
@@ -486,72 +485,47 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                     overflow: "hidden",
                   }}
                 >
-                  {backView === "stats" ? (
-                    weeklyRows.map((row) => (
-                      <div
-                        key={row.key}
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "minmax(0,1fr) auto",
-                          alignItems: "center",
-                          gap: 10,
-                          padding: "4px 0",
-                          borderBottom: "1px solid rgba(255,255,255,.08)",
-                          fontSize: 12,
-                          lineHeight: 1.05,
-                        }}
-                      >
-                        <span style={{ color: "rgba(255,255,255,.84)" }}>
-                          {row.label}
-                        </span>
-                        <strong style={{ color: "#fff", fontSize: 12 }}>
-                          {row.value}
-                        </strong>
-                      </div>
-                    ))
-                  ) : (
-                    <>
-                      {breakdownRows.map((row) => (
-                        <div
-                          key={row.key}
-                          style={{
-                            display: "grid",
-                            gridTemplateColumns: "minmax(0,1fr) auto",
-                            alignItems: "center",
-                            gap: 10,
-                            padding: "4px 0",
-                            borderBottom: "1px solid rgba(255,255,255,.08)",
-                            fontSize: 12,
-                            lineHeight: 1.05,
-                          }}
-                        >
-                          <span style={{ color: "rgba(255,255,255,.84)" }}>
-                            {row.label}
-                          </span>
-                          <strong style={{ color: "#fff", fontSize: 12 }}>
-                            {row.value}
-                          </strong>
-                        </div>
-                      ))}
+                  {(backView === "stats" ? weeklyRows : breakdownRows).map((row) => (
+                    <div
+                      key={row.key}
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "minmax(0,1fr) auto",
+                        alignItems: "center",
+                        gap: 10,
+                        padding: "4px 0",
+                        borderBottom: "1px solid rgba(255,255,255,.08)",
+                        fontSize: 12,
+                        lineHeight: 1.05,
+                      }}
+                    >
+                      <span style={{ color: "rgba(255,255,255,.84)" }}>
+                        {row.label}
+                      </span>
+                      <strong style={{ color: "#fff", fontSize: 12 }}>
+                        {row.value}
+                      </strong>
+                    </div>
+                  ))}
 
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "minmax(0,1fr) auto",
-                          alignItems: "center",
-                          gap: 10,
-                          paddingTop: 5,
-                          marginTop: 2,
-                          fontSize: 13,
-                          fontWeight: 900,
-                          lineHeight: 1.05,
-                        }}
-                      >
-                        <span style={{ color: "#fff" }}>Total</span>
-                        <strong style={{ color: "#fff" }}>{breakdownTotal}</strong>
-                      </div>
-                    </>
-                  )}
+                  {backView === "points" ? (
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "minmax(0,1fr) auto",
+                        alignItems: "center",
+                        gap: 10,
+                        paddingTop: 5,
+                        marginTop: 2,
+                        fontSize: 13,
+                        fontWeight: 900,
+                        lineHeight: 1.05,
+                      }}
+                    >
+                      <span style={{ color: "#fff" }}>Total</span>
+                      <strong style={{ color: "#fff" }}>{breakdownTotal}</strong>
+                    </div>
+                  ) : null}
                 </div>
               </>
             ) : (
