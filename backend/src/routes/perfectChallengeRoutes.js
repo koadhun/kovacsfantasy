@@ -36,7 +36,104 @@ function getPlayerScore(player) {
   );
 }
 
-function normalizePlayer(player) {
+function createEmptyOffenseAccumulator() {
+  return {
+    weeks: new Set(),
+    passingYards: 0,
+    passingTDs: 0,
+    interceptions: 0,
+    rushingYards: 0,
+    rushingTDs: 0,
+    fumbles: 0,
+    pointsScored: 0,
+    pointsGames: 0,
+  };
+}
+
+function isOffensiveSkillPosition(position) {
+  return ["QB", "RB", "WR", "TE"].includes(position);
+}
+
+function getOrCreateTeamAccumulator(map, teamCode) {
+  if (!map.has(teamCode)) {
+    map.set(teamCode, createEmptyOffenseAccumulator());
+  }
+  return map.get(teamCode);
+}
+
+async function buildOpponentOffenseStatsMap(season, currentWeek) {
+  if (currentWeek <= 1) {
+    return new Map();
+  }
+
+  const previousWeekPlayers = await prisma.perfectChallengePlayer.findMany({
+    where: {
+      season,
+      week: { lt: currentWeek },
+      isActive: true,
+    },
+    orderBy: [{ week: "asc" }, { teamCode: "asc" }, { position: "asc" }],
+  });
+
+  const teamMap = new Map();
+
+  for (const player of previousWeekPlayers) {
+    if (isOffensiveSkillPosition(player.position)) {
+      const acc = getOrCreateTeamAccumulator(teamMap, player.teamCode);
+      acc.weeks.add(player.week);
+
+      const weeklyStats = player.weeklyStats || {};
+
+      if (player.position === "QB") {
+        acc.passingYards += Number(weeklyStats.passingYards || 0);
+        acc.passingTDs += Number(weeklyStats.passingTDs || 0);
+        acc.interceptions += Number(weeklyStats.interceptions || 0);
+      }
+
+      acc.rushingYards += Number(weeklyStats.rushingYards || 0);
+      acc.rushingTDs += Number(weeklyStats.rushingTDs || 0);
+      acc.fumbles += Number(
+        weeklyStats.fumble != null ? weeklyStats.fumble : weeklyStats.fumbles || 0
+      );
+    }
+
+    if (player.position === "DEF" && player.currentWeekOpponentTeam) {
+      const opponentTeam = player.currentWeekOpponentTeam;
+      const acc = getOrCreateTeamAccumulator(teamMap, opponentTeam);
+      const allowedPoints = Number(player.weeklyStats?.allowedPoints);
+
+      if (!Number.isNaN(allowedPoints)) {
+        acc.pointsScored += allowedPoints;
+        acc.pointsGames += 1;
+      }
+    }
+  }
+
+  const result = new Map();
+
+  for (const [teamCode, acc] of teamMap.entries()) {
+    const games = acc.weeks.size || 0;
+
+    if (!games) continue;
+
+    result.set(teamCode, {
+      passingYards: roundToOne(acc.passingYards / games),
+      passingTDs: roundToOne(acc.passingTDs / games),
+      interceptions: roundToOne(acc.interceptions / games),
+      rushingYards: roundToOne(acc.rushingYards / games),
+      rushingTDs: roundToOne(acc.rushingTDs / games),
+      fumbles: roundToOne(acc.fumbles / games),
+      avgPoints: roundToOne(
+        acc.pointsGames > 0 ? acc.pointsScored / acc.pointsGames : 0
+      ),
+      games,
+    });
+  }
+
+  return result;
+}
+
+function normalizePlayer(player, offenseStatsMap) {
   if (!player) return null;
 
   const currentScore = getPlayerScore(player);
@@ -65,6 +162,8 @@ function normalizePlayer(player) {
     currentWeekOpponentDefenseTeamCode: player.currentWeekOpponentDefenseTeamCode,
     allowedPassingYards: player.allowedPassingYards,
     allowedRushingYards: player.allowedRushingYards,
+    currentWeekOpponentOffenseStats:
+      offenseStatsMap.get(player.currentWeekOpponentTeam) || null,
     week: player.week,
   };
 }
@@ -157,7 +256,6 @@ async function getSeasonSummary(userId, season) {
   return {
     totalPoints: roundToOne(totalPoints),
     selectedSlots,
-    maxSlots: rosters.length * 8,
   };
 }
 
@@ -185,8 +283,13 @@ router.get("/week", requireAuth, async (req, res) => {
       orderBy: [{ position: "asc" }, { lastName: "asc" }, { firstName: "asc" }],
     });
 
+    const offenseStatsMap = await buildOpponentOffenseStatsMap(season, week);
+
     const slotMap = Object.fromEntries(
-      roster.slots.map((slot) => [slot.slot, normalizePlayer(slot.player)])
+      roster.slots.map((slot) => [
+        slot.slot,
+        normalizePlayer(slot.player, offenseStatsMap),
+      ])
     );
 
     const slots = SLOT_ORDER.map((slotKey) => ({
@@ -196,7 +299,9 @@ router.get("/week", requireAuth, async (req, res) => {
       canSwap: true,
     }));
 
-    const normalizedPool = pool.map(normalizePlayer);
+    const normalizedPool = pool.map((player) =>
+      normalizePlayer(player, offenseStatsMap)
+    );
 
     const poolByPosition = {
       QB: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "QB")),
@@ -223,7 +328,6 @@ router.get("/week", requireAuth, async (req, res) => {
         seasonPoints: seasonSummary.totalPoints,
         selectedCount: slots.filter((slot) => !!slot.player).length,
         seasonSelectedCount: seasonSummary.selectedSlots,
-        seasonMaxCount: seasonSummary.maxSlots,
       },
     });
   } catch (error) {

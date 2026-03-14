@@ -48,15 +48,17 @@ function ScoreCard({ title, value, sub }) {
           fontSize: 28,
           fontWeight: 900,
           lineHeight: 1,
-          marginBottom: 8,
+          marginBottom: sub ? 8 : 0,
         }}
       >
         {value}
       </div>
 
-      <div className="muted" style={{ fontSize: 13 }}>
-        {sub}
-      </div>
+      {sub ? (
+        <div className="muted" style={{ fontSize: 13 }}>
+          {sub}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -75,7 +77,6 @@ export default function PerfectChallenge() {
     seasonPoints: 0,
     selectedCount: 0,
     seasonSelectedCount: 0,
-    seasonMaxCount: 0,
   });
   const [err, setErr] = useState("");
   const [modalSlot, setModalSlot] = useState(null);
@@ -102,7 +103,6 @@ export default function PerfectChallenge() {
         seasonPoints: 0,
         selectedCount: 0,
         seasonSelectedCount: 0,
-        seasonMaxCount: 0,
       }
     );
   }
@@ -191,7 +191,6 @@ export default function PerfectChallenge() {
             <ScoreCard
               title="Season total"
               value={formatScore(summary.seasonPoints)}
-              sub={`${summary.seasonSelectedCount}/${summary.seasonMaxCount} selected`}
             />
           </div>
         </div>
@@ -236,7 +235,6 @@ export default function PerfectChallenge() {
         title={modalSlot ? `Select player for ${modalSlot.slot}` : ""}
         players={modalPlayers}
         defensePlayers={defensePlayers}
-        slot={modalSlot}
         onClose={() => setModalSlot(null)}
         onPick={pickPlayer}
       />

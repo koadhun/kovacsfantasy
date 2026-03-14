@@ -30,13 +30,6 @@ const DECIMAL_KEYS = new Set([
   "receivedYards",
 ]);
 
-const SCORE_DECIMAL_KEYS = new Set([
-  "passingYards",
-  "rushingYards",
-  "receivedYards",
-  "allowedPointsPenalty",
-]);
-
 const STAT_ORDER_BY_POSITION = {
   QB: [
     "passingYards",
@@ -119,7 +112,7 @@ function formatStatValue(key, value) {
   return value;
 }
 
-function formatBreakdownValue(_key, value) {
+function formatBreakdownValue(value) {
   if (value == null) return "-";
   return Number(value).toFixed(2);
 }
@@ -142,7 +135,7 @@ function orderedBreakdownRows(position, breakdown) {
   return order.map((key) => ({
     key,
     label: LABELS[key] || key,
-    value: formatBreakdownValue(key, breakdown[key]),
+    value: formatBreakdownValue(breakdown[key]),
   }));
 }
 
@@ -157,13 +150,13 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
   const [flipped, setFlipped] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
   const [backView, setBackView] = useState("stats");
-  const [isHovered, setIsHovered] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
     setImgFailed(false);
     setBackView("stats");
     setFlipped(false);
-    setIsHovered(false);
+    setHovered(false);
   }, [player?.id, slot]);
 
   const weeklyRows = useMemo(
@@ -193,64 +186,63 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
   const displayName = getDisplayName(player);
   const showHeadshot = !!player?.headshotUrl && !imgFailed;
 
-  function handleImgError() {
-    setImgFailed(true);
-  }
-
   return (
     <div className="pc-card-wrap">
-      <div
-        className={`pc-card ${flipped ? "is-flipped" : ""}`}
-        style={{ minHeight: 400 }}
-      >
+      <div className={`pc-card ${flipped ? "is-flipped" : ""}`}>
         <div className="pc-card-face pc-card-front">
           <div
             style={{
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              minHeight: "100%",
               flexDirection: "column",
+              height: "100%",
+              minHeight: 0,
             }}
           >
-            <div className="pc-slot-badge">{slot}</div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+              }}
+            >
+              <div className="pc-slot-badge">{slot}</div>
+            </div>
 
             {player ? (
               <>
                 <div
                   style={{
-                    width: "100%",
                     flex: 1,
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "center",
                     justifyContent: "center",
+                    alignItems: "center",
                     textAlign: "center",
-                    padding: "12px 8px 20px",
-                    gap: 10,
+                    padding: "8px 8px 14px",
                   }}
                 >
                   <div
                     style={{
                       position: "relative",
-                      width: 132,
+                      width: 118,
                       height: 132,
                       borderRadius: 18,
+                      overflow: "hidden",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       background:
                         "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
-                      overflow: "hidden",
+                      marginBottom: 10,
                     }}
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
+                    onMouseEnter={() => setHovered(true)}
+                    onMouseLeave={() => setHovered(false)}
                   >
                     {showHeadshot ? (
                       <img
                         src={player.headshotUrl}
                         alt={displayName}
-                        onError={handleImgError}
+                        onError={() => setImgFailed(true)}
                         style={{
                           width: "100%",
                           height: "100%",
@@ -259,31 +251,43 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                         }}
                       />
                     ) : (
-                      <TeamLogo team={player.teamCode} size={72} />
+                      <TeamLogo team={player.teamCode} size={70} />
                     )}
+
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        background: hovered ? "rgba(3, 10, 28, 0.42)" : "rgba(3, 10, 28, 0)",
+                        transition: "0.18s ease",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        pointerEvents: "none",
+                      }}
+                    />
 
                     <button
                       type="button"
                       onClick={onSelect}
                       style={{
                         position: "absolute",
-                        left: "50%",
                         bottom: 10,
-                        transform: `translateX(-50%) ${
-                          isHovered ? "translateY(0)" : "translateY(8px)"
-                        }`,
-                        opacity: isHovered ? 1 : 0,
-                        pointerEvents: isHovered ? "auto" : "none",
+                        left: "50%",
+                        transform: hovered
+                          ? "translateX(-50%) translateY(0)"
+                          : "translateX(-50%) translateY(10px)",
+                        opacity: hovered ? 1 : 0,
+                        pointerEvents: hovered ? "auto" : "none",
                         transition: "all 0.18s ease",
-                        border: "1px solid rgba(59,130,246,.65)",
-                        background: "rgba(8,19,48,.92)",
+                        border: "1px solid rgba(59,130,246,.6)",
+                        background: "rgba(8,18,44,.95)",
                         color: "#fff",
                         borderRadius: 10,
-                        padding: "8px 12px",
-                        fontSize: 13,
+                        padding: "7px 12px",
+                        fontSize: 12,
                         fontWeight: 800,
                         whiteSpace: "nowrap",
-                        boxShadow: "0 8px 18px rgba(0,0,0,.28)",
                         cursor: "pointer",
                       }}
                     >
@@ -299,23 +303,22 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                       fontSize: 13,
                       fontWeight: 700,
                       color: "rgba(255,255,255,.78)",
+                      marginBottom: 6,
                     }}
                   >
-                    <TeamLogo team={player.teamCode} size={15} />
+                    <TeamLogo team={player.teamCode} size={14} />
                     <span>{player.teamCode}</span>
                   </div>
 
                   <div
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
                       lineHeight: 1.02,
+                      marginBottom: 8,
                     }}
                   >
                     <div
                       style={{
-                        fontSize: 18,
+                        fontSize: 17,
                         fontWeight: 800,
                         color: "rgba(255,255,255,.9)",
                       }}
@@ -324,7 +327,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                     </div>
                     <div
                       style={{
-                        fontSize: 28,
+                        fontSize: 29,
                         fontWeight: 900,
                         color: "#f3f6ff",
                       }}
@@ -351,19 +354,19 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                   title="Weekly details"
                   style={{
                     position: "absolute",
-                    right: 12,
-                    bottom: 12,
-                    width: 34,
-                    height: 34,
+                    right: 14,
+                    bottom: 14,
+                    width: 36,
+                    height: 36,
                     borderRadius: "50%",
                     border: "1px solid rgba(255,255,255,.14)",
                     background: "rgba(255,255,255,.06)",
                     color: "#fff",
                     fontSize: 18,
                     fontWeight: 800,
-                    cursor: "pointer",
                     display: "grid",
                     placeItems: "center",
+                    cursor: "pointer",
                   }}
                 >
                   i
@@ -372,14 +375,13 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
             ) : (
               <div
                 style={{
-                  width: "100%",
                   flex: 1,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
                   textAlign: "center",
-                  padding: "28px 16px",
+                  padding: "22px 16px",
                 }}
               >
                 <div
@@ -417,26 +419,24 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
               display: "flex",
               flexDirection: "column",
               height: "100%",
-              padding: 14,
+              padding: "14px 16px 14px",
             }}
           >
             <div
               style={{
                 display: "flex",
-                alignItems: "center",
                 justifyContent: "space-between",
-                gap: 10,
-                marginBottom: 10,
+                alignItems: "center",
+                gap: 12,
+                marginBottom: 12,
               }}
             >
               <div
                 className="pc-slot-badge"
                 style={{
-                  minWidth: "unset",
                   paddingInline: 14,
-                  borderRadius: 999,
+                  minWidth: "unset",
                   fontSize: 12,
-                  letterSpacing: ".05em",
                 }}
               >
                 {slot} · {backView === "stats" ? "WEEKLY STATS" : "FANTASY POINTS"}
@@ -447,15 +447,16 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                 onClick={() => setFlipped(false)}
                 title="Back"
                 style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 8,
+                  width: 32,
+                  height: 32,
+                  borderRadius: 10,
                   border: "1px solid rgba(255,255,255,.14)",
                   background: "rgba(255,255,255,.06)",
                   color: "#fff",
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: 800,
                   cursor: "pointer",
+                  flexShrink: 0,
                 }}
               >
                 ↺
@@ -528,8 +529,8 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                     display: "flex",
                     flexDirection: "column",
                     gap: 0,
-                    overflow: "auto",
-                    paddingRight: 2,
+                    flex: 1,
+                    overflow: "hidden",
                   }}
                 >
                   {backView === "stats" ? (
@@ -541,7 +542,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                           justifyContent: "space-between",
                           alignItems: "center",
                           gap: 12,
-                          padding: "9px 0",
+                          padding: "8px 0",
                           borderBottom: "1px solid rgba(255,255,255,.08)",
                           fontSize: 15,
                         }}
@@ -564,7 +565,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                             justifyContent: "space-between",
                             alignItems: "center",
                             gap: 12,
-                            padding: "9px 0",
+                            padding: "8px 0",
                             borderBottom: "1px solid rgba(255,255,255,.08)",
                             fontSize: 15,
                           }}
@@ -584,8 +585,8 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                           justifyContent: "space-between",
                           alignItems: "center",
                           gap: 12,
-                          paddingTop: 12,
-                          marginTop: 6,
+                          paddingTop: 10,
+                          marginTop: 4,
                           fontSize: 16,
                           fontWeight: 900,
                         }}
@@ -606,7 +607,6 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                   justifyContent: "center",
                   color: "rgba(255,255,255,.72)",
                   textAlign: "center",
-                  padding: 20,
                 }}
               >
                 Select a player first.
