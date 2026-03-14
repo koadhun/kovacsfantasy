@@ -192,19 +192,20 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
         <div className="pc-card-face pc-card-front">
           <div
             style={{
+              position: "relative",
               display: "flex",
               flexDirection: "column",
               height: "100%",
+              minHeight: 0,
               padding: 18,
-              position: "relative",
             }}
           >
             <div
               style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                marginBottom: 12,
+                position: "absolute",
+                top: 18,
+                left: 18,
+                zIndex: 2,
               }}
             >
               <div className="pc-slot-badge">{slot}</div>
@@ -214,17 +215,21 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
               <>
                 <div
                   style={{
+                    flex: 1,
                     display: "grid",
-                    gridTemplateRows: "auto auto 1fr auto",
-                    height: "100%",
+                    gridTemplateRows: "1fr auto auto auto",
                     alignItems: "start",
+                    justifyItems: "center",
+                    paddingTop: 34,
                   }}
                 >
                   <div
                     style={{
+                      width: "100%",
                       display: "flex",
                       justifyContent: "center",
-                      marginBottom: 14,
+                      alignItems: "center",
+                      minHeight: 0,
                     }}
                   >
                     <div
@@ -309,10 +314,9 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                   <div
                     style={{
                       display: "flex",
-                      justifyContent: "center",
                       alignItems: "center",
                       gap: 6,
-                      marginBottom: 8,
+                      marginTop: 10,
                       fontSize: 13,
                       fontWeight: 700,
                       color: "rgba(255,255,255,.78)",
@@ -324,10 +328,9 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
 
                   <div
                     style={{
+                      marginTop: 10,
                       textAlign: "center",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "flex-start",
+                      lineHeight: 1.02,
                     }}
                   >
                     <div
@@ -335,7 +338,6 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                         fontSize: 18,
                         fontWeight: 800,
                         color: "rgba(255,255,255,.92)",
-                        lineHeight: 1.05,
                       }}
                     >
                       {player.firstName}
@@ -345,7 +347,6 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                         fontSize: 30,
                         fontWeight: 900,
                         color: "#f8fbff",
-                        lineHeight: 1.02,
                         letterSpacing: "-0.02em",
                       }}
                     >
@@ -355,9 +356,10 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
 
                   <div
                     style={{
+                      width: "100%",
                       display: "flex",
+                      justifyContent: "flex-start",
                       alignItems: "flex-end",
-                      justifyContent: "space-between",
                       marginTop: 14,
                     }}
                   >
@@ -371,30 +373,33 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                     >
                       {score}
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setFlipped(true)}
-                      title="Weekly details"
-                      style={{
-                        width: 38,
-                        height: 38,
-                        borderRadius: "50%",
-                        border: "1px solid rgba(255,255,255,.14)",
-                        background: "rgba(255,255,255,.06)",
-                        color: "#fff",
-                        fontSize: 18,
-                        fontWeight: 800,
-                        display: "grid",
-                        placeItems: "center",
-                        cursor: "pointer",
-                        flexShrink: 0,
-                      }}
-                    >
-                      i
-                    </button>
                   </div>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() => setFlipped(true)}
+                  title="Weekly details"
+                  style={{
+                    position: "absolute",
+                    right: 18,
+                    bottom: 18,
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    border: "1px solid rgba(255,255,255,.14)",
+                    background: "rgba(255,255,255,.06)",
+                    color: "#fff",
+                    fontSize: 18,
+                    fontWeight: 800,
+                    display: "grid",
+                    placeItems: "center",
+                    cursor: "pointer",
+                    zIndex: 2,
+                  }}
+                >
+                  i
+                </button>
               </>
             ) : (
               <div
@@ -444,7 +449,8 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
               display: "flex",
               flexDirection: "column",
               height: "100%",
-              padding: "14px 16px 12px",
+              padding: "12px 14px 10px",
+              overflow: "hidden",
             }}
           >
             <div
@@ -452,8 +458,8 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                gap: 10,
-                marginBottom: 10,
+                gap: 8,
+                marginBottom: 8,
               }}
             >
               <div
@@ -492,10 +498,11 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
               <>
                 <div
                   style={{
-                    fontSize: 15,
+                    fontSize: 14,
                     fontWeight: 800,
                     color: "#f3f6ff",
                     marginBottom: 8,
+                    lineHeight: 1.1,
                   }}
                 >
                   {displayName}
@@ -505,7 +512,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                   style={{
                     display: "inline-flex",
                     gap: 8,
-                    marginBottom: 10,
+                    marginBottom: 8,
                   }}
                 >
                   <button
@@ -519,7 +526,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                           : "rgba(255,255,255,.06)",
                       color: "#fff",
                       borderRadius: 8,
-                      padding: "7px 12px",
+                      padding: "6px 12px",
                       fontSize: 13,
                       fontWeight: 800,
                       cursor: "pointer",
@@ -539,7 +546,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                           : "rgba(255,255,255,.06)",
                       color: "#fff",
                       borderRadius: 8,
-                      padding: "7px 12px",
+                      padding: "6px 12px",
                       fontSize: 13,
                       fontWeight: 800,
                       cursor: "pointer",
@@ -553,7 +560,6 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: 0,
                     flex: 1,
                     overflow: "hidden",
                   }}
@@ -566,16 +572,17 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                           display: "grid",
                           gridTemplateColumns: "minmax(0,1fr) auto",
                           alignItems: "center",
-                          gap: 12,
-                          padding: "6px 0",
+                          gap: 10,
+                          padding: "5px 0",
                           borderBottom: "1px solid rgba(255,255,255,.08)",
-                          fontSize: 14,
+                          fontSize: 13,
+                          lineHeight: 1.15,
                         }}
                       >
                         <span style={{ color: "rgba(255,255,255,.84)" }}>
                           {row.label}
                         </span>
-                        <strong style={{ color: "#fff", fontSize: 14 }}>
+                        <strong style={{ color: "#fff", fontSize: 13 }}>
                           {row.value}
                         </strong>
                       </div>
@@ -589,16 +596,17 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                             display: "grid",
                             gridTemplateColumns: "minmax(0,1fr) auto",
                             alignItems: "center",
-                            gap: 12,
-                            padding: "6px 0",
+                            gap: 10,
+                            padding: "5px 0",
                             borderBottom: "1px solid rgba(255,255,255,.08)",
-                            fontSize: 14,
+                            fontSize: 13,
+                            lineHeight: 1.15,
                           }}
                         >
                           <span style={{ color: "rgba(255,255,255,.84)" }}>
                             {row.label}
                           </span>
-                          <strong style={{ color: "#fff", fontSize: 14 }}>
+                          <strong style={{ color: "#fff", fontSize: 13 }}>
                             {row.value}
                           </strong>
                         </div>
@@ -609,11 +617,12 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                           display: "grid",
                           gridTemplateColumns: "minmax(0,1fr) auto",
                           alignItems: "center",
-                          gap: 12,
-                          paddingTop: 8,
-                          marginTop: 4,
-                          fontSize: 15,
+                          gap: 10,
+                          paddingTop: 6,
+                          marginTop: 2,
+                          fontSize: 14,
                           fontWeight: 900,
+                          lineHeight: 1.1,
                         }}
                       >
                         <span style={{ color: "#fff" }}>Total</span>

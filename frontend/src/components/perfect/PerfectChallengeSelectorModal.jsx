@@ -435,11 +435,15 @@ export default function PerfectChallengeSelectorModal({
                     selectedPlayer.currentWeekOpponentOffenseStats ? (
                       <>
                         <div
-                          className="pc-side-player-meta pc-side-defense-meta"
-                          style={{ marginBottom: 12 }}
+                          style={{
+                            marginBottom: 12,
+                            fontSize: 14,
+                            fontWeight: 800,
+                            color: "rgba(255,255,255,.86)",
+                            lineHeight: 1.2,
+                          }}
                         >
-                          <TeamLogo team={selectedPlayer.currentWeekOpponentTeam} size={14} />
-                          <span>{selectedPlayer.currentWeekOpponentTeam || "-"}</span>
+                          {selectedPlayer.currentWeekOpponentTeam || "-"}
                         </div>
 
                         <div className="pc-side-stats pc-side-stats-tight">
