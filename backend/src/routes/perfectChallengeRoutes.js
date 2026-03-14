@@ -128,6 +128,35 @@ function getOrCreate(map, key, factory) {
   return map.get(key);
 }
 
+function isGameStarted(game, now = new Date()) {
+  if (!game) return false;
+  if (game.status === "FINAL") return true;
+  return new Date(game.kickoffAt) <= now;
+}
+
+async function getStartedTeamMap(season, week) {
+  const games = await prisma.game.findMany({
+    where: { season, week },
+    select: {
+      kickoffAt: true,
+      status: true,
+      homeTeam: true,
+      awayTeam: true,
+    },
+  });
+
+  const now = new Date();
+  const map = new Map();
+
+  for (const game of games) {
+    const started = isGameStarted(game, now);
+    map.set(game.homeTeam, started);
+    map.set(game.awayTeam, started);
+  }
+
+  return map;
+}
+
 async function buildAverageMaps(season, currentWeek) {
   if (currentWeek <= 1) {
     return {
@@ -405,6 +434,42 @@ async function getSeasonSummary(userId, season) {
   };
 }
 
+async function getMaskedSeasonPoints(userId, season, viewedWeek, startedByTeam) {
+  const rosters = await prisma.perfectChallengeRoster.findMany({
+    where: {
+      userId: parseUserId(userId),
+      season,
+      week: { lte: viewedWeek },
+    },
+    include: {
+      slots: {
+        include: {
+          player: true,
+        },
+      },
+    },
+    orderBy: { week: "asc" },
+  });
+
+  let total = 0;
+
+  for (const roster of rosters) {
+    if (roster.week < viewedWeek) {
+      total += sumRosterScoreFromSlots(roster.slots);
+      continue;
+    }
+
+    const visibleSlots = roster.slots.filter((slot) => {
+      const teamCode = slot.player?.teamCode;
+      return teamCode ? startedByTeam.get(teamCode) === true : false;
+    });
+
+    total += sumRosterScoreFromSlots(visibleSlots);
+  }
+
+  return roundToOne(total);
+}
+
 async function buildWeekStateForUser(userId, season, week, createIfMissing = false) {
   const [averageMaps, pool, roster] = await Promise.all([
     buildAverageMaps(season, week),
@@ -433,6 +498,7 @@ async function buildWeekStateForUser(userId, season, week, createIfMissing = fal
     position: SLOT_TO_POSITION[slotKey],
     player: slotMap[slotKey] || null,
     canSwap: true,
+    hidden: false,
   }));
 
   const normalizedPool = pool.map((player) =>
@@ -593,7 +659,35 @@ router.get("/user/:userId/roster", requireAuth, async (req, res) => {
       false
     );
 
-    const seasonSummary = await getSeasonSummary(requestedUserId, season);
+    const isOwnRoster = String(requestedUserId) === String(req.user?.id);
+    const startedByTeam = await getStartedTeamMap(season, week);
+
+    let visibleSlots = weekState.slots;
+
+    if (!isOwnRoster) {
+      visibleSlots = weekState.slots.map((slot) => {
+        if (!slot.player) return slot;
+
+        const started = startedByTeam.get(slot.player.teamCode) === true;
+        if (started) return slot;
+
+        return {
+          ...slot,
+          hidden: true,
+          player: null,
+        };
+      });
+    }
+
+    const visibleWeeklyPoints = roundToOne(
+      visibleSlots.reduce((sum, slot) => sum + Number(slot.player?.currentScore || 0), 0)
+    );
+
+    const visibleSelectedCount = visibleSlots.filter((slot) => !!slot.player).length;
+
+    const seasonPoints = isOwnRoster
+      ? (await getSeasonSummary(requestedUserId, season)).totalPoints
+      : await getMaskedSeasonPoints(requestedUserId, season, week, startedByTeam);
 
     return res.json({
       season,
@@ -602,11 +696,11 @@ router.get("/user/:userId/roster", requireAuth, async (req, res) => {
         id: viewedUser.id,
         username: viewedUser.username,
       },
-      slots: weekState.slots,
+      slots: visibleSlots,
       summary: {
-        weeklyPoints: weekState.summary.weeklyPoints,
-        selectedCount: weekState.summary.selectedCount,
-        seasonPoints: seasonSummary.totalPoints,
+        weeklyPoints: visibleWeeklyPoints,
+        selectedCount: visibleSelectedCount,
+        seasonPoints,
       },
     });
   } catch (error) {

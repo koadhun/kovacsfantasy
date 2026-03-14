@@ -86,6 +86,7 @@ export default function PerfectChallengeCard({
   player,
   onSelect,
   readOnly = false,
+  hidden = false,
 }) {
   const [flipped, setFlipped] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
@@ -97,7 +98,7 @@ export default function PerfectChallengeCard({
     setBackView("stats");
     setFlipped(false);
     setHovered(false);
-  }, [player?.id, slot]);
+  }, [player?.id, slot, hidden]);
 
   const weeklyRows = useMemo(
     () => orderedStatRows(player?.position, player?.weeklyStats),
@@ -164,7 +165,57 @@ export default function PerfectChallengeCard({
               </div>
             </div>
 
-            {player ? (
+            {hidden ? (
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  padding: "18px 14px 26px",
+                }}
+              >
+                <div
+                  style={{
+                    width: 88,
+                    height: 88,
+                    borderRadius: "50%",
+                    display: "grid",
+                    placeItems: "center",
+                    background: "rgba(255,255,255,.05)",
+                    border: "1px solid rgba(255,255,255,.08)",
+                    fontSize: 28,
+                    marginBottom: 16,
+                  }}
+                >
+                  🔒
+                </div>
+
+                <div
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 900,
+                    color: "#f2f5ff",
+                    marginBottom: 10,
+                  }}
+                >
+                  Pick hidden
+                </div>
+
+                <div
+                  style={{
+                    fontSize: 14,
+                    color: "rgba(255,255,255,.72)",
+                    maxWidth: 220,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  This player's game has not started yet. The pick becomes visible after kickoff.
+                </div>
+              </div>
+            ) : player ? (
               <>
                 <div
                   style={{
@@ -377,7 +428,7 @@ export default function PerfectChallengeCard({
                   }}
                 >
                   {readOnly
-                    ? `No ${slot} player selected for this slot.`
+                    ? `No ${slot} player visible for this slot.`
                     : `Choose a ${slot} player for this slot.`}
                 </div>
 
@@ -403,173 +454,192 @@ export default function PerfectChallengeCard({
               boxSizing: "border-box",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 8,
-                marginBottom: 6,
-              }}
-            >
+            {hidden ? (
               <div
-                className="pc-slot-badge"
                 style={{
-                  paddingInline: 14,
-                  minWidth: "unset",
-                  fontSize: 12,
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  color: "rgba(255,255,255,.74)",
+                  padding: 20,
+                  lineHeight: 1.45,
                 }}
               >
-                {slot} · {backView === "stats" ? "WEEKLY STATS" : "FANTASY POINTS"}
+                Pick hidden until kickoff.
               </div>
-
-              <button
-                type="button"
-                onClick={() => setFlipped(false)}
-                title="Back"
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 10,
-                  border: "1px solid rgba(255,255,255,.14)",
-                  background: "rgba(255,255,255,.06)",
-                  color: "#fff",
-                  fontSize: 15,
-                  fontWeight: 800,
-                  cursor: "pointer",
-                  flexShrink: 0,
-                }}
-              >
-                ↺
-              </button>
-            </div>
-
-            {player ? (
+            ) : (
               <>
                 <div
                   style={{
-                    fontSize: 14,
-                    fontWeight: 800,
-                    color: "#f3f6ff",
-                    marginBottom: 6,
-                    lineHeight: 1.1,
-                  }}
-                >
-                  {displayName}
-                </div>
-
-                <div
-                  style={{
-                    display: "inline-flex",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                     gap: 8,
                     marginBottom: 6,
                   }}
                 >
-                  <button
-                    type="button"
-                    onClick={() => setBackView("stats")}
+                  <div
+                    className="pc-slot-badge"
                     style={{
-                      border: "1px solid rgba(255,255,255,.12)",
-                      background:
-                        backView === "stats"
-                          ? "rgba(59,130,246,.22)"
-                          : "rgba(255,255,255,.06)",
-                      color: "#fff",
-                      borderRadius: 8,
-                      padding: "6px 12px",
-                      fontSize: 13,
-                      fontWeight: 800,
-                      cursor: "pointer",
+                      paddingInline: 14,
+                      minWidth: "unset",
+                      fontSize: 12,
                     }}
                   >
-                    Stats
-                  </button>
+                    {slot} · {backView === "stats" ? "WEEKLY STATS" : "FANTASY POINTS"}
+                  </div>
 
                   <button
                     type="button"
-                    onClick={() => setBackView("points")}
+                    onClick={() => setFlipped(false)}
+                    title="Back"
                     style={{
-                      border: "1px solid rgba(255,255,255,.12)",
-                      background:
-                        backView === "points"
-                          ? "rgba(59,130,246,.22)"
-                          : "rgba(255,255,255,.06)",
+                      width: 30,
+                      height: 30,
+                      borderRadius: 10,
+                      border: "1px solid rgba(255,255,255,.14)",
+                      background: "rgba(255,255,255,.06)",
                       color: "#fff",
-                      borderRadius: 8,
-                      padding: "6px 12px",
-                      fontSize: 13,
+                      fontSize: 15,
                       fontWeight: 800,
                       cursor: "pointer",
+                      flexShrink: 0,
                     }}
                   >
-                    Points
+                    ↺
                   </button>
                 </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    flex: 1,
-                    overflow: "hidden",
-                  }}
-                >
-                  {(backView === "stats" ? weeklyRows : breakdownRows).map((row) => (
+                {player ? (
+                  <>
                     <div
-                      key={row.key}
                       style={{
-                        display: "grid",
-                        gridTemplateColumns: "minmax(0,1fr) auto",
-                        alignItems: "center",
-                        gap: 10,
-                        padding: "4px 0",
-                        borderBottom: "1px solid rgba(255,255,255,.08)",
-                        fontSize: 12,
-                        lineHeight: 1.05,
+                        fontSize: 14,
+                        fontWeight: 800,
+                        color: "#f3f6ff",
+                        marginBottom: 6,
+                        lineHeight: 1.1,
                       }}
                     >
-                      <span style={{ color: "rgba(255,255,255,.84)" }}>
-                        {row.label}
-                      </span>
-                      <strong style={{ color: "#fff", fontSize: 12 }}>
-                        {row.value}
-                      </strong>
+                      {displayName}
                     </div>
-                  ))}
 
-                  {backView === "points" ? (
                     <div
                       style={{
-                        display: "grid",
-                        gridTemplateColumns: "minmax(0,1fr) auto",
-                        alignItems: "center",
-                        gap: 10,
-                        paddingTop: 5,
-                        marginTop: 2,
-                        fontSize: 13,
-                        fontWeight: 900,
-                        lineHeight: 1.05,
+                        display: "inline-flex",
+                        gap: 8,
+                        marginBottom: 6,
                       }}
                     >
-                      <span style={{ color: "#fff" }}>Total</span>
-                      <strong style={{ color: "#fff" }}>{breakdownTotal}</strong>
+                      <button
+                        type="button"
+                        onClick={() => setBackView("stats")}
+                        style={{
+                          border: "1px solid rgba(255,255,255,.12)",
+                          background:
+                            backView === "stats"
+                              ? "rgba(59,130,246,.22)"
+                              : "rgba(255,255,255,.06)",
+                          color: "#fff",
+                          borderRadius: 8,
+                          padding: "6px 12px",
+                          fontSize: 13,
+                          fontWeight: 800,
+                          cursor: "pointer",
+                        }}
+                      >
+                        Stats
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setBackView("points")}
+                        style={{
+                          border: "1px solid rgba(255,255,255,.12)",
+                          background:
+                            backView === "points"
+                              ? "rgba(59,130,246,.22)"
+                              : "rgba(255,255,255,.06)",
+                          color: "#fff",
+                          borderRadius: 8,
+                          padding: "6px 12px",
+                          fontSize: 13,
+                          fontWeight: 800,
+                          cursor: "pointer",
+                        }}
+                      >
+                        Points
+                      </button>
                     </div>
-                  ) : null}
-                </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        flex: 1,
+                        overflow: "hidden",
+                      }}
+                    >
+                      {(backView === "stats" ? weeklyRows : breakdownRows).map((row) => (
+                        <div
+                          key={row.key}
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: "minmax(0,1fr) auto",
+                            alignItems: "center",
+                            gap: 10,
+                            padding: "4px 0",
+                            borderBottom: "1px solid rgba(255,255,255,.08)",
+                            fontSize: 12,
+                            lineHeight: 1.05,
+                          }}
+                        >
+                          <span style={{ color: "rgba(255,255,255,.84)" }}>
+                            {row.label}
+                          </span>
+                          <strong style={{ color: "#fff", fontSize: 12 }}>
+                            {row.value}
+                          </strong>
+                        </div>
+                      ))}
+
+                      {backView === "points" ? (
+                        <div
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: "minmax(0,1fr) auto",
+                            alignItems: "center",
+                            gap: 10,
+                            paddingTop: 5,
+                            marginTop: 2,
+                            fontSize: 13,
+                            fontWeight: 900,
+                            lineHeight: 1.05,
+                          }}
+                        >
+                          <span style={{ color: "#fff" }}>Total</span>
+                          <strong style={{ color: "#fff" }}>{breakdownTotal}</strong>
+                        </div>
+                      ) : null}
+                    </div>
+                  </>
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "rgba(255,255,255,.72)",
+                      textAlign: "center",
+                    }}
+                  >
+                    Select a player first.
+                  </div>
+                )}
               </>
-            ) : (
-              <div
-                style={{
-                  display: "flex",
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "rgba(255,255,255,.72)",
-                  textAlign: "center",
-                }}
-              >
-                Select a player first.
-              </div>
             )}
           </div>
         </div>

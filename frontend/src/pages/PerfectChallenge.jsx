@@ -232,7 +232,7 @@ export default function PerfectChallenge() {
 
             <p className="sub" style={{ maxWidth: 840 }}>
               {isReadOnlyView
-                ? "Itt az adott felhasználó kiválasztott 8 játékosát látod az adott hétre, ugyanazon a Perfect Challenge felületen."
+                ? "Itt az adott felhasználó kiválasztott játékosait látod az adott hétre. A még el nem kezdett meccsekhez tartozó pickek rejtve maradnak."
                 : "Válassz 8 játékost fix pozíciókra bontva. A front oldalon a játékos pontszáma látszik, a hátoldalon a heti statok és a fantasy pontok breakdown nézet is megtekinthető."}
             </p>
           </div>
@@ -295,7 +295,7 @@ export default function PerfectChallenge() {
 
           <span className="pill">
             <span className="dot" />
-            {filledCount}/8 selected
+            {filledCount}/8 visible
           </span>
         </div>
       </div>
@@ -312,6 +312,7 @@ export default function PerfectChallenge() {
             key={slot.slot}
             slot={slot.slot}
             player={slot.player}
+            hidden={Boolean(slot.hidden)}
             onSelect={isReadOnlyView ? undefined : () => setModalSlot(slot)}
             readOnly={isReadOnlyView}
           />
