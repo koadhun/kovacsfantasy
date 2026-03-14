@@ -72,7 +72,9 @@ function formatScore(value) {
 
 export default function PerfectChallenge() {
   const [sp, setSp] = useSearchParams();
+
   const requestedWeek = Number(sp.get("week") || 1);
+  const viewedUserId = sp.get("userId") || "";
 
   const [weeks, setWeeks] = useState([]);
   const [week, setWeek] = useState(requestedWeek);
@@ -84,8 +86,11 @@ export default function PerfectChallenge() {
     selectedCount: 0,
     seasonSelectedCount: 0,
   });
+  const [viewingUser, setViewingUser] = useState(null);
   const [err, setErr] = useState("");
   const [modalSlot, setModalSlot] = useState(null);
+
+  const isReadOnlyView = Boolean(viewedUserId);
 
   async function loadWeeks() {
     const res = await api.get("/perfect-challenge/weeks");
@@ -102,9 +107,7 @@ export default function PerfectChallenge() {
     setWeek(safeWeek);
   }
 
-  async function loadWeekData(targetWeek) {
-    setErr("");
-
+  async function loadMyWeekData(targetWeek) {
     const res = await api.get("/perfect-challenge/week", {
       params: { season: SEASON, week: targetWeek },
     });
@@ -119,6 +122,23 @@ export default function PerfectChallenge() {
         seasonSelectedCount: 0,
       }
     );
+    setViewingUser(null);
+  }
+
+  async function loadViewedUserWeekData(targetUserId, targetWeek) {
+    const res = await api.get(`/perfect-challenge/user/${targetUserId}/roster`, {
+      params: { season: SEASON, week: targetWeek },
+    });
+
+    setSlots(res.data?.slots || []);
+    setPoolByPosition({});
+    setSummary({
+      weeklyPoints: res.data?.summary?.weeklyPoints || 0,
+      seasonPoints: res.data?.summary?.seasonPoints || 0,
+      selectedCount: res.data?.summary?.selectedCount || 0,
+      seasonSelectedCount: 0,
+    });
+    setViewingUser(res.data?.user || null);
   }
 
   useEffect(() => {
@@ -129,19 +149,37 @@ export default function PerfectChallenge() {
   useEffect(() => {
     if (!week) return;
 
-    const currentQueryWeek = Number(sp.get("week") || 0);
-    if (currentQueryWeek !== week) {
-      setSp({ week: String(week) }, { replace: true });
+    const nextParams = { week: String(week) };
+    if (viewedUserId) nextParams.userId = viewedUserId;
+
+    const currentWeek = sp.get("week") || "";
+    const currentUserId = sp.get("userId") || "";
+
+    if (
+      currentWeek !== String(week) ||
+      currentUserId !== (viewedUserId || "")
+    ) {
+      setSp(nextParams, { replace: true });
     }
 
-    loadWeekData(week).catch(() =>
-      setErr("Nem sikerült betölteni a Perfect Challenge adatokat.")
+    setErr("");
+    setModalSlot(null);
+
+    const loader = viewedUserId
+      ? loadViewedUserWeekData(viewedUserId, week)
+      : loadMyWeekData(week);
+
+    loader.catch((e) =>
+      setErr(
+        e?.response?.data?.error ||
+          "Nem sikerült betölteni a Perfect Challenge adatokat."
+      )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [week]);
+  }, [week, viewedUserId]);
 
   async function pickPlayer(playerId) {
-    if (!modalSlot) return;
+    if (!modalSlot || isReadOnlyView) return;
 
     try {
       await api.put("/perfect-challenge/slot", {
@@ -152,7 +190,7 @@ export default function PerfectChallenge() {
       });
 
       setModalSlot(null);
-      await loadWeekData(week);
+      await loadMyWeekData(week);
     } catch (e) {
       setErr(e?.response?.data?.error || "Nem sikerült frissíteni a slotot.");
     }
@@ -181,15 +219,21 @@ export default function PerfectChallenge() {
           <div>
             <div className="kicker">
               <span className="tag">FANTASY</span>
-              <span>Perfect Challenge</span>
+              <span>
+                {isReadOnlyView ? "Perfect Challenge Viewer" : "Perfect Challenge"}
+              </span>
             </div>
 
-            <h1 className="h1">Perfect Challenge</h1>
+            <h1 className="h1">
+              {isReadOnlyView && viewingUser
+                ? `${viewingUser.username} · Perfect Challenge`
+                : "Perfect Challenge"}
+            </h1>
 
             <p className="sub" style={{ maxWidth: 840 }}>
-              Válassz 8 játékost fix pozíciókra bontva. A front oldalon a játékos
-              pontszáma látszik, a hátoldalon a heti statok és a fantasy pontok
-              breakdown nézet is megtekinthető.
+              {isReadOnlyView
+                ? "Itt az adott felhasználó kiválasztott 8 játékosát látod az adott hétre, ugyanazon a Perfect Challenge felületen."
+                : "Válassz 8 játékost fix pozíciókra bontva. A front oldalon a játékos pontszáma látszik, a hátoldalon a heti statok és a fantasy pontok breakdown nézet is megtekinthető."}
             </p>
           </div>
 
@@ -224,12 +268,30 @@ export default function PerfectChallenge() {
 
           <div className="filters-spacer" />
 
-          <Link
-            to={`/fantasy/perfect-challenge/leaderboard?week=${week}`}
-            className="btn"
-          >
-            Leaderboard
-          </Link>
+          {isReadOnlyView ? (
+            <>
+              <Link
+                to={`/fantasy/perfect-challenge/leaderboard?week=${week}`}
+                className="btn"
+              >
+                Back to Leaderboard
+              </Link>
+
+              <Link
+                to={`/fantasy/perfect-challenge?week=${week}`}
+                className="btn primary"
+              >
+                My Perfect Challenge
+              </Link>
+            </>
+          ) : (
+            <Link
+              to={`/fantasy/perfect-challenge/leaderboard?week=${week}`}
+              className="btn"
+            >
+              Leaderboard
+            </Link>
+          )}
 
           <span className="pill">
             <span className="dot" />
@@ -250,18 +312,23 @@ export default function PerfectChallenge() {
             key={slot.slot}
             slot={slot.slot}
             player={slot.player}
-            onSelect={() => setModalSlot(slot)}
+            onSelect={
+              isReadOnlyView ? undefined : () => setModalSlot(slot)
+            }
+            readOnly={isReadOnlyView}
           />
         ))}
       </div>
 
-      <PerfectChallengeSelectorModal
-        open={!!modalSlot}
-        title={modalSlot ? `Select player for ${modalSlot.slot}` : ""}
-        players={modalPlayers}
-        onClose={() => setModalSlot(null)}
-        onPick={pickPlayer}
-      />
+      {!isReadOnlyView && (
+        <PerfectChallengeSelectorModal
+          open={!!modalSlot}
+          title={modalSlot ? `Select player for ${modalSlot.slot}` : ""}
+          players={modalPlayers}
+          onClose={() => setModalSlot(null)}
+          onPick={pickPlayer}
+        />
+      )}
     </div>
   );
 }

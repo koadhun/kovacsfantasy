@@ -140,7 +140,7 @@ export default function PerfectChallengeLeaderboard() {
                 <td>{idx + 1}</td>
                 <td>
                   <Link
-                    to={`/fantasy/perfect-challenge/user/${row.user.id}?week=${week}`}
+                    to={`/fantasy/perfect-challenge?week=${week}&userId=${row.user.id}`}
                     style={userLinkStyle}
                   >
                     {row.user.username}
@@ -180,7 +180,7 @@ export default function PerfectChallengeLeaderboard() {
                 <td>{idx + 1}</td>
                 <td>
                   <Link
-                    to={`/fantasy/perfect-challenge/user/${row.userId}?week=${week}`}
+                    to={`/fantasy/perfect-challenge?week=${week}&userId=${row.userId}`}
                     style={userLinkStyle}
                   >
                     {row.username}
