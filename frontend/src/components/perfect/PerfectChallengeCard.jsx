@@ -58,6 +58,7 @@ function formatBreakdownValue(value) {
 function orderedStatRows(position, stats) {
   if (!stats || !position) return [];
   const order = STAT_ORDER_BY_POSITION[position] || [];
+
   return order.map((key) => ({
     key,
     label: LABELS[key] || key,
@@ -68,6 +69,7 @@ function orderedStatRows(position, stats) {
 function orderedBreakdownRows(position, breakdown) {
   if (!breakdown || !position) return [];
   const order = BREAKDOWN_ORDER_BY_POSITION[position] || [];
+
   return order.map((key) => ({
     key,
     label: LABELS[key] || key,
@@ -122,11 +124,13 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
           <div
             style={{
               position: "relative",
+              width: "100%",
               height: "100%",
               minHeight: 0,
-              padding: "14px 14px 16px",
+              padding: "12px 12px 14px",
               display: "flex",
               flexDirection: "column",
+              boxSizing: "border-box",
             }}
           >
             <div
@@ -134,14 +138,14 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                 position: "absolute",
                 top: 14,
                 left: 14,
-                zIndex: 3,
+                zIndex: 5,
               }}
             >
               <div
                 className="pc-slot-badge"
                 style={{
-                  minWidth: 48,
-                  height: 32,
+                  minWidth: 46,
+                  height: 31,
                   padding: "0 13px",
                   display: "inline-flex",
                   alignItems: "center",
@@ -160,13 +164,15 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                 <div
                   style={{
                     flex: 1,
+                    width: "100%",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
                     textAlign: "center",
-                    paddingTop: 24,
-                    paddingBottom: 54,
+                    paddingTop: 26,
+                    paddingBottom: 64,
+                    boxSizing: "border-box",
                   }}
                 >
                   <div
@@ -174,12 +180,13 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                       position: "relative",
                       width: 132,
                       height: 132,
-                      borderRadius: 20,
+                      borderRadius: 22,
                       overflow: "hidden",
                       background:
                         "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
                       boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
                       marginBottom: 12,
+                      flexShrink: 0,
                     }}
                     onMouseEnter={() => setHovered(true)}
                     onMouseLeave={() => setHovered(false)}
@@ -257,13 +264,14 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                       fontSize: 13,
                       fontWeight: 700,
                       color: "rgba(255,255,255,.78)",
+                      flexShrink: 0,
                     }}
                   >
                     <TeamLogo team={player.teamCode} size={14} />
                     <span>{player.teamCode}</span>
                   </div>
 
-                  <div style={{ lineHeight: 1.02 }}>
+                  <div style={{ lineHeight: 1.02, flexShrink: 0 }}>
                     <div
                       style={{
                         fontSize: 17,
@@ -289,13 +297,15 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                 <div
                   style={{
                     position: "absolute",
-                    left: 14,
+                    left: "50%",
                     bottom: 18,
+                    transform: "translateX(-50%)",
                     fontSize: 34,
                     fontWeight: 900,
                     lineHeight: 1,
                     color: "#f8fbff",
-                    zIndex: 2,
+                    zIndex: 3,
+                    pointerEvents: "none",
                   }}
                 >
                   {score}
@@ -309,18 +319,18 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                     position: "absolute",
                     right: 14,
                     bottom: 14,
-                    width: 32,
-                    height: 32,
+                    width: 30,
+                    height: 30,
                     borderRadius: "50%",
                     border: "1px solid rgba(255,255,255,.14)",
                     background: "rgba(255,255,255,.06)",
                     color: "#fff",
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: 800,
                     display: "grid",
                     placeItems: "center",
                     cursor: "pointer",
-                    zIndex: 3,
+                    zIndex: 5,
                   }}
                 >
                   i
@@ -376,6 +386,8 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
               height: "100%",
               padding: "10px 14px 10px",
               overflow: "hidden",
+              width: "100%",
+              boxSizing: "border-box",
             }}
           >
             <div
