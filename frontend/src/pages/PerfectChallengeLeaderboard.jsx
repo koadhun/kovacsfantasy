@@ -9,6 +9,12 @@ function formatScore(value) {
   return Number(value || 0).toFixed(1);
 }
 
+const userLinkStyle = {
+  color: "inherit",
+  textDecoration: "none",
+  fontWeight: 800,
+};
+
 export default function PerfectChallengeLeaderboard() {
   const [sp, setSp] = useSearchParams();
   const initialWeek = Number(sp.get("week") || 1);
@@ -132,7 +138,14 @@ export default function PerfectChallengeLeaderboard() {
             {weekly.map((row, idx) => (
               <tr key={row.user.id}>
                 <td>{idx + 1}</td>
-                <td>{row.user.username}</td>
+                <td>
+                  <Link
+                    to={`/fantasy/perfect-challenge/user/${row.user.id}?week=${week}`}
+                    style={userLinkStyle}
+                  >
+                    {row.user.username}
+                  </Link>
+                </td>
                 <td>{formatScore(row.points)}</td>
                 <td>
                   {row.selectedCount}/{row.totalSlots}
@@ -165,7 +178,14 @@ export default function PerfectChallengeLeaderboard() {
             {totals.map((row, idx) => (
               <tr key={row.userId}>
                 <td>{idx + 1}</td>
-                <td>{row.username}</td>
+                <td>
+                  <Link
+                    to={`/fantasy/perfect-challenge/user/${row.userId}?week=${week}`}
+                    style={userLinkStyle}
+                  >
+                    {row.username}
+                  </Link>
+                </td>
                 <td>{formatScore(row.points)}</td>
               </tr>
             ))}

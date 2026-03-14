@@ -63,6 +63,11 @@ function roundToOne(value) {
   return Number(Number(value || 0).toFixed(1));
 }
 
+function parseUserId(value) {
+  const n = Number(value);
+  return Number.isNaN(n) ? value : n;
+}
+
 function normalizeTeamKey(value) {
   if (!value) return "";
   const trimmed = String(value).trim();
@@ -303,10 +308,10 @@ function normalizePlayer(player, averageMaps) {
 }
 
 async function ensureUserExists(userId) {
-  if (!userId) return null;
+  if (userId == null) return null;
 
   return prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: parseUserId(userId) },
     select: { id: true, username: true, role: true },
   });
 }
@@ -323,7 +328,7 @@ async function getOrCreateRoster(userId, season, week) {
   let roster = await prisma.perfectChallengeRoster.findUnique({
     where: {
       userId_season_week: {
-        userId,
+        userId: parseUserId(userId),
         season,
         week,
       },
@@ -339,7 +344,7 @@ async function getOrCreateRoster(userId, season, week) {
 
   if (!roster) {
     roster = await prisma.perfectChallengeRoster.create({
-      data: { userId, season, week },
+      data: { userId: parseUserId(userId), season, week },
       include: {
         slots: {
           include: {
@@ -353,9 +358,28 @@ async function getOrCreateRoster(userId, season, week) {
   return roster;
 }
 
+async function getExistingRoster(userId, season, week) {
+  return prisma.perfectChallengeRoster.findUnique({
+    where: {
+      userId_season_week: {
+        userId: parseUserId(userId),
+        season,
+        week,
+      },
+    },
+    include: {
+      slots: {
+        include: {
+          player: true,
+        },
+      },
+    },
+  });
+}
+
 async function getSeasonSummary(userId, season) {
   const rosters = await prisma.perfectChallengeRoster.findMany({
-    where: { userId, season },
+    where: { userId: parseUserId(userId), season },
     include: {
       slots: {
         include: {
@@ -381,12 +405,70 @@ async function getSeasonSummary(userId, season) {
   };
 }
 
+async function buildWeekStateForUser(userId, season, week, createIfMissing = false) {
+  const [averageMaps, pool, roster] = await Promise.all([
+    buildAverageMaps(season, week),
+    prisma.perfectChallengePlayer.findMany({
+      where: {
+        season,
+        week,
+        isActive: true,
+      },
+      orderBy: [{ position: "asc" }, { lastName: "asc" }, { firstName: "asc" }],
+    }),
+    createIfMissing
+      ? getOrCreateRoster(userId, season, week)
+      : getExistingRoster(userId, season, week),
+  ]);
+
+  const slotMap = Object.fromEntries(
+    (roster?.slots || []).map((slot) => [
+      slot.slot,
+      normalizePlayer(slot.player, averageMaps),
+    ])
+  );
+
+  const slots = SLOT_ORDER.map((slotKey) => ({
+    slot: slotKey,
+    position: SLOT_TO_POSITION[slotKey],
+    player: slotMap[slotKey] || null,
+    canSwap: true,
+  }));
+
+  const normalizedPool = pool.map((player) =>
+    normalizePlayer(player, averageMaps)
+  );
+
+  const poolByPosition = {
+    QB: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "QB")),
+    RB: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "RB")),
+    WR: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "WR")),
+    TE: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "TE")),
+    K: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "K")),
+    DEF: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "DEF")),
+  };
+
+  const weeklyPoints = roundToOne(
+    slots.reduce((sum, slot) => sum + Number(slot.player?.currentScore || 0), 0)
+  );
+
+  return {
+    roster,
+    slots,
+    poolByPosition,
+    summary: {
+      weeklyPoints,
+      selectedCount: slots.filter((slot) => !!slot.player).length,
+    },
+  };
+}
+
 function buildWeeklyLeaderboardRows(users, rosters) {
-  const rosterMap = new Map(rosters.map((r) => [r.userId, r]));
+  const rosterMap = new Map(rosters.map((r) => [String(r.userId), r]));
 
   return users
     .map((user) => {
-      const roster = rosterMap.get(user.id);
+      const roster = rosterMap.get(String(user.id));
       const selectedCount = roster?.slots?.length || 0;
       const points = roundToOne(sumRosterScoreFromSlots(roster?.slots || []));
 
@@ -412,7 +494,7 @@ function buildSeasonLeaderboardRows(users, rosters) {
   const byUser = new Map();
 
   for (const user of users) {
-    byUser.set(user.id, {
+    byUser.set(String(user.id), {
       userId: user.id,
       username: user.username,
       points: 0,
@@ -421,7 +503,7 @@ function buildSeasonLeaderboardRows(users, rosters) {
   }
 
   for (const roster of rosters) {
-    const row = byUser.get(roster.userId);
+    const row = byUser.get(String(roster.userId));
     if (!row) continue;
 
     row.points = roundToOne(row.points + sumRosterScoreFromSlots(roster.slots || []));
@@ -491,67 +573,68 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
   }
 });
 
+router.get("/user/:userId/roster", requireAuth, async (req, res) => {
+  try {
+    const season = Number(req.query.season || DEFAULT_SEASON);
+    const week = Number(req.query.week || 1);
+    const requestedUserId = parseUserId(req.params.userId);
+
+    const viewedUser = await ensureUserExists(requestedUserId);
+    if (!viewedUser) {
+      return res.status(404).json({
+        error: "Felhasználó nem található.",
+      });
+    }
+
+    const weekState = await buildWeekStateForUser(
+      requestedUserId,
+      season,
+      week,
+      false
+    );
+
+    const seasonSummary = await getSeasonSummary(requestedUserId, season);
+
+    return res.json({
+      season,
+      week,
+      user: {
+        id: viewedUser.id,
+        username: viewedUser.username,
+      },
+      slots: weekState.slots,
+      summary: {
+        weeklyPoints: weekState.summary.weeklyPoints,
+        selectedCount: weekState.summary.selectedCount,
+        seasonPoints: seasonSummary.totalPoints,
+      },
+    });
+  } catch (error) {
+    console.error("GET /api/perfect-challenge/user/:userId/roster error:", error);
+    return res.status(500).json({
+      error: "Nem sikerült betölteni a felhasználó Perfect Challenge rosterét.",
+    });
+  }
+});
+
 router.get("/week", requireAuth, async (req, res) => {
   try {
     const season = Number(req.query.season || DEFAULT_SEASON);
     const week = Number(req.query.week || 1);
     const userId = req.user?.id;
 
-    const roster = await getOrCreateRoster(userId, season, week);
-
-    const pool = await prisma.perfectChallengePlayer.findMany({
-      where: {
-        season,
-        week,
-        isActive: true,
-      },
-      orderBy: [{ position: "asc" }, { lastName: "asc" }, { firstName: "asc" }],
-    });
-
-    const averageMaps = await buildAverageMaps(season, week);
-
-    const slotMap = Object.fromEntries(
-      roster.slots.map((slot) => [
-        slot.slot,
-        normalizePlayer(slot.player, averageMaps),
-      ])
-    );
-
-    const slots = SLOT_ORDER.map((slotKey) => ({
-      slot: slotKey,
-      position: SLOT_TO_POSITION[slotKey],
-      player: slotMap[slotKey] || null,
-      canSwap: true,
-    }));
-
-    const normalizedPool = pool.map((player) =>
-      normalizePlayer(player, averageMaps)
-    );
-
-    const poolByPosition = {
-      QB: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "QB")),
-      RB: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "RB")),
-      WR: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "WR")),
-      TE: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "TE")),
-      K: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "K")),
-      DEF: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "DEF")),
-    };
-
-    const weeklyPoints = roundToOne(
-      slots.reduce((sum, slot) => sum + Number(slot.player?.currentScore || 0), 0)
-    );
-
+    const weekState = await buildWeekStateForUser(userId, season, week, true);
     const seasonSummary = await getSeasonSummary(userId, season);
 
     return res.json({
       season,
       week,
-      slots,
-      poolByPosition,
+      slots: weekState.slots,
+      poolByPosition: weekState.poolByPosition,
       summary: {
-        weeklyPoints,
+        weeklyPoints: weekState.summary.weeklyPoints,
         seasonPoints: seasonSummary.totalPoints,
-        selectedCount: slots.filter((slot) => !!slot.player).length,
+        selectedCount: weekState.summary.selectedCount,
         seasonSelectedCount: seasonSummary.selectedSlots,
       },
     });

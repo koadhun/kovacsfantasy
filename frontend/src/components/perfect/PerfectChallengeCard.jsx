@@ -81,7 +81,12 @@ function getDisplayName(player) {
   return player?.displayName || `${player?.firstName || ""} ${player?.lastName || ""}`.trim();
 }
 
-export default function PerfectChallengeCard({ slot, player, onSelect }) {
+export default function PerfectChallengeCard({
+  slot,
+  player,
+  onSelect,
+  readOnly = false,
+}) {
   const [flipped, setFlipped] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
   const [backView, setBackView] = useState("stats");
@@ -188,8 +193,8 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                       marginBottom: 12,
                       flexShrink: 0,
                     }}
-                    onMouseEnter={() => setHovered(true)}
-                    onMouseLeave={() => setHovered(false)}
+                    onMouseEnter={() => !readOnly && setHovered(true)}
+                    onMouseLeave={() => !readOnly && setHovered(false)}
                   >
                     {showHeadshot ? (
                       <img
@@ -216,43 +221,47 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                       </div>
                     )}
 
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        background: hovered
-                          ? "linear-gradient(180deg, rgba(2,6,23,0.08), rgba(2,6,23,0.58))"
-                          : "transparent",
-                        transition: "0.18s ease",
-                      }}
-                    />
+                    {!readOnly ? (
+                      <>
+                        <div
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            background: hovered
+                              ? "linear-gradient(180deg, rgba(2,6,23,0.08), rgba(2,6,23,0.58))"
+                              : "transparent",
+                            transition: "0.18s ease",
+                          }}
+                        />
 
-                    <button
-                      type="button"
-                      onClick={onSelect}
-                      style={{
-                        position: "absolute",
-                        left: "50%",
-                        bottom: 10,
-                        transform: hovered
-                          ? "translateX(-50%) translateY(0)"
-                          : "translateX(-50%) translateY(8px)",
-                        opacity: hovered ? 1 : 0,
-                        pointerEvents: hovered ? "auto" : "none",
-                        transition: "all 0.18s ease",
-                        border: "1px solid rgba(59,130,246,.55)",
-                        background: "rgba(8,18,44,.95)",
-                        color: "#fff",
-                        borderRadius: 10,
-                        padding: "8px 12px",
-                        fontSize: 12,
-                        fontWeight: 800,
-                        whiteSpace: "nowrap",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Change player
-                    </button>
+                        <button
+                          type="button"
+                          onClick={onSelect}
+                          style={{
+                            position: "absolute",
+                            left: "50%",
+                            bottom: 10,
+                            transform: hovered
+                              ? "translateX(-50%) translateY(0)"
+                              : "translateX(-50%) translateY(8px)",
+                            opacity: hovered ? 1 : 0,
+                            pointerEvents: hovered ? "auto" : "none",
+                            transition: "all 0.18s ease",
+                            border: "1px solid rgba(59,130,246,.55)",
+                            background: "rgba(8,18,44,.95)",
+                            color: "#fff",
+                            borderRadius: 10,
+                            padding: "8px 12px",
+                            fontSize: 12,
+                            fontWeight: 800,
+                            whiteSpace: "nowrap",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Change player
+                        </button>
+                      </>
+                    ) : null}
                   </div>
 
                   <div
@@ -367,12 +376,16 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                     maxWidth: 220,
                   }}
                 >
-                  Choose a {slot} player for this slot.
+                  {readOnly
+                    ? `No ${slot} player selected for this slot.`
+                    : `Choose a ${slot} player for this slot.`}
                 </div>
 
-                <button className="btn primary" onClick={onSelect}>
-                  Select player
-                </button>
+                {!readOnly ? (
+                  <button className="btn primary" onClick={onSelect}>
+                    Select player
+                  </button>
+                ) : null}
               </div>
             )}
           </div>
