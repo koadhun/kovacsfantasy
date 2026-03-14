@@ -50,43 +50,43 @@ function sumRosterScoreFromSlots(slots = []) {
 
 function createDefenseAccumulator() {
   return {
-    weeks: new Set(),
+    games: 0,
     allowedPassingYards: 0,
     allowedRushingYards: 0,
     interceptions: 0,
     fumbles: 0,
     sacks: 0,
     returnTDs: 0,
-    safety: 0,
+    safeties: 0,
     allowedPoints: 0,
   };
 }
 
 function createOffenseAccumulator() {
   return {
-    weeks: new Set(),
+    games: 0,
     passingYards: 0,
     passingTDs: 0,
     interceptions: 0,
     rushingYards: 0,
     rushingTDs: 0,
     fumbles: 0,
-    pointsScored: 0,
+    points: 0,
   };
 }
 
-function getOrCreateAccumulator(map, teamCode, factory) {
-  if (!map.has(teamCode)) {
-    map.set(teamCode, factory());
+function getOrCreate(map, key, factory) {
+  if (!map.has(key)) {
+    map.set(key, factory());
   }
-  return map.get(teamCode);
+  return map.get(key);
 }
 
-async function buildWeeklyAverageMaps(season, currentWeek) {
+async function buildAverageMaps(season, currentWeek) {
   if (currentWeek <= 1) {
     return {
-      defenseAveragesByTeam: new Map(),
-      offenseAveragesByTeam: new Map(),
+      defenseByTeam: new Map(),
+      offenseByTeam: new Map(),
     };
   }
 
@@ -99,140 +99,130 @@ async function buildWeeklyAverageMaps(season, currentWeek) {
     orderBy: [{ week: "asc" }, { teamCode: "asc" }, { position: "asc" }],
   });
 
-  const defenseMap = new Map();
-  const offenseMap = new Map();
+  const defenseByTeam = new Map();
+  const offenseByTeam = new Map();
+
+  const countedDefenseGames = new Set();
+  const countedOffenseGames = new Set();
 
   for (const player of previousWeeksPlayers) {
-    const weeklyStats = player.weeklyStats || {};
+    const stats = player.weeklyStats || {};
 
     if (player.position === "DEF") {
-      const defenseAcc = getOrCreateAccumulator(
-        defenseMap,
+      const defenseAcc = getOrCreate(
+        defenseByTeam,
         player.teamCode,
         createDefenseAccumulator
       );
 
-      defenseAcc.weeks.add(player.week);
-      defenseAcc.allowedPassingYards += Number(player.allowedPassingYards || 0);
-      defenseAcc.allowedRushingYards += Number(player.allowedRushingYards || 0);
-      defenseAcc.interceptions += Number(
-        weeklyStats.interception ?? weeklyStats.interceptions ?? 0
-      );
-      defenseAcc.fumbles += Number(
-        weeklyStats.forcedFumble ?? weeklyStats.forcedFumbles ?? 0
-      );
-      defenseAcc.sacks += Number(weeklyStats.sack ?? weeklyStats.sacks ?? 0);
-      defenseAcc.returnTDs += Number(
-        weeklyStats.returnTD ?? weeklyStats.returnTDs ?? 0
-      );
-      defenseAcc.safety += Number(weeklyStats.safety ?? weeklyStats.safeties ?? 0);
-      defenseAcc.allowedPoints += Number(weeklyStats.allowedPoints || 0);
+      const defenseGameKey = `${player.teamCode}-${player.week}`;
+      if (!countedDefenseGames.has(defenseGameKey)) {
+        countedDefenseGames.add(defenseGameKey);
+        defenseAcc.games += 1;
+        defenseAcc.allowedPassingYards += Number(player.allowedPassingYards || 0);
+        defenseAcc.allowedRushingYards += Number(player.allowedRushingYards || 0);
+        defenseAcc.interceptions += Number(
+          stats.interception ?? stats.interceptions ?? 0
+        );
+        defenseAcc.fumbles += Number(
+          stats.forcedFumble ?? stats.forcedFumbles ?? 0
+        );
+        defenseAcc.sacks += Number(stats.sack ?? stats.sacks ?? 0);
+        defenseAcc.returnTDs += Number(stats.returnTD ?? stats.returnTDs ?? 0);
+        defenseAcc.safeties += Number(stats.safety ?? stats.safeties ?? 0);
+        defenseAcc.allowedPoints += Number(stats.allowedPoints || 0);
+      }
 
       if (player.currentWeekOpponentTeam) {
-        const offenseAcc = getOrCreateAccumulator(
-          offenseMap,
+        const offenseAcc = getOrCreate(
+          offenseByTeam,
           player.currentWeekOpponentTeam,
           createOffenseAccumulator
         );
 
-        offenseAcc.weeks.add(player.week);
-        offenseAcc.pointsScored += Number(weeklyStats.allowedPoints || 0);
+        const offenseGameKey = `${player.currentWeekOpponentTeam}-${player.week}`;
+        if (!countedOffenseGames.has(offenseGameKey)) {
+          countedOffenseGames.add(offenseGameKey);
+          offenseAcc.games += 1;
+          offenseAcc.points += Number(stats.allowedPoints || 0);
+        }
       }
 
       continue;
     }
 
+    const offenseAcc = getOrCreate(
+      offenseByTeam,
+      player.teamCode,
+      createOffenseAccumulator
+    );
+
     if (player.position === "QB") {
-      const offenseAcc = getOrCreateAccumulator(
-        offenseMap,
-        player.teamCode,
-        createOffenseAccumulator
-      );
-
-      offenseAcc.weeks.add(player.week);
-      offenseAcc.passingYards += Number(weeklyStats.passingYards || 0);
-      offenseAcc.passingTDs += Number(weeklyStats.passingTDs || 0);
-      offenseAcc.interceptions += Number(weeklyStats.interceptions || 0);
-      offenseAcc.rushingYards += Number(weeklyStats.rushingYards || 0);
-      offenseAcc.rushingTDs += Number(weeklyStats.rushingTDs || 0);
+      offenseAcc.passingYards += Number(stats.passingYards || 0);
+      offenseAcc.passingTDs += Number(stats.passingTDs || 0);
+      offenseAcc.interceptions += Number(stats.interceptions || 0);
+      offenseAcc.rushingYards += Number(stats.rushingYards || 0);
+      offenseAcc.rushingTDs += Number(stats.rushingTDs || 0);
       offenseAcc.fumbles += Number(
-        weeklyStats.fumble != null ? weeklyStats.fumble : weeklyStats.fumbles || 0
+        stats.fumble != null ? stats.fumble : stats.fumbles || 0
       );
-
       continue;
     }
 
     if (player.position === "RB") {
-      const offenseAcc = getOrCreateAccumulator(
-        offenseMap,
-        player.teamCode,
-        createOffenseAccumulator
-      );
-
-      offenseAcc.weeks.add(player.week);
-      offenseAcc.rushingYards += Number(weeklyStats.rushingYards || 0);
-      offenseAcc.rushingTDs += Number(weeklyStats.rushingTDs || 0);
+      offenseAcc.rushingYards += Number(stats.rushingYards || 0);
+      offenseAcc.rushingTDs += Number(stats.rushingTDs || 0);
       offenseAcc.fumbles += Number(
-        weeklyStats.fumble != null ? weeklyStats.fumble : weeklyStats.fumbles || 0
+        stats.fumble != null ? stats.fumble : stats.fumbles || 0
       );
-
       continue;
     }
 
     if (player.position === "WR" || player.position === "TE") {
-      const offenseAcc = getOrCreateAccumulator(
-        offenseMap,
-        player.teamCode,
-        createOffenseAccumulator
-      );
-
-      offenseAcc.weeks.add(player.week);
-      offenseAcc.rushingYards += Number(weeklyStats.rushingYards || 0);
-      offenseAcc.rushingTDs += Number(weeklyStats.rushingTDs || 0);
+      offenseAcc.rushingYards += Number(stats.rushingYards || 0);
+      offenseAcc.rushingTDs += Number(stats.rushingTDs || 0);
       offenseAcc.fumbles += Number(
-        weeklyStats.fumble != null ? weeklyStats.fumble : weeklyStats.fumbles || 0
+        stats.fumble != null ? stats.fumble : stats.fumbles || 0
       );
     }
   }
 
-  const defenseAveragesByTeam = new Map();
-  for (const [teamCode, acc] of defenseMap.entries()) {
-    const games = acc.weeks.size || 0;
+  const normalizedDefenseByTeam = new Map();
+  for (const [teamCode, acc] of defenseByTeam.entries()) {
+    const games = acc.games || 0;
     if (!games) continue;
 
-    defenseAveragesByTeam.set(teamCode, {
+    normalizedDefenseByTeam.set(teamCode, {
       allowedPassingYards: roundToOne(acc.allowedPassingYards / games),
       allowedRushingYards: roundToOne(acc.allowedRushingYards / games),
       interceptions: roundToOne(acc.interceptions / games),
       fumbles: roundToOne(acc.fumbles / games),
       sacks: roundToOne(acc.sacks / games),
       returnTDs: roundToOne(acc.returnTDs / games),
-      safety: roundToOne(acc.safety / games),
+      safety: roundToOne(acc.safeties / games),
       allowedPoints: roundToOne(acc.allowedPoints / games),
-      games,
     });
   }
 
-  const offenseAveragesByTeam = new Map();
-  for (const [teamCode, acc] of offenseMap.entries()) {
-    const games = acc.weeks.size || 0;
+  const normalizedOffenseByTeam = new Map();
+  for (const [teamCode, acc] of offenseByTeam.entries()) {
+    const games = acc.games || 0;
     if (!games) continue;
 
-    offenseAveragesByTeam.set(teamCode, {
+    normalizedOffenseByTeam.set(teamCode, {
       passingYards: roundToOne(acc.passingYards / games),
       passingTDs: roundToOne(acc.passingTDs / games),
       interceptions: roundToOne(acc.interceptions / games),
       rushingYards: roundToOne(acc.rushingYards / games),
       rushingTDs: roundToOne(acc.rushingTDs / games),
       fumbles: roundToOne(acc.fumbles / games),
-      avgPoints: roundToOne(acc.pointsScored / games),
-      games,
+      avgPoints: roundToOne(acc.points / games),
     });
   }
 
   return {
-    defenseAveragesByTeam,
-    offenseAveragesByTeam,
+    defenseByTeam: normalizedDefenseByTeam,
+    offenseByTeam: normalizedOffenseByTeam,
   };
 }
 
@@ -244,14 +234,6 @@ function normalizePlayer(player, averageMaps) {
     player.position,
     player.weeklyStats || {}
   );
-
-  const defenseAverages =
-    averageMaps.defenseAveragesByTeam.get(
-      player.currentWeekOpponentDefenseTeamCode || player.currentWeekOpponentTeam
-    ) || null;
-
-  const offenseAverages =
-    averageMaps.offenseAveragesByTeam.get(player.currentWeekOpponentTeam) || null;
 
   return {
     id: player.id,
@@ -273,8 +255,12 @@ function normalizePlayer(player, averageMaps) {
     currentWeekOpponentDefenseTeamCode: player.currentWeekOpponentDefenseTeamCode,
     allowedPassingYards: player.allowedPassingYards,
     allowedRushingYards: player.allowedRushingYards,
-    currentWeekOpponentDefenseStats: defenseAverages,
-    currentWeekOpponentOffenseStats: offenseAverages,
+    currentWeekOpponentDefenseStats:
+      averageMaps.defenseByTeam.get(
+        player.currentWeekOpponentDefenseTeamCode
+      ) || null,
+    currentWeekOpponentOffenseStats:
+      averageMaps.offenseByTeam.get(player.currentWeekOpponentTeam) || null,
     week: player.week,
   };
 }
@@ -382,7 +368,7 @@ router.get("/week", requireAuth, async (req, res) => {
       orderBy: [{ position: "asc" }, { lastName: "asc" }, { firstName: "asc" }],
     });
 
-    const averageMaps = await buildWeeklyAverageMaps(season, week);
+    const averageMaps = await buildAverageMaps(season, week);
 
     const slotMap = Object.fromEntries(
       roster.slots.map((slot) => [

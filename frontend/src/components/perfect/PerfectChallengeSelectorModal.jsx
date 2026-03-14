@@ -44,35 +44,10 @@ const OFFENSE_LABELS = {
 };
 
 const PLAYER_STAT_ORDER_BY_POSITION = {
-  QB: [
-    "passingYards",
-    "passingTDs",
-    "interceptions",
-    "rushingYards",
-    "rushingTDs",
-    "fumble",
-  ],
-  RB: [
-    "rushingYards",
-    "rushingTDs",
-    "receivedYards",
-    "receivedTDs",
-    "fumble",
-  ],
-  WR: [
-    "receivedYards",
-    "receivedTDs",
-    "rushingYards",
-    "rushingTDs",
-    "fumbles",
-  ],
-  TE: [
-    "receivedYards",
-    "receivedTDs",
-    "rushingYards",
-    "rushingTDs",
-    "fumbles",
-  ],
+  QB: ["passingYards", "passingTDs", "interceptions", "rushingYards", "rushingTDs", "fumble"],
+  RB: ["rushingYards", "rushingTDs", "receivedYards", "receivedTDs", "fumble"],
+  WR: ["receivedYards", "receivedTDs", "rushingYards", "rushingTDs", "fumbles"],
+  TE: ["receivedYards", "receivedTDs", "rushingYards", "rushingTDs", "fumbles"],
   K: ["fg0to49Yards", "fg50plusYards", "xp"],
   DEF: ["interception", "forcedFumble", "sack", "safety", "returnTD", "allowedPoints"],
 };
@@ -134,7 +109,6 @@ function buildPlayerWeeklyRows(player) {
 
 function buildDefenseRows(defenseStats) {
   if (!defenseStats) return [];
-
   return DEFENSE_STAT_ORDER.map((key) => ({
     key,
     label: DEFENSE_LABELS[key] || key,
@@ -144,7 +118,6 @@ function buildDefenseRows(defenseStats) {
 
 function buildOffenseRows(offenseStats) {
   if (!offenseStats) return [];
-
   return OFFENSE_STAT_ORDER.map((key) => ({
     key,
     label: OFFENSE_LABELS[key] || key,
@@ -218,7 +191,6 @@ export default function PerfectChallengeSelectorModal({
     return players.filter((player) => {
       const displayName = getDisplayName(player).toLowerCase();
       const teamCode = (player.teamCode || "").toLowerCase();
-
       return displayName.includes(query) || teamCode.includes(query);
     });
   }, [players, searchTerm]);
@@ -464,14 +436,15 @@ export default function PerfectChallengeSelectorModal({
                   ) : selectedPlayer.currentWeekOpponentDefenseStats ? (
                     <>
                       <div
-                        className="pc-side-player-meta pc-side-defense-meta"
-                        style={{ marginBottom: 12 }}
+                        style={{
+                          marginBottom: 12,
+                          fontSize: 14,
+                          fontWeight: 800,
+                          color: "rgba(255,255,255,.86)",
+                          lineHeight: 1.2,
+                        }}
                       >
-                        <TeamLogo
-                          team={selectedPlayer.currentWeekOpponentDefenseTeamCode}
-                          size={14}
-                        />
-                        <span>{selectedPlayer.currentWeekOpponentTeam || "-"}</span>
+                        {selectedPlayer.currentWeekOpponentTeam || "-"}
                       </div>
 
                       <div className="pc-side-stats pc-side-stats-tight">

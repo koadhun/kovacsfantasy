@@ -24,86 +24,24 @@ const LABELS = {
   allowedPointsPenalty: "Allowed points penalty",
 };
 
-const DECIMAL_KEYS = new Set([
-  "passingYards",
-  "rushingYards",
-  "receivedYards",
-]);
+const DECIMAL_KEYS = new Set(["passingYards", "rushingYards", "receivedYards"]);
 
 const STAT_ORDER_BY_POSITION = {
-  QB: [
-    "passingYards",
-    "passingTDs",
-    "interceptions",
-    "rushingYards",
-    "rushingTDs",
-    "fumble",
-  ],
-  RB: [
-    "rushingYards",
-    "rushingTDs",
-    "receivedYards",
-    "receivedTDs",
-    "fumble",
-  ],
-  WR: [
-    "receivedYards",
-    "receivedTDs",
-    "rushingYards",
-    "rushingTDs",
-    "fumbles",
-  ],
-  TE: [
-    "receivedYards",
-    "receivedTDs",
-    "rushingYards",
-    "rushingTDs",
-    "fumbles",
-  ],
+  QB: ["passingYards", "passingTDs", "interceptions", "rushingYards", "rushingTDs", "fumble"],
+  RB: ["rushingYards", "rushingTDs", "receivedYards", "receivedTDs", "fumble"],
+  WR: ["receivedYards", "receivedTDs", "rushingYards", "rushingTDs", "fumbles"],
+  TE: ["receivedYards", "receivedTDs", "rushingYards", "rushingTDs", "fumbles"],
   K: ["fg0to49Yards", "fg50plusYards", "xp"],
   DEF: ["interception", "forcedFumble", "sack", "safety", "returnTD", "allowedPoints"],
 };
 
 const BREAKDOWN_ORDER_BY_POSITION = {
-  QB: [
-    "passingYards",
-    "passingTDs",
-    "interceptions",
-    "rushingYards",
-    "rushingTDs",
-    "fumble",
-  ],
-  RB: [
-    "rushingYards",
-    "rushingTDs",
-    "receivedYards",
-    "receivedTDs",
-    "fumble",
-  ],
-  WR: [
-    "receivedYards",
-    "receivedTDs",
-    "rushingYards",
-    "rushingTDs",
-    "fumbles",
-  ],
-  TE: [
-    "receivedYards",
-    "receivedTDs",
-    "rushingYards",
-    "rushingTDs",
-    "fumbles",
-  ],
+  QB: ["passingYards", "passingTDs", "interceptions", "rushingYards", "rushingTDs", "fumble"],
+  RB: ["rushingYards", "rushingTDs", "receivedYards", "receivedTDs", "fumble"],
+  WR: ["receivedYards", "receivedTDs", "rushingYards", "rushingTDs", "fumbles"],
+  TE: ["receivedYards", "receivedTDs", "rushingYards", "rushingTDs", "fumbles"],
   K: ["fg0to49Yards", "fg50plusYards", "xp"],
-  DEF: [
-    "base",
-    "interception",
-    "forcedFumble",
-    "sack",
-    "safety",
-    "returnTD",
-    "allowedPointsPenalty",
-  ],
+  DEF: ["base", "interception", "forcedFumble", "sack", "safety", "returnTD", "allowedPointsPenalty"],
 };
 
 function formatStatValue(key, value) {
@@ -120,7 +58,6 @@ function formatBreakdownValue(value) {
 function orderedStatRows(position, stats) {
   if (!stats || !position) return [];
   const order = STAT_ORDER_BY_POSITION[position] || [];
-
   return order.map((key) => ({
     key,
     label: LABELS[key] || key,
@@ -131,7 +68,6 @@ function orderedStatRows(position, stats) {
 function orderedBreakdownRows(position, breakdown) {
   if (!breakdown || !position) return [];
   const order = BREAKDOWN_ORDER_BY_POSITION[position] || [];
-
   return order.map((key) => ({
     key,
     label: LABELS[key] || key,
@@ -140,10 +76,7 @@ function orderedBreakdownRows(position, breakdown) {
 }
 
 function getDisplayName(player) {
-  return (
-    player?.displayName ||
-    `${player?.firstName || ""} ${player?.lastName || ""}`.trim()
-  );
+  return player?.displayName || `${player?.firstName || ""} ${player?.lastName || ""}`.trim();
 }
 
 export default function PerfectChallengeCard({ slot, player, onSelect }) {
@@ -165,11 +98,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
   );
 
   const breakdownRows = useMemo(
-    () =>
-      orderedBreakdownRows(
-        player?.position,
-        player?.weeklyScoreBreakdown?.breakdown
-      ),
+    () => orderedBreakdownRows(player?.position, player?.weeklyScoreBreakdown?.breakdown),
     [player]
   );
 
@@ -200,14 +129,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
               padding: 18,
             }}
           >
-            <div
-              style={{
-                position: "absolute",
-                top: 18,
-                left: 18,
-                zIndex: 2,
-              }}
-            >
+            <div style={{ position: "absolute", top: 18, left: 18, zIndex: 2 }}>
               <div className="pc-slot-badge">{slot}</div>
             </div>
 
@@ -449,7 +371,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
               display: "flex",
               flexDirection: "column",
               height: "100%",
-              padding: "12px 14px 10px",
+              padding: "10px 14px 10px",
               overflow: "hidden",
             }}
           >
@@ -459,7 +381,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                 justifyContent: "space-between",
                 alignItems: "center",
                 gap: 8,
-                marginBottom: 8,
+                marginBottom: 6,
               }}
             >
               <div
@@ -501,7 +423,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                     fontSize: 14,
                     fontWeight: 800,
                     color: "#f3f6ff",
-                    marginBottom: 8,
+                    marginBottom: 6,
                     lineHeight: 1.1,
                   }}
                 >
@@ -512,7 +434,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                   style={{
                     display: "inline-flex",
                     gap: 8,
-                    marginBottom: 8,
+                    marginBottom: 6,
                   }}
                 >
                   <button
@@ -573,16 +495,16 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                           gridTemplateColumns: "minmax(0,1fr) auto",
                           alignItems: "center",
                           gap: 10,
-                          padding: "5px 0",
+                          padding: "4px 0",
                           borderBottom: "1px solid rgba(255,255,255,.08)",
-                          fontSize: 13,
-                          lineHeight: 1.15,
+                          fontSize: 12,
+                          lineHeight: 1.05,
                         }}
                       >
                         <span style={{ color: "rgba(255,255,255,.84)" }}>
                           {row.label}
                         </span>
-                        <strong style={{ color: "#fff", fontSize: 13 }}>
+                        <strong style={{ color: "#fff", fontSize: 12 }}>
                           {row.value}
                         </strong>
                       </div>
@@ -597,16 +519,16 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                             gridTemplateColumns: "minmax(0,1fr) auto",
                             alignItems: "center",
                             gap: 10,
-                            padding: "5px 0",
+                            padding: "4px 0",
                             borderBottom: "1px solid rgba(255,255,255,.08)",
-                            fontSize: 13,
-                            lineHeight: 1.15,
+                            fontSize: 12,
+                            lineHeight: 1.05,
                           }}
                         >
                           <span style={{ color: "rgba(255,255,255,.84)" }}>
                             {row.label}
                           </span>
-                          <strong style={{ color: "#fff", fontSize: 13 }}>
+                          <strong style={{ color: "#fff", fontSize: 12 }}>
                             {row.value}
                           </strong>
                         </div>
@@ -618,11 +540,11 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                           gridTemplateColumns: "minmax(0,1fr) auto",
                           alignItems: "center",
                           gap: 10,
-                          paddingTop: 6,
+                          paddingTop: 5,
                           marginTop: 2,
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: 900,
-                          lineHeight: 1.1,
+                          lineHeight: 1.05,
                         }}
                       >
                         <span style={{ color: "#fff" }}>Total</span>
