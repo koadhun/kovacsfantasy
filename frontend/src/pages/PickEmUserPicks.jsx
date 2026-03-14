@@ -23,7 +23,6 @@ export default function PickEmUserPicks() {
   const { userId } = useParams();
   const [sp] = useSearchParams();
   const navigate = useNavigate();
-
   const week = Number(sp.get("week") || 1);
 
   const [data, setData] = useState(null);
@@ -46,7 +45,10 @@ export default function PickEmUserPicks() {
 
   useEffect(() => {
     load().catch((e) =>
-      setErr(e?.response?.data?.error || "Nem sikerült betölteni a user pickeket.")
+      setErr(
+        e?.response?.data?.error ||
+          "Nem sikerült betölteni a user pickeket."
+      )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, week]);
@@ -85,8 +87,9 @@ export default function PickEmUserPicks() {
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <span className="pill">
             <span className="dot" />
-            Viewing: <b style={{ marginLeft: 6 }}>{username}</b>
-            <span className="muted" style={{ marginLeft: 10 }}>
+            Viewing:
+            <b style={{ marginLeft: 6 }}>{username}</b>
+            <span style={{ marginLeft: 10 }}>
               {visiblePickCount}/{startedCount} visible picks
             </span>
           </span>
@@ -98,8 +101,8 @@ export default function PickEmUserPicks() {
           </button>
 
           <Link
-            to={`/fantasy/weekly-pickem/leaderboard?week=${week}`}
             className="btn primary"
+            to={`/fantasy/weekly-pickem/leaderboard?week=${week}`}
           >
             Back to leaderboard
           </Link>
@@ -118,146 +121,125 @@ export default function PickEmUserPicks() {
         </p>
       )}
 
-      <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
-        {picks.map((g) => {
-          const key = g.id || g.gameId;
+      {picks.map((g) => {
+        const key = g.id || g.gameId;
+        const final =
+          g.final ??
+          (g.status === "FINAL" && g.homeScore != null && g.awayScore != null);
 
-          const final =
-            g.final ??
-            (g.status === "FINAL" &&
-              g.homeScore != null &&
-              g.awayScore != null);
+        const started = Boolean(g.started || final);
+        const leftScore = final ? g.awayScore : "—";
+        const rightScore = final ? g.homeScore : "—";
 
-          const leftScore = final ? g.awayScore : "—";
-          const rightScore = final ? g.homeScore : "—";
+        const leftSelected = started && g.picked && g.picked === g.awayTeam;
+        const rightSelected = started && g.picked && g.picked === g.homeTeam;
 
-          const leftSelected =
-            g.started && g.picked && g.picked === g.awayTeam;
-          const rightSelected =
-            g.started && g.picked && g.picked === g.homeTeam;
+        function borderColorForSelected() {
+          if (!started) return null;
+          if (!g.picked) return null;
+          if (!final) return "rgba(245,158,11,.65)";
+          return g.correct ? "rgba(34,197,94,.55)" : "rgba(225,29,72,.60)";
+        }
 
-          function borderColorForSelected() {
-            if (!g.started) return null;
-            if (!g.picked) return null;
-            if (!final) return "rgba(245,158,11,.65)";
-            return g.correct ? "rgba(34,197,94,.55)" : "rgba(225,29,72,.60)";
-          }
+        const borderColor = borderColorForSelected();
 
-          const borderColor = borderColorForSelected();
+        let verdict = null;
+        if (started && g.picked && final) {
+          verdict = g.correct ? "✅ Helyes tipp" : "❌ Hibás tipp";
+        } else if (started && g.picked && !final) {
+          verdict = "Pick revealed";
+        } else if (!started) {
+          verdict = "Pick hidden";
+        }
 
-          let verdict = null;
-          if (g.started && g.picked && final) {
-            verdict = g.correct ? "✅ Helyes tipp" : "❌ Hibás tipp";
-          } else if (g.started && g.picked && !final) {
-            verdict = "🟨 Pick revealed";
-          } else if (!g.started) {
-            verdict = "🔒 Pick hidden";
-          }
-
-          return (
-            <div key={key} className="scheduleRow">
+        return (
+          <div
+            key={key}
+            className="card"
+            style={{
+              marginTop: 14,
+              padding: 16,
+              borderLeft: borderColor ? `4px solid ${borderColor}` : undefined,
+            }}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr auto 1fr",
+                gap: 12,
+                alignItems: "center",
+              }}
+            >
               <div
-                className="scheduleRowBar"
-                style={{ background: "rgba(60,130,255,.65)" }}
-              />
-
-              <div
-                className="scheduleRowMain"
-                style={{ gridTemplateColumns: "1fr", gap: 10 }}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "10px 14px",
+                  borderRadius: 16,
+                  border: leftSelected
+                    ? `1px solid ${borderColor || "rgba(59,130,246,.4)"}`
+                    : "1px solid rgba(255,255,255,.08)",
+                  background: leftSelected
+                    ? "rgba(59,130,246,.10)"
+                    : "rgba(255,255,255,.02)",
+                }}
               >
-                <div className="pickRow">
-                  <div
-                    className="pickTeamBtn"
-                    style={{
-                      cursor: "default",
-                      borderColor: leftSelected
-                        ? borderColor
-                        : "rgba(255,255,255,.14)",
-                      boxShadow:
-                        leftSelected && borderColor
-                          ? `inset 0 0 0 1px ${borderColor}`
-                          : undefined,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: 10,
-                      padding: "0 14px",
-                    }}
-                    title={leftSelected ? `Picked: ${g.picked}` : ""}
-                  >
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 10,
-                      }}
-                    >
-                      <TeamLogo team={g.awayTeam} size={22} />
-                      <span style={{ fontWeight: 900 }}>{g.awayTeam}</span>
-                    </span>
-                    <span style={{ fontWeight: 900 }}>{leftScore}</span>
-                  </div>
-
-                  <div className="pickMeta muted" style={{ textAlign: "center" }}>
-                    <div style={{ fontWeight: 900 }}>
-                      {final ? "FINAL" : formatKickoff(g.kickoffAt)}
-                    </div>
-                    <div style={{ opacity: 0.9 }}>
-                      {!g.started
-                        ? "Pick hidden"
-                        : g.picked
-                        ? `Picked: ${g.picked}`
-                        : "No pick"}
-                    </div>
-                  </div>
-
-                  <div
-                    className="pickTeamBtn"
-                    style={{
-                      cursor: "default",
-                      borderColor: rightSelected
-                        ? borderColor
-                        : "rgba(255,255,255,.14)",
-                      boxShadow:
-                        rightSelected && borderColor
-                          ? `inset 0 0 0 1px ${borderColor}`
-                          : undefined,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: 10,
-                      padding: "0 14px",
-                    }}
-                    title={rightSelected ? `Picked: ${g.picked}` : ""}
-                  >
-                    <span style={{ fontWeight: 900 }}>{rightScore}</span>
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 10,
-                      }}
-                    >
-                      <span style={{ fontWeight: 900 }}>{g.homeTeam}</span>
-                      <TeamLogo team={g.homeTeam} size={22} />
-                    </span>
-                  </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <TeamLogo team={g.awayTeam} size={20} />
+                  <strong>{g.awayTeam}</strong>
                 </div>
+                <strong style={{ fontSize: 18 }}>{leftScore}</strong>
+              </div>
 
-                {verdict && (
-                  <div style={{ fontWeight: 900, fontSize: 13 }}>{verdict}</div>
-                )}
+              <div style={{ textAlign: "center" }}>
+                <div className="muted" style={{ fontWeight: 800 }}>
+                  {final ? "FINAL" : formatKickoff(g.kickoffAt)}
+                </div>
+                <div className="muted" style={{ marginTop: 4 }}>
+                  {!started ? "Pick hidden" : g.picked ? `Picked: ${g.picked}` : "No pick"}
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "10px 14px",
+                  borderRadius: 16,
+                  border: rightSelected
+                    ? `1px solid ${borderColor || "rgba(59,130,246,.4)"}`
+                    : "1px solid rgba(255,255,255,.08)",
+                  background: rightSelected
+                    ? "rgba(59,130,246,.10)"
+                    : "rgba(255,255,255,.02)",
+                }}
+              >
+                <strong style={{ fontSize: 18 }}>{rightScore}</strong>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <strong>{g.homeTeam}</strong>
+                  <TeamLogo team={g.homeTeam} size={20} />
+                </div>
               </div>
             </div>
-          );
-        })}
 
-        {!loading && !picks.length && !err && (
-          <div className="card" style={{ padding: 14 }}>
-            <div className="muted">Ehhez a héthez nincs adat.</div>
+            {verdict && (
+              <div style={{ marginTop: 10, fontWeight: 700 }}>
+                {verdict}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        );
+      })}
+
+      {!loading && !picks.length && !err && (
+        <p className="muted" style={{ marginTop: 14 }}>
+          Ehhez a héthez nincs adat.
+        </p>
+      )}
     </div>
   );
 }
