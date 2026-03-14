@@ -195,14 +195,16 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
               display: "flex",
               flexDirection: "column",
               height: "100%",
-              minHeight: 0,
+              padding: 18,
+              position: "relative",
             }}
           >
             <div
               style={{
                 display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                marginBottom: 12,
               }}
             >
               <div className="pc-slot-badge">{slot}</div>
@@ -212,98 +214,108 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
               <>
                 <div
                   style={{
-                    flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textAlign: "center",
-                    padding: "8px 8px 14px",
+                    display: "grid",
+                    gridTemplateRows: "auto auto 1fr auto",
+                    height: "100%",
+                    alignItems: "start",
                   }}
                 >
                   <div
                     style={{
-                      position: "relative",
-                      width: 118,
-                      height: 132,
-                      borderRadius: 18,
-                      overflow: "hidden",
                       display: "flex",
-                      alignItems: "center",
                       justifyContent: "center",
-                      background:
-                        "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
-                      marginBottom: 10,
+                      marginBottom: 14,
                     }}
-                    onMouseEnter={() => setHovered(true)}
-                    onMouseLeave={() => setHovered(false)}
                   >
-                    {showHeadshot ? (
-                      <img
-                        src={player.headshotUrl}
-                        alt={displayName}
-                        onError={() => setImgFailed(true)}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          display: "block",
-                        }}
-                      />
-                    ) : (
-                      <TeamLogo team={player.teamCode} size={70} />
-                    )}
-
                     <div
                       style={{
-                        position: "absolute",
-                        inset: 0,
-                        background: hovered ? "rgba(3, 10, 28, 0.42)" : "rgba(3, 10, 28, 0)",
-                        transition: "0.18s ease",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        pointerEvents: "none",
+                        position: "relative",
+                        width: 138,
+                        height: 138,
+                        borderRadius: 22,
+                        overflow: "hidden",
+                        background:
+                          "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
+                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
                       }}
-                    />
-
-                    <button
-                      type="button"
-                      onClick={onSelect}
-                      style={{
-                        position: "absolute",
-                        bottom: 10,
-                        left: "50%",
-                        transform: hovered
-                          ? "translateX(-50%) translateY(0)"
-                          : "translateX(-50%) translateY(10px)",
-                        opacity: hovered ? 1 : 0,
-                        pointerEvents: hovered ? "auto" : "none",
-                        transition: "all 0.18s ease",
-                        border: "1px solid rgba(59,130,246,.6)",
-                        background: "rgba(8,18,44,.95)",
-                        color: "#fff",
-                        borderRadius: 10,
-                        padding: "7px 12px",
-                        fontSize: 12,
-                        fontWeight: 800,
-                        whiteSpace: "nowrap",
-                        cursor: "pointer",
-                      }}
+                      onMouseEnter={() => setHovered(true)}
+                      onMouseLeave={() => setHovered(false)}
                     >
-                      Change player
-                    </button>
+                      {showHeadshot ? (
+                        <img
+                          src={player.headshotUrl}
+                          alt={displayName}
+                          onError={() => setImgFailed(true)}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            display: "block",
+                          }}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            display: "grid",
+                            placeItems: "center",
+                          }}
+                        >
+                          <TeamLogo team={player.teamCode} size={74} />
+                        </div>
+                      )}
+
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          background: hovered
+                            ? "linear-gradient(180deg, rgba(2,6,23,0.08), rgba(2,6,23,0.58))"
+                            : "transparent",
+                          transition: "0.18s ease",
+                        }}
+                      />
+
+                      <button
+                        type="button"
+                        onClick={onSelect}
+                        style={{
+                          position: "absolute",
+                          left: "50%",
+                          bottom: 12,
+                          transform: hovered
+                            ? "translateX(-50%) translateY(0)"
+                            : "translateX(-50%) translateY(8px)",
+                          opacity: hovered ? 1 : 0,
+                          pointerEvents: hovered ? "auto" : "none",
+                          transition: "all 0.18s ease",
+                          border: "1px solid rgba(59,130,246,.55)",
+                          background: "rgba(8,18,44,.95)",
+                          color: "#fff",
+                          borderRadius: 10,
+                          padding: "8px 12px",
+                          fontSize: 12,
+                          fontWeight: 800,
+                          whiteSpace: "nowrap",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Change player
+                      </button>
+                    </div>
                   </div>
 
                   <div
                     style={{
                       display: "flex",
+                      justifyContent: "center",
                       alignItems: "center",
                       gap: 6,
+                      marginBottom: 8,
                       fontSize: 13,
                       fontWeight: 700,
                       color: "rgba(255,255,255,.78)",
-                      marginBottom: 6,
                     }}
                   >
                     <TeamLogo team={player.teamCode} size={14} />
@@ -312,24 +324,29 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
 
                   <div
                     style={{
-                      lineHeight: 1.02,
-                      marginBottom: 8,
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "flex-start",
                     }}
                   >
                     <div
                       style={{
-                        fontSize: 17,
+                        fontSize: 18,
                         fontWeight: 800,
-                        color: "rgba(255,255,255,.9)",
+                        color: "rgba(255,255,255,.92)",
+                        lineHeight: 1.05,
                       }}
                     >
                       {player.firstName}
                     </div>
                     <div
                       style={{
-                        fontSize: 29,
+                        fontSize: 30,
                         fontWeight: 900,
-                        color: "#f3f6ff",
+                        color: "#f8fbff",
+                        lineHeight: 1.02,
+                        letterSpacing: "-0.02em",
                       }}
                     >
                       {player.lastName}
@@ -338,39 +355,46 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
 
                   <div
                     style={{
-                      fontSize: 34,
-                      fontWeight: 900,
-                      lineHeight: 1,
-                      color: "#f8fbff",
+                      display: "flex",
+                      alignItems: "flex-end",
+                      justifyContent: "space-between",
+                      marginTop: 14,
                     }}
                   >
-                    {score}
+                    <div
+                      style={{
+                        fontSize: 34,
+                        fontWeight: 900,
+                        lineHeight: 1,
+                        color: "#f8fbff",
+                      }}
+                    >
+                      {score}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setFlipped(true)}
+                      title="Weekly details"
+                      style={{
+                        width: 38,
+                        height: 38,
+                        borderRadius: "50%",
+                        border: "1px solid rgba(255,255,255,.14)",
+                        background: "rgba(255,255,255,.06)",
+                        color: "#fff",
+                        fontSize: 18,
+                        fontWeight: 800,
+                        display: "grid",
+                        placeItems: "center",
+                        cursor: "pointer",
+                        flexShrink: 0,
+                      }}
+                    >
+                      i
+                    </button>
                   </div>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => setFlipped(true)}
-                  title="Weekly details"
-                  style={{
-                    position: "absolute",
-                    right: 14,
-                    bottom: 14,
-                    width: 36,
-                    height: 36,
-                    borderRadius: "50%",
-                    border: "1px solid rgba(255,255,255,.14)",
-                    background: "rgba(255,255,255,.06)",
-                    color: "#fff",
-                    fontSize: 18,
-                    fontWeight: 800,
-                    display: "grid",
-                    placeItems: "center",
-                    cursor: "pointer",
-                  }}
-                >
-                  i
-                </button>
               </>
             ) : (
               <div
@@ -381,7 +405,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                   alignItems: "center",
                   justifyContent: "center",
                   textAlign: "center",
-                  padding: "22px 16px",
+                  padding: "18px 14px 26px",
                 }}
               >
                 <div
@@ -400,6 +424,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                     fontSize: 15,
                     color: "rgba(255,255,255,.72)",
                     marginBottom: 18,
+                    maxWidth: 220,
                   }}
                 >
                   Choose a {slot} player for this slot.
@@ -419,7 +444,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
               display: "flex",
               flexDirection: "column",
               height: "100%",
-              padding: "14px 16px 14px",
+              padding: "14px 16px 12px",
             }}
           >
             <div
@@ -427,8 +452,8 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                gap: 12,
-                marginBottom: 12,
+                gap: 10,
+                marginBottom: 10,
               }}
             >
               <div
@@ -470,7 +495,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                     fontSize: 15,
                     fontWeight: 800,
                     color: "#f3f6ff",
-                    marginBottom: 10,
+                    marginBottom: 8,
                   }}
                 >
                   {displayName}
@@ -480,7 +505,7 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                   style={{
                     display: "inline-flex",
                     gap: 8,
-                    marginBottom: 12,
+                    marginBottom: 10,
                   }}
                 >
                   <button
@@ -538,19 +563,19 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                       <div
                         key={row.key}
                         style={{
-                          display: "flex",
-                          justifyContent: "space-between",
+                          display: "grid",
+                          gridTemplateColumns: "minmax(0,1fr) auto",
                           alignItems: "center",
                           gap: 12,
-                          padding: "8px 0",
+                          padding: "6px 0",
                           borderBottom: "1px solid rgba(255,255,255,.08)",
-                          fontSize: 15,
+                          fontSize: 14,
                         }}
                       >
                         <span style={{ color: "rgba(255,255,255,.84)" }}>
                           {row.label}
                         </span>
-                        <strong style={{ color: "#fff", fontSize: 15 }}>
+                        <strong style={{ color: "#fff", fontSize: 14 }}>
                           {row.value}
                         </strong>
                       </div>
@@ -561,19 +586,19 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
                         <div
                           key={row.key}
                           style={{
-                            display: "flex",
-                            justifyContent: "space-between",
+                            display: "grid",
+                            gridTemplateColumns: "minmax(0,1fr) auto",
                             alignItems: "center",
                             gap: 12,
-                            padding: "8px 0",
+                            padding: "6px 0",
                             borderBottom: "1px solid rgba(255,255,255,.08)",
-                            fontSize: 15,
+                            fontSize: 14,
                           }}
                         >
                           <span style={{ color: "rgba(255,255,255,.84)" }}>
                             {row.label}
                           </span>
-                          <strong style={{ color: "#fff", fontSize: 15 }}>
+                          <strong style={{ color: "#fff", fontSize: 14 }}>
                             {row.value}
                           </strong>
                         </div>
@@ -581,13 +606,13 @@ export default function PerfectChallengeCard({ slot, player, onSelect }) {
 
                       <div
                         style={{
-                          display: "flex",
-                          justifyContent: "space-between",
+                          display: "grid",
+                          gridTemplateColumns: "minmax(0,1fr) auto",
                           alignItems: "center",
                           gap: 12,
-                          paddingTop: 10,
+                          paddingTop: 8,
                           marginTop: 4,
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: 900,
                         }}
                       >

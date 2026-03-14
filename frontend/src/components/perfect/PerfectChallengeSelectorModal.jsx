@@ -25,10 +25,10 @@ const PLAYER_WEEKLY_LABELS = {
 const DEFENSE_LABELS = {
   allowedPassingYards: "Allowed passing yards",
   allowedRushingYards: "Allowed rushing yards",
-  interception: "Interception",
-  forcedFumble: "Forced fumble",
-  sack: "Sack",
-  returnTD: "Return TD",
+  interceptions: "Interceptions",
+  fumbles: "Fumbles",
+  sacks: "Sacks",
+  returnTDs: "Return TDs",
   safety: "Safety",
   allowedPoints: "Allowed points",
 };
@@ -80,10 +80,10 @@ const PLAYER_STAT_ORDER_BY_POSITION = {
 const DEFENSE_STAT_ORDER = [
   "allowedPassingYards",
   "allowedRushingYards",
-  "interception",
-  "forcedFumble",
-  "sack",
-  "returnTD",
+  "interceptions",
+  "fumbles",
+  "sacks",
+  "returnTDs",
   "safety",
   "allowedPoints",
 ];
@@ -111,27 +111,6 @@ const DECIMAL_KEYS = new Set([
   "avgPoints",
 ]);
 
-const MATCHUP_COLORS = {
-  great: {
-    background: "rgba(34, 197, 94, 0.12)",
-    border: "rgba(34, 197, 94, 0.35)",
-    text: "#86efac",
-    value: "#dcfce7",
-  },
-  tough: {
-    background: "rgba(239, 68, 68, 0.12)",
-    border: "rgba(239, 68, 68, 0.35)",
-    text: "#fca5a5",
-    value: "#fee2e2",
-  },
-  neutral: {
-    background: "rgba(255, 255, 255, 0.03)",
-    border: "rgba(255, 255, 255, 0.06)",
-    text: "rgba(255,255,255,0.82)",
-    value: "#ffffff",
-  },
-};
-
 function formatValue(key, value) {
   if (value == null) return "-";
   if (DECIMAL_KEYS.has(key)) return Number(value).toFixed(1);
@@ -153,23 +132,14 @@ function buildPlayerWeeklyRows(player) {
   }));
 }
 
-function buildDefenseRows(defense) {
-  if (!defense) return [];
+function buildDefenseRows(defenseStats) {
+  if (!defenseStats) return [];
 
-  return DEFENSE_STAT_ORDER.map((key) => {
-    let value;
-
-    if (key === "allowedPassingYards") value = defense.allowedPassingYards;
-    else if (key === "allowedRushingYards") value = defense.allowedRushingYards;
-    else value = defense.overallStats?.[key];
-
-    return {
-      key,
-      label: DEFENSE_LABELS[key] || key,
-      rawValue: value,
-      value: formatValue(key, value),
-    };
-  });
+  return DEFENSE_STAT_ORDER.map((key) => ({
+    key,
+    label: DEFENSE_LABELS[key] || key,
+    value: formatValue(key, defenseStats[key]),
+  }));
 }
 
 function buildOffenseRows(offenseStats) {
@@ -180,148 +150,6 @@ function buildOffenseRows(offenseStats) {
     label: OFFENSE_LABELS[key] || key,
     value: formatValue(key, offenseStats[key]),
   }));
-}
-
-function getMatchupTone(position, key, rawValue) {
-  if (rawValue == null) return "neutral";
-  if (position === "DEF") return "neutral";
-
-  if (position === "QB") {
-    if (key === "allowedPassingYards") {
-      if (rawValue >= 245) return "great";
-      if (rawValue <= 205) return "tough";
-    }
-    if (key === "interception") {
-      if (rawValue <= 7) return "great";
-      if (rawValue >= 15) return "tough";
-    }
-    if (key === "sack") {
-      if (rawValue <= 24) return "great";
-      if (rawValue >= 38) return "tough";
-    }
-    if (key === "allowedPoints") {
-      if (rawValue >= 24) return "great";
-      if (rawValue <= 18) return "tough";
-    }
-  }
-
-  if (position === "RB") {
-    if (key === "allowedRushingYards") {
-      if (rawValue >= 118) return "great";
-      if (rawValue <= 92) return "tough";
-    }
-    if (key === "forcedFumble") {
-      if (rawValue <= 6) return "great";
-      if (rawValue >= 12) return "tough";
-    }
-    if (key === "allowedPoints") {
-      if (rawValue >= 24) return "great";
-      if (rawValue <= 18) return "tough";
-    }
-  }
-
-  if (position === "WR" || position === "TE") {
-    if (key === "allowedPassingYards") {
-      if (rawValue >= 235) return "great";
-      if (rawValue <= 200) return "tough";
-    }
-    if (key === "interception") {
-      if (rawValue <= 7) return "great";
-      if (rawValue >= 15) return "tough";
-    }
-    if (key === "sack") {
-      if (rawValue <= 25) return "great";
-      if (rawValue >= 38) return "tough";
-    }
-    if (key === "allowedPoints") {
-      if (rawValue >= 24) return "great";
-      if (rawValue <= 18) return "tough";
-    }
-  }
-
-  if (position === "K") {
-    if (key === "allowedPoints") {
-      if (rawValue >= 24) return "great";
-      if (rawValue <= 18) return "tough";
-    }
-  }
-
-  return "neutral";
-}
-
-function getOverallMatchupSummary(position, defenseRows) {
-  if (!defenseRows.length || position === "DEF") {
-    return {
-      label: "Neutral matchup",
-      tone: "neutral",
-      detail: "General opponent overview.",
-    };
-  }
-
-  const relevantKeysByPosition = {
-    QB: ["allowedPassingYards", "interception", "sack", "allowedPoints"],
-    RB: ["allowedRushingYards", "forcedFumble", "allowedPoints"],
-    WR: ["allowedPassingYards", "interception", "sack", "allowedPoints"],
-    TE: ["allowedPassingYards", "interception", "sack", "allowedPoints"],
-    K: ["allowedPoints"],
-  };
-
-  const relevantKeys = relevantKeysByPosition[position] || [];
-  let score = 0;
-
-  defenseRows.forEach((row) => {
-    if (!relevantKeys.includes(row.key)) return;
-    const tone = getMatchupTone(position, row.key, row.rawValue);
-    if (tone === "great") score += 1;
-    if (tone === "tough") score -= 1;
-  });
-
-  if (score >= 2) {
-    return {
-      label: "Great matchup",
-      tone: "great",
-      detail:
-        position === "RB"
-          ? "Rush defense looks beatable."
-          : "Pass matchup looks favorable.",
-    };
-  }
-
-  if (score <= -2) {
-    return {
-      label: "Tough matchup",
-      tone: "tough",
-      detail:
-        position === "RB"
-          ? "Rush defense looks difficult."
-          : "Passing matchup looks difficult.",
-    };
-  }
-
-  return {
-    label: "Neutral matchup",
-    tone: "neutral",
-    detail: "Mixed opponent indicators.",
-  };
-}
-
-function getHighlightHint(position, defenseRows) {
-  const passRow = defenseRows.find((row) => row.key === "allowedPassingYards");
-  const rushRow = defenseRows.find((row) => row.key === "allowedRushingYards");
-
-  if ((position === "QB" || position === "WR" || position === "TE") && passRow) {
-    const tone = getMatchupTone(position, "allowedPassingYards", passRow.rawValue);
-    if (tone === "great") return { text: "Pass matchup advantage", tone: "great" };
-    if (tone === "tough") return { text: "Pass matchup warning", tone: "tough" };
-  }
-
-  if (position === "RB" && rushRow) {
-    const tone = getMatchupTone(position, "allowedRushingYards", rushRow.rawValue);
-    if (tone === "great") return { text: "Rush matchup advantage", tone: "great" };
-    if (tone === "tough") return { text: "Rush matchup warning", tone: "tough" };
-  }
-
-  return null;
 }
 
 function PlayerOptionImage({ player, displayName }) {
@@ -376,7 +204,6 @@ export default function PerfectChallengeSelectorModal({
   open,
   title,
   players = [],
-  defensePlayers = [],
   onClose,
   onPick,
 }) {
@@ -391,6 +218,7 @@ export default function PerfectChallengeSelectorModal({
     return players.filter((player) => {
       const displayName = getDisplayName(player).toLowerCase();
       const teamCode = (player.teamCode || "").toLowerCase();
+
       return displayName.includes(query) || teamCode.includes(query);
     });
   }, [players, searchTerm]);
@@ -419,46 +247,20 @@ export default function PerfectChallengeSelectorModal({
 
   const isWeekOne = Number(selectedPlayer?.week) === 1;
 
-  const opponentDefense = useMemo(() => {
-    if (!selectedPlayer || isWeekOne || selectedPlayer.position === "DEF") return null;
-
-    return (
-      defensePlayers.find(
-        (defensePlayer) =>
-          defensePlayer.teamCode === selectedPlayer.currentWeekOpponentDefenseTeamCode
-      ) || null
-    );
-  }, [selectedPlayer, defensePlayers, isWeekOne]);
-
-  const opponentOffenseStats = useMemo(() => {
-    if (!selectedPlayer || isWeekOne || selectedPlayer.position !== "DEF") return null;
-    return selectedPlayer.currentWeekOpponentOffenseStats || null;
-  }, [selectedPlayer, isWeekOne]);
-
   const weeklyRows = useMemo(() => {
     if (!selectedPlayer || isWeekOne) return [];
     return buildPlayerWeeklyRows(selectedPlayer);
   }, [selectedPlayer, isWeekOne]);
 
   const defenseRows = useMemo(() => {
-    if (!opponentDefense || isWeekOne) return [];
-    return buildDefenseRows(opponentDefense);
-  }, [opponentDefense, isWeekOne]);
+    if (!selectedPlayer || isWeekOne || selectedPlayer.position === "DEF") return [];
+    return buildDefenseRows(selectedPlayer.currentWeekOpponentDefenseStats);
+  }, [selectedPlayer, isWeekOne]);
 
   const offenseRows = useMemo(() => {
-    if (!opponentOffenseStats || isWeekOne) return [];
-    return buildOffenseRows(opponentOffenseStats);
-  }, [opponentOffenseStats, isWeekOne]);
-
-  const matchupSummary = useMemo(
-    () => getOverallMatchupSummary(selectedPlayer?.position, defenseRows),
-    [selectedPlayer?.position, defenseRows]
-  );
-
-  const highlightHint = useMemo(
-    () => getHighlightHint(selectedPlayer?.position, defenseRows),
-    [selectedPlayer?.position, defenseRows]
-  );
+    if (!selectedPlayer || isWeekOne || selectedPlayer.position !== "DEF") return [];
+    return buildOffenseRows(selectedPlayer.currentWeekOpponentOffenseStats);
+  }, [selectedPlayer, isWeekOne]);
 
   if (!open) return null;
 
@@ -617,39 +419,10 @@ export default function PerfectChallengeSelectorModal({
                 </div>
 
                 <div className="pc-side-card pc-side-card-tight">
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      justifyContent: "space-between",
-                      gap: 12,
-                      marginBottom: 10,
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <div className="pc-side-section-title" style={{ marginBottom: 0 }}>
-                      {selectedPlayer.position === "DEF"
-                        ? "Opponent's offense stats"
-                        : "Opponent's defense stats"}
-                    </div>
-
-                    {!isWeekOne && selectedPlayer.position !== "DEF" && (
-                      <div
-                        style={{
-                          padding: "6px 10px",
-                          borderRadius: 999,
-                          fontSize: 12,
-                          fontWeight: 800,
-                          letterSpacing: 0.4,
-                          textTransform: "uppercase",
-                          background: MATCHUP_COLORS[matchupSummary.tone].background,
-                          border: `1px solid ${MATCHUP_COLORS[matchupSummary.tone].border}`,
-                          color: MATCHUP_COLORS[matchupSummary.tone].text,
-                        }}
-                      >
-                        {matchupSummary.label}
-                      </div>
-                    )}
+                  <div className="pc-side-section-title" style={{ marginBottom: 10 }}>
+                    {selectedPlayer.position === "DEF"
+                      ? "Opponent's offense stats"
+                      : "Opponent's defense stats"}
                   </div>
 
                   {isWeekOne ? (
@@ -659,7 +432,7 @@ export default function PerfectChallengeSelectorModal({
                         : "No opponent defense stats available for Week 1."}
                     </div>
                   ) : selectedPlayer.position === "DEF" ? (
-                    opponentOffenseStats ? (
+                    selectedPlayer.currentWeekOpponentOffenseStats ? (
                       <>
                         <div
                           className="pc-side-player-meta pc-side-defense-meta"
@@ -684,66 +457,29 @@ export default function PerfectChallengeSelectorModal({
                     ) : (
                       <div className="muted">No offense stats available.</div>
                     )
-                  ) : opponentDefense ? (
+                  ) : selectedPlayer.currentWeekOpponentDefenseStats ? (
                     <>
                       <div
                         className="pc-side-player-meta pc-side-defense-meta"
                         style={{ marginBottom: 12 }}
                       >
-                        <TeamLogo team={opponentDefense.teamCode} size={14} />
-                        <span>{opponentDefense.displayName || opponentDefense.teamCode}</span>
+                        <TeamLogo
+                          team={selectedPlayer.currentWeekOpponentDefenseTeamCode}
+                          size={14}
+                        />
+                        <span>{selectedPlayer.currentWeekOpponentTeam || "-"}</span>
                       </div>
-
-                      {highlightHint && (
-                        <div
-                          style={{
-                            marginBottom: 12,
-                            padding: "10px 12px",
-                            borderRadius: 12,
-                            fontSize: 13,
-                            fontWeight: 700,
-                            background: MATCHUP_COLORS[highlightHint.tone].background,
-                            border: `1px solid ${MATCHUP_COLORS[highlightHint.tone].border}`,
-                            color: MATCHUP_COLORS[highlightHint.tone].text,
-                          }}
-                        >
-                          {highlightHint.text}
-                        </div>
-                      )}
 
                       <div className="pc-side-stats pc-side-stats-tight">
-                        {defenseRows.map((row) => {
-                          const tone = getMatchupTone(
-                            selectedPlayer.position,
-                            row.key,
-                            row.rawValue
-                          );
-                          const palette = MATCHUP_COLORS[tone];
-
-                          return (
-                            <div
-                              key={row.key}
-                              className="pc-side-stat-row pc-side-stat-row-tight"
-                              style={{
-                                padding: "10px 12px",
-                                borderRadius: 10,
-                                marginBottom: 6,
-                                background: palette.background,
-                                border: `1px solid ${palette.border}`,
-                              }}
-                            >
-                              <span style={{ color: palette.text }}>{row.label}</span>
-                              <strong style={{ color: palette.value }}>{row.value}</strong>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      <div
-                        className="muted"
-                        style={{ marginTop: 10, fontSize: 12, lineHeight: 1.45 }}
-                      >
-                        {matchupSummary.detail}
+                        {defenseRows.map((row) => (
+                          <div
+                            key={row.key}
+                            className="pc-side-stat-row pc-side-stat-row-tight"
+                          >
+                            <span>{row.label}</span>
+                            <strong>{row.value}</strong>
+                          </div>
+                        ))}
                       </div>
                     </>
                   ) : (

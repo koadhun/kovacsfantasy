@@ -146,8 +146,6 @@ export default function PerfectChallenge() {
     ? poolByPosition[SLOT_TO_POOL_KEY[modalSlot.slot]] || []
     : [];
 
-  const defensePlayers = poolByPosition.DEF || [];
-
   return (
     <div className="container page">
       <div className="hero">
@@ -234,7 +232,6 @@ export default function PerfectChallenge() {
         open={!!modalSlot}
         title={modalSlot ? `Select player for ${modalSlot.slot}` : ""}
         players={modalPlayers}
-        defensePlayers={defensePlayers}
         onClose={() => setModalSlot(null)}
         onPick={pickPlayer}
       />
