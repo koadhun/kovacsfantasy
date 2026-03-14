@@ -54,25 +54,25 @@ const TEAM_PROFILES = {
     ],
     2: [
       { away: "BAL", home: "CIN" },
-      { away: "DET", home: "MIN" },
+      { away: "DET", home: "GB" },
       { away: "BUF", home: "MIA" },
       { away: "NE", home: "NYJ" },
-      { away: "TB", home: "DET" },
-      { away: "GB", home: "IND" },
-      { away: "DAL", home: "PHI" },
-      { away: "SF", home: "SEA" },
-      { away: "KC", home: "BUF" },
-      { away: "ATL", home: "NO" },
+      { away: "TB", home: "NO" },
       { away: "CAR", home: "LAC" },
       { away: "ARI", home: "LAR" },
       { away: "JAX", home: "HOU" },
       { away: "PIT", home: "DEN" },
       { away: "TEN", home: "CHI" },
       { away: "LV", home: "WAS" },
+      { away: "MIN", home: "IND" },
+      { away: "DAL", home: "CLE" },
+      { away: "PHI", home: "ATL" },
+      { away: "SF", home: "SEA" },
+      { away: "KC", home: "NYG" },
     ],
     3: [
       { away: "BAL", home: "BUF" },
-      { away: "DET", home: "GB" },
+      { away: "DET", home: "MIN" },
       { away: "MIA", home: "NYJ" },
       { away: "PHI", home: "DAL" },
       { away: "CIN", home: "KC" },
@@ -82,7 +82,7 @@ const TEAM_PROFILES = {
       { away: "SEA", home: "ARI" },
       { away: "NO", home: "CAR" },
       { away: "CLE", home: "PIT" },
-      { away: "MIN", home: "CHI" },
+      { away: "GB", home: "CHI" },
       { away: "JAX", home: "TEN" },
       { away: "WAS", home: "NYG" },
       { away: "LAC", home: "DEN" },
@@ -111,6 +111,27 @@ const TEAM_PROFILES = {
   
   function clampInt(value, min, max) {
     return Math.round(clamp(value, min, max));
+  }
+  
+  function splitName(fullName) {
+    const parts = String(fullName).trim().split(" ");
+    if (parts.length === 1) return { firstName: parts[0], lastName: "" };
+    return {
+      firstName: parts.slice(0, -1).join(" "),
+      lastName: parts.slice(-1).join(" "),
+    };
+  }
+  
+  function makeAvatarUrl(playerName) {
+    const name = encodeURIComponent(playerName);
+    return `https://ui-avatars.com/api/?name=${name}&background=0b1738&color=ffffff&size=256&bold=true`;
+  }
+  
+  function getLastWeekOpponentName(teamCode, week) {
+    if (week <= 1) return null;
+    const previousOpponentCode = matchupByWeek?.[week - 1]?.[teamCode];
+    if (!previousOpponentCode) return null;
+    return TEAM_PROFILES[previousOpponentCode]?.name || null;
   }
   
   function scorePlayer(position, stats) {
@@ -145,6 +166,7 @@ const TEAM_PROFILES = {
   
     const allowed = stats.allowedPoints || 0;
     let pointsAllowedBonus = 0;
+  
     if (allowed === 0) pointsAllowedBonus = 10;
     else if (allowed <= 6) pointsAllowedBonus = 7;
     else if (allowed <= 13) pointsAllowedBonus = 4;
@@ -201,10 +223,20 @@ const TEAM_PROFILES = {
       38
     );
   
-    const qbRushShare = round1(clamp(18 + week * 3 + (teamCode === "BAL" || teamCode === "ARI" || teamCode === "PHI" ? 18 : 0), 8, 58));
+    const qbRushShare = round1(
+      clamp(
+        18 +
+          week * 3 +
+          (teamCode === "BAL" || teamCode === "ARI" || teamCode === "PHI" ? 18 : 0),
+        8,
+        58
+      )
+    );
     const rbRushShare = round1(clamp(rushingYards * 0.72, 48, 132));
-    const wrRushShare = round1(clamp(rushingYards * 0.10, 0, 22));
-    const teRushShare = round1(clamp(rushingYards - qbRushShare - rbRushShare - wrRushShare, 0, 16));
+    const wrRushShare = round1(clamp(rushingYards * 0.1, 0, 22));
+    const teRushShare = round1(
+      clamp(rushingYards - qbRushShare - rbRushShare - wrRushShare, 0, 16)
+    );
   
     const wrReceivedYards = round1(clamp(passingYards * 0.41, 58, 154));
     const teReceivedYards = round1(clamp(passingYards * 0.24, 34, 102));
@@ -221,7 +253,10 @@ const TEAM_PROFILES = {
       passingTDs,
       interceptions,
       rushingYards: qbRushShare,
-      rushingTDs: teamCode === "BAL" || teamCode === "PHI" || teamCode === "ARI" ? Math.min(1, rushingTDs) : 0,
+      rushingTDs:
+        teamCode === "BAL" || teamCode === "PHI" || teamCode === "ARI"
+          ? Math.min(1, rushingTDs)
+          : 0,
       fumble: 0,
     };
   
@@ -251,6 +286,7 @@ const TEAM_PROFILES = {
   
     const extraPoints = clampInt(teamPoints / 7, 1, 5);
     const madeFieldGoals = clampInt((teamPoints - extraPoints) / 6, 1, 3);
+  
     const kStats = {
       fg0to49Yards: Math.max(0, madeFieldGoals - (teamPoints >= 27 ? 1 : 0)),
       fg50plusYards: teamPoints >= 27 ? 1 : 0,
@@ -274,7 +310,11 @@ const TEAM_PROFILES = {
   
     const sack = clampInt(2 + pressure / 14 + (week % 2 ? 1 : 0), 1, 6);
     const interception = clampInt(1 + pressure / 24, 0, 3);
-    const forcedFumble = clampInt(1 + pressure / 26 + (week % 3 === 0 ? 1 : 0), 0, 3);
+    const forcedFumble = clampInt(
+      1 + pressure / 26 + (week % 3 === 0 ? 1 : 0),
+      0,
+      3
+    );
     const safety = week === 3 && pressure > 8 ? 1 : 0;
     const returnTD = pressure > 12 && week % 2 === 0 ? 1 : 0;
   
@@ -303,6 +343,7 @@ const TEAM_PROFILES = {
   
     if (week === 1) {
       base.setDate(base.getDate() - 21 + gameIndex);
+      base.setHours(19 + (gameIndex % 3), 0, 0, 0);
       return {
         kickoffAt: new Date(base),
         started: true,
@@ -312,6 +353,7 @@ const TEAM_PROFILES = {
   
     if (week === 2) {
       base.setDate(base.getDate() - 10 + gameIndex);
+      base.setHours(18 + (gameIndex % 4), 0, 0, 0);
       return {
         kickoffAt: new Date(base),
         started: true,
@@ -383,10 +425,13 @@ const TEAM_PROFILES = {
     };
   }
   
-  function makeHeadshotUrl(position, playerName) {
-    if (position === "DEF") return null;
-    const slug = playerName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-    return `https://a.espncdn.com/i/headshots/nfl/players/full/${slug}.png`;
+  function scaleStats(stats, multipliers) {
+    const out = {};
+    for (const [key, value] of Object.entries(stats)) {
+      const factor = multipliers[key] ?? 1.8;
+      out[key] = round1((value || 0) * factor);
+    }
+    return out;
   }
   
   export function buildPerfectChallengeTestData(now = new Date()) {
@@ -401,20 +446,179 @@ const TEAM_PROFILES = {
       const previous = getHistory(historyKey);
       const avgScore = (previous.total + row.currentScore) / (previous.count + 1);
       row.avgScore = round1(avgScore);
+  
       history.set(historyKey, {
         total: previous.total + row.currentScore,
         count: previous.count + 1,
       });
+  
       players.push(row);
+    };
+  
+    const addSkillPlayers = (teamCode, opponentCode, week, offenseBox) => {
+      const team = TEAM_PROFILES[teamCode];
+      const opponent = TEAM_PROFILES[opponentCode];
+      const meta = {
+        season,
+        week,
+        teamCode,
+        lastWeekOpponentTeam: getLastWeekOpponentName(teamCode, week),
+        opponentDefenseTeamCode: opponentCode,
+        currentWeekOpponentTeam: opponent.name,
+        currentWeekOpponentDefenseTeamCode: opponentCode,
+      };
+  
+      const qbName = splitName(team.qb);
+      pushWithAverage(
+        createPlayerRow({
+          ...meta,
+          position: "QB",
+          ...qbName,
+          displayName: team.qb,
+          headshotUrl: makeAvatarUrl(team.qb),
+          currentScore: scorePlayer("QB", offenseBox.qbStats),
+          avgScore: 0,
+          overallStats: scaleStats(offenseBox.qbStats, {
+            passingYards: 1.95 + week * 0.08,
+            passingTDs: 1.7 + week * 0.08,
+            interceptions: 0.9 + week * 0.03,
+            rushingYards: 1.7 + week * 0.06,
+            rushingTDs: 1.55 + week * 0.04,
+            fumble: 1.2,
+          }),
+          weeklyStats: offenseBox.qbStats,
+        }),
+        `${teamCode}-QB`
+      );
+  
+      const rbName = splitName(team.rb);
+      pushWithAverage(
+        createPlayerRow({
+          ...meta,
+          position: "RB",
+          ...rbName,
+          displayName: team.rb,
+          headshotUrl: makeAvatarUrl(team.rb),
+          currentScore: scorePlayer("RB", offenseBox.rbStats),
+          avgScore: 0,
+          overallStats: scaleStats(offenseBox.rbStats, {
+            rushingYards: 1.9 + week * 0.08,
+            rushingTDs: 1.65 + week * 0.05,
+            receivedYards: 1.6 + week * 0.05,
+            receivedTDs: 1.45 + week * 0.04,
+            fumble: 1.15,
+          }),
+          weeklyStats: offenseBox.rbStats,
+        }),
+        `${teamCode}-RB`
+      );
+  
+      const wrName = splitName(team.wr);
+      pushWithAverage(
+        createPlayerRow({
+          ...meta,
+          position: "WR",
+          ...wrName,
+          displayName: team.wr,
+          headshotUrl: makeAvatarUrl(team.wr),
+          currentScore: scorePlayer("WR", offenseBox.wrStats),
+          avgScore: 0,
+          overallStats: scaleStats(offenseBox.wrStats, {
+            receivedYards: 1.85 + week * 0.07,
+            receivedTDs: 1.55 + week * 0.04,
+            rushingYards: 1.2,
+            rushingTDs: 1.1,
+            fumbles: 1.1,
+          }),
+          weeklyStats: offenseBox.wrStats,
+        }),
+        `${teamCode}-WR`
+      );
+  
+      const teName = splitName(team.te);
+      pushWithAverage(
+        createPlayerRow({
+          ...meta,
+          position: "TE",
+          ...teName,
+          displayName: team.te,
+          headshotUrl: makeAvatarUrl(team.te),
+          currentScore: scorePlayer("TE", offenseBox.teStats),
+          avgScore: 0,
+          overallStats: scaleStats(offenseBox.teStats, {
+            receivedYards: 1.8 + week * 0.06,
+            receivedTDs: 1.5 + week * 0.04,
+            rushingYards: 1.1,
+            rushingTDs: 1.1,
+            fumbles: 1.1,
+          }),
+          weeklyStats: offenseBox.teStats,
+        }),
+        `${teamCode}-TE`
+      );
+  
+      const kName = splitName(team.k);
+      pushWithAverage(
+        createPlayerRow({
+          ...meta,
+          position: "K",
+          ...kName,
+          displayName: team.k,
+          headshotUrl: null,
+          currentScore: scorePlayer("K", offenseBox.kStats),
+          avgScore: 0,
+          overallStats: scaleStats(offenseBox.kStats, {
+            fg0to49Yards: 1.8 + week * 0.06,
+            fg50plusYards: 1.35 + week * 0.04,
+            xp: 1.9 + week * 0.07,
+          }),
+          weeklyStats: offenseBox.kStats,
+        }),
+        `${teamCode}-K`
+      );
+    };
+  
+    const addDefensePlayer = (teamCode, opponentCode, week, defenseBox) => {
+      const team = TEAM_PROFILES[teamCode];
+      const opponent = TEAM_PROFILES[opponentCode];
+      const teamName = splitName(team.name);
+  
+      pushWithAverage(
+        createPlayerRow({
+          season,
+          week,
+          position: "DEF",
+          teamCode,
+          ...teamName,
+          displayName: team.name,
+          headshotUrl: null,
+          isDefense: true,
+          currentScore: scorePlayer("DEF", defenseBox.weeklyStats),
+          avgScore: 0,
+          lastWeekOpponentTeam: getLastWeekOpponentName(teamCode, week),
+          opponentDefenseTeamCode: null,
+          currentWeekOpponentTeam: opponent.name,
+          currentWeekOpponentDefenseTeamCode: null,
+          allowedPassingYards: defenseBox.allowedPassingYards,
+          allowedRushingYards: defenseBox.allowedRushingYards,
+          overallStats: scaleStats(defenseBox.weeklyStats, {
+            interception: 1.85 + week * 0.05,
+            forcedFumble: 1.75 + week * 0.05,
+            sack: 1.8 + week * 0.05,
+            safety: 1.2,
+            returnTD: 1.2,
+            allowedPoints: 1,
+          }),
+          weeklyStats: defenseBox.weeklyStats,
+        }),
+        `${teamCode}-DEF`
+      );
     };
   
     for (const [weekKey, schedule] of Object.entries(WEEKLY_SCHEDULE)) {
       const week = Number(weekKey);
   
       schedule.forEach((game, gameIndex) => {
-        const awayTeam = TEAM_PROFILES[game.away];
-        const homeTeam = TEAM_PROFILES[game.home];
-  
         const awayOffense = createTeamOffenseBox(game.away, game.home, week);
         const homeOffense = createTeamOffenseBox(game.home, game.away, week);
   
@@ -435,287 +639,11 @@ const TEAM_PROFILES = {
           status: timing.final ? "FINAL" : "SCHEDULED",
         });
   
-        const commonMeta = (teamCode, oppCode) => ({
-          season,
-          week,
-          teamCode,
-          lastWeekOpponentTeam:
-            week > 1 ? TEAM_PROFILES[matchupByWeek[week - 1][teamCode]].name : null,
-          opponentDefenseTeamCode: oppCode,
-          currentWeekOpponentTeam: TEAM_PROFILES[oppCode].name,
-          currentWeekOpponentDefenseTeamCode: oppCode,
-        });
+        addSkillPlayers(game.away, game.home, week, awayOffense);
+        addDefensePlayer(game.away, game.home, week, awayDefense);
   
-        const awayMeta = commonMeta(game.away, game.home);
-        const homeMeta = commonMeta(game.home, game.away);
-  
-        pushWithAverage(
-          createPlayerRow({
-            ...awayMeta,
-            position: "QB",
-            firstName: awayTeam.qb.split(" ").slice(0, -1).join(" "),
-            lastName: awayTeam.qb.split(" ").slice(-1).join(" "),
-            displayName: awayTeam.qb,
-            headshotUrl: makeHeadshotUrl("QB", awayTeam.qb),
-            currentScore: scorePlayer("QB", awayOffense.qbStats),
-            avgScore: 0,
-            overallStats: {
-              passingYards: round1(awayOffense.qbStats.passingYards * (1.8 + week * 0.15)),
-              passingTDs: round1(awayOffense.qbStats.passingTDs * (1.7 + week * 0.1)),
-              interceptions: round1(Math.max(0, awayOffense.qbStats.interceptions * (0.8 + week * 0.05))),
-              rushingYards: round1(awayOffense.qbStats.rushingYards * (1.7 + week * 0.1)),
-              rushingTDs: round1(awayOffense.qbStats.rushingTDs * (1.6 + week * 0.05)),
-            },
-            weeklyStats: awayOffense.qbStats,
-          }),
-          `${game.away}-QB`
-        );
-  
-        pushWithAverage(
-          createPlayerRow({
-            ...awayMeta,
-            position: "RB",
-            firstName: awayTeam.rb.split(" ").slice(0, -1).join(" "),
-            lastName: awayTeam.rb.split(" ").slice(-1).join(" "),
-            displayName: awayTeam.rb,
-            headshotUrl: makeHeadshotUrl("RB", awayTeam.rb),
-            currentScore: scorePlayer("RB", awayOffense.rbStats),
-            avgScore: 0,
-            overallStats: {
-              rushingYards: round1(awayOffense.rbStats.rushingYards * (1.9 + week * 0.12)),
-              rushingTDs: round1(awayOffense.rbStats.rushingTDs * (1.7 + week * 0.08)),
-              receivedYards: round1(awayOffense.rbStats.receivedYards * (1.6 + week * 0.08)),
-              receivedTDs: round1(awayOffense.rbStats.receivedTDs * (1.5 + week * 0.05)),
-            },
-            weeklyStats: awayOffense.rbStats,
-          }),
-          `${game.away}-RB`
-        );
-  
-        pushWithAverage(
-          createPlayerRow({
-            ...awayMeta,
-            position: "WR",
-            firstName: awayTeam.wr.split(" ").slice(0, -1).join(" "),
-            lastName: awayTeam.wr.split(" ").slice(-1).join(" "),
-            displayName: awayTeam.wr,
-            headshotUrl: makeHeadshotUrl("WR", awayTeam.wr),
-            currentScore: scorePlayer("WR", awayOffense.wrStats),
-            avgScore: 0,
-            overallStats: {
-              receivedYards: round1(awayOffense.wrStats.receivedYards * (1.8 + week * 0.12)),
-              receivedTDs: round1(awayOffense.wrStats.receivedTDs * (1.6 + week * 0.05)),
-            },
-            weeklyStats: awayOffense.wrStats,
-          }),
-          `${game.away}-WR`
-        );
-  
-        pushWithAverage(
-          createPlayerRow({
-            ...awayMeta,
-            position: "TE",
-            firstName: awayTeam.te.split(" ").slice(0, -1).join(" "),
-            lastName: awayTeam.te.split(" ").slice(-1).join(" "),
-            displayName: awayTeam.te,
-            headshotUrl: makeHeadshotUrl("TE", awayTeam.te),
-            currentScore: scorePlayer("TE", awayOffense.teStats),
-            avgScore: 0,
-            overallStats: {
-              receivedYards: round1(awayOffense.teStats.receivedYards * (1.8 + week * 0.1)),
-              receivedTDs: round1(awayOffense.teStats.receivedTDs * (1.6 + week * 0.05)),
-            },
-            weeklyStats: awayOffense.teStats,
-          }),
-          `${game.away}-TE`
-        );
-  
-        pushWithAverage(
-          createPlayerRow({
-            ...awayMeta,
-            position: "K",
-            firstName: awayTeam.k.split(" ").slice(0, -1).join(" "),
-            lastName: awayTeam.k.split(" ").slice(-1).join(" "),
-            displayName: awayTeam.k,
-            headshotUrl: null,
-            currentScore: scorePlayer("K", awayOffense.kStats),
-            avgScore: 0,
-            overallStats: {
-              fg0to49Yards: round1(awayOffense.kStats.fg0to49Yards * (1.8 + week * 0.08)),
-              fg50plusYards: round1(Math.max(1, awayOffense.kStats.fg50plusYards * (1.4 + week * 0.05))),
-              xp: round1(awayOffense.kStats.xp * (1.9 + week * 0.08)),
-            },
-            weeklyStats: awayOffense.kStats,
-          }),
-          `${game.away}-K`
-        );
-  
-        pushWithAverage(
-          createPlayerRow({
-            season,
-            week,
-            position: "DEF",
-            teamCode: game.away,
-            firstName: awayTeam.name.split(" ").slice(0, -1).join(" "),
-            lastName: awayTeam.name.split(" ").slice(-1).join(" "),
-            displayName: awayTeam.name,
-            headshotUrl: null,
-            isDefense: true,
-            currentScore: scorePlayer("DEF", awayDefense.weeklyStats),
-            avgScore: 0,
-            lastWeekOpponentTeam:
-              week > 1 ? TEAM_PROFILES[matchupByWeek[week - 1][game.away]].name : null,
-            opponentDefenseTeamCode: null,
-            currentWeekOpponentTeam: homeTeam.name,
-            currentWeekOpponentDefenseTeamCode: null,
-            allowedPassingYards: awayDefense.allowedPassingYards,
-            allowedRushingYards: awayDefense.allowedRushingYards,
-            overallStats: {
-              interception: round1(awayDefense.weeklyStats.interception * (1.9 + week * 0.08)),
-              forcedFumble: round1(awayDefense.weeklyStats.forcedFumble * (1.8 + week * 0.08)),
-              sack: round1(awayDefense.weeklyStats.sack * (1.8 + week * 0.08)),
-              safety: round1(awayDefense.weeklyStats.safety * (1.2 + week * 0.05)),
-              returnTD: round1(awayDefense.weeklyStats.returnTD * (1.3 + week * 0.05)),
-              allowedPoints: round1(awayDefense.weeklyStats.allowedPoints * (0.95 + week * 0.02)),
-            },
-            weeklyStats: awayDefense.weeklyStats,
-          }),
-          `${game.away}-DEF`
-        );
-  
-        pushWithAverage(
-          createPlayerRow({
-            ...homeMeta,
-            position: "QB",
-            firstName: homeTeam.qb.split(" ").slice(0, -1).join(" "),
-            lastName: homeTeam.qb.split(" ").slice(-1).join(" "),
-            displayName: homeTeam.qb,
-            headshotUrl: makeHeadshotUrl("QB", homeTeam.qb),
-            currentScore: scorePlayer("QB", homeOffense.qbStats),
-            avgScore: 0,
-            overallStats: {
-              passingYards: round1(homeOffense.qbStats.passingYards * (1.8 + week * 0.15)),
-              passingTDs: round1(homeOffense.qbStats.passingTDs * (1.7 + week * 0.1)),
-              interceptions: round1(Math.max(0, homeOffense.qbStats.interceptions * (0.8 + week * 0.05))),
-              rushingYards: round1(homeOffense.qbStats.rushingYards * (1.7 + week * 0.1)),
-              rushingTDs: round1(homeOffense.qbStats.rushingTDs * (1.6 + week * 0.05)),
-            },
-            weeklyStats: homeOffense.qbStats,
-          }),
-          `${game.home}-QB`
-        );
-  
-        pushWithAverage(
-          createPlayerRow({
-            ...homeMeta,
-            position: "RB",
-            firstName: homeTeam.rb.split(" ").slice(0, -1).join(" "),
-            lastName: homeTeam.rb.split(" ").slice(-1).join(" "),
-            displayName: homeTeam.rb,
-            headshotUrl: makeHeadshotUrl("RB", homeTeam.rb),
-            currentScore: scorePlayer("RB", homeOffense.rbStats),
-            avgScore: 0,
-            overallStats: {
-              rushingYards: round1(homeOffense.rbStats.rushingYards * (1.9 + week * 0.12)),
-              rushingTDs: round1(homeOffense.rbStats.rushingTDs * (1.7 + week * 0.08)),
-              receivedYards: round1(homeOffense.rbStats.receivedYards * (1.6 + week * 0.08)),
-              receivedTDs: round1(homeOffense.rbStats.receivedTDs * (1.5 + week * 0.05)),
-            },
-            weeklyStats: homeOffense.rbStats,
-          }),
-          `${game.home}-RB`
-        );
-  
-        pushWithAverage(
-          createPlayerRow({
-            ...homeMeta,
-            position: "WR",
-            firstName: homeTeam.wr.split(" ").slice(0, -1).join(" "),
-            lastName: homeTeam.wr.split(" ").slice(-1).join(" "),
-            displayName: homeTeam.wr,
-            headshotUrl: makeHeadshotUrl("WR", homeTeam.wr),
-            currentScore: scorePlayer("WR", homeOffense.wrStats),
-            avgScore: 0,
-            overallStats: {
-              receivedYards: round1(homeOffense.wrStats.receivedYards * (1.8 + week * 0.12)),
-              receivedTDs: round1(homeOffense.wrStats.receivedTDs * (1.6 + week * 0.05)),
-            },
-            weeklyStats: homeOffense.wrStats,
-          }),
-          `${game.home}-WR`
-        );
-  
-        pushWithAverage(
-          createPlayerRow({
-            ...homeMeta,
-            position: "TE",
-            firstName: homeTeam.te.split(" ").slice(0, -1).join(" "),
-            lastName: homeTeam.te.split(" ").slice(-1).join(" "),
-            displayName: homeTeam.te,
-            headshotUrl: makeHeadshotUrl("TE", homeTeam.te),
-            currentScore: scorePlayer("TE", homeOffense.teStats),
-            avgScore: 0,
-            overallStats: {
-              receivedYards: round1(homeOffense.teStats.receivedYards * (1.8 + week * 0.1)),
-              receivedTDs: round1(homeOffense.teStats.receivedTDs * (1.6 + week * 0.05)),
-            },
-            weeklyStats: homeOffense.teStats,
-          }),
-          `${game.home}-TE`
-        );
-  
-        pushWithAverage(
-          createPlayerRow({
-            ...homeMeta,
-            position: "K",
-            firstName: homeTeam.k.split(" ").slice(0, -1).join(" "),
-            lastName: homeTeam.k.split(" ").slice(-1).join(" "),
-            displayName: homeTeam.k,
-            headshotUrl: null,
-            currentScore: scorePlayer("K", homeOffense.kStats),
-            avgScore: 0,
-            overallStats: {
-              fg0to49Yards: round1(homeOffense.kStats.fg0to49Yards * (1.8 + week * 0.08)),
-              fg50plusYards: round1(Math.max(1, homeOffense.kStats.fg50plusYards * (1.4 + week * 0.05))),
-              xp: round1(homeOffense.kStats.xp * (1.9 + week * 0.08)),
-            },
-            weeklyStats: homeOffense.kStats,
-          }),
-          `${game.home}-K`
-        );
-  
-        pushWithAverage(
-          createPlayerRow({
-            season,
-            week,
-            position: "DEF",
-            teamCode: game.home,
-            firstName: homeTeam.name.split(" ").slice(0, -1).join(" "),
-            lastName: homeTeam.name.split(" ").slice(-1).join(" "),
-            displayName: homeTeam.name,
-            headshotUrl: null,
-            isDefense: true,
-            currentScore: scorePlayer("DEF", homeDefense.weeklyStats),
-            avgScore: 0,
-            lastWeekOpponentTeam:
-              week > 1 ? TEAM_PROFILES[matchupByWeek[week - 1][game.home]].name : null,
-            opponentDefenseTeamCode: null,
-            currentWeekOpponentTeam: awayTeam.name,
-            currentWeekOpponentDefenseTeamCode: null,
-            allowedPassingYards: homeDefense.allowedPassingYards,
-            allowedRushingYards: homeDefense.allowedRushingYards,
-            overallStats: {
-              interception: round1(homeDefense.weeklyStats.interception * (1.9 + week * 0.08)),
-              forcedFumble: round1(homeDefense.weeklyStats.forcedFumble * (1.8 + week * 0.08)),
-              sack: round1(homeDefense.weeklyStats.sack * (1.8 + week * 0.08)),
-              safety: round1(homeDefense.weeklyStats.safety * (1.2 + week * 0.05)),
-              returnTD: round1(homeDefense.weeklyStats.returnTD * (1.3 + week * 0.05)),
-              allowedPoints: round1(homeDefense.weeklyStats.allowedPoints * (0.95 + week * 0.02)),
-            },
-            weeklyStats: homeDefense.weeklyStats,
-          }),
-          `${game.home}-DEF`
-        );
+        addSkillPlayers(game.home, game.away, week, homeOffense);
+        addDefensePlayer(game.home, game.away, week, homeDefense);
       });
     }
   
