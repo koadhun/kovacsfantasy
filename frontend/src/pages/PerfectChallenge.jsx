@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
+import { Link, useSearchParams } from "react-router-dom";
 import WeekDropdown from "../components/WeekDropdown";
 import PerfectChallengeCard from "../components/perfect/PerfectChallengeCard";
 import PerfectChallengeSelectorModal from "../components/perfect/PerfectChallengeSelectorModal";
@@ -70,8 +71,11 @@ function formatScore(value) {
 }
 
 export default function PerfectChallenge() {
+  const [sp, setSp] = useSearchParams();
+  const requestedWeek = Number(sp.get("week") || 1);
+
   const [weeks, setWeeks] = useState([]);
-  const [week, setWeek] = useState(1);
+  const [week, setWeek] = useState(requestedWeek);
   const [slots, setSlots] = useState([]);
   const [poolByPosition, setPoolByPosition] = useState({});
   const [summary, setSummary] = useState({
@@ -85,9 +89,17 @@ export default function PerfectChallenge() {
 
   async function loadWeeks() {
     const res = await api.get("/perfect-challenge/weeks");
-    const ws = res.data?.weeks || [];
+    const ws = Array.isArray(res.data?.weeks) ? res.data.weeks : [];
+
     setWeeks(ws);
-    if (ws.length) setWeek((prev) => (ws.includes(prev) ? prev : ws[0]));
+
+    if (!ws.length) {
+      setWeek(1);
+      return;
+    }
+
+    const safeWeek = ws.includes(requestedWeek) ? requestedWeek : ws[0];
+    setWeek(safeWeek);
   }
 
   async function loadWeekData(targetWeek) {
@@ -111,14 +123,21 @@ export default function PerfectChallenge() {
 
   useEffect(() => {
     loadWeeks().catch(() => setErr("Nem sikerült betölteni a heteket."));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (!week) return;
 
+    const currentQueryWeek = Number(sp.get("week") || 0);
+    if (currentQueryWeek !== week) {
+      setSp({ week: String(week) }, { replace: true });
+    }
+
     loadWeekData(week).catch(() =>
       setErr("Nem sikerült betölteni a Perfect Challenge adatokat.")
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [week]);
 
   async function pickPlayer(playerId) {
@@ -204,6 +223,13 @@ export default function PerfectChallenge() {
           />
 
           <div className="filters-spacer" />
+
+          <Link
+            to={`/fantasy/perfect-challenge/leaderboard?week=${week}`}
+            className="btn"
+          >
+            Leaderboard
+          </Link>
 
           <span className="pill">
             <span className="dot" />

@@ -381,11 +381,114 @@ async function getSeasonSummary(userId, season) {
   };
 }
 
+function buildWeeklyLeaderboardRows(users, rosters) {
+  const rosterMap = new Map(rosters.map((r) => [r.userId, r]));
+
+  return users
+    .map((user) => {
+      const roster = rosterMap.get(user.id);
+      const selectedCount = roster?.slots?.length || 0;
+      const points = roundToOne(sumRosterScoreFromSlots(roster?.slots || []));
+
+      return {
+        user: {
+          id: user.id,
+          username: user.username,
+        },
+        points,
+        selectedCount,
+        totalSlots: 8,
+      };
+    })
+    .sort(
+      (a, b) =>
+        b.points - a.points ||
+        b.selectedCount - a.selectedCount ||
+        a.user.username.localeCompare(b.user.username)
+    );
+}
+
+function buildSeasonLeaderboardRows(users, rosters) {
+  const byUser = new Map();
+
+  for (const user of users) {
+    byUser.set(user.id, {
+      userId: user.id,
+      username: user.username,
+      points: 0,
+      selectedCount: 0,
+    });
+  }
+
+  for (const roster of rosters) {
+    const row = byUser.get(roster.userId);
+    if (!row) continue;
+
+    row.points = roundToOne(row.points + sumRosterScoreFromSlots(roster.slots || []));
+    row.selectedCount += roster.slots?.length || 0;
+  }
+
+  return [...byUser.values()].sort(
+    (a, b) =>
+      b.points - a.points ||
+      b.selectedCount - a.selectedCount ||
+      a.username.localeCompare(b.username)
+  );
+}
+
 router.get("/weeks", requireAuth, async (_req, res) => {
   return res.json({
     season: DEFAULT_SEASON,
     weeks: DEFAULT_WEEKS,
   });
+});
+
+router.get("/leaderboard", requireAuth, async (req, res) => {
+  try {
+    const season = Number(req.query.season || DEFAULT_SEASON);
+    const week = Number(req.query.week || 1);
+
+    const [users, weeklyRosters, seasonRosters] = await Promise.all([
+      prisma.user.findMany({
+        select: { id: true, username: true },
+      }),
+      prisma.perfectChallengeRoster.findMany({
+        where: { season, week },
+        include: {
+          slots: {
+            include: {
+              player: true,
+            },
+          },
+        },
+      }),
+      prisma.perfectChallengeRoster.findMany({
+        where: { season },
+        include: {
+          slots: {
+            include: {
+              player: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+    const weekly = buildWeeklyLeaderboardRows(users, weeklyRosters);
+    const totals = buildSeasonLeaderboardRows(users, seasonRosters);
+
+    return res.json({
+      season,
+      week,
+      weekly,
+      totals,
+    });
+  } catch (error) {
+    console.error("GET /api/perfect-challenge/leaderboard error:", error);
+    return res.status(500).json({
+      error: "Nem sikerült betölteni a Perfect Challenge leaderboard adatokat.",
+    });
+  }
 });
 
 router.get("/week", requireAuth, async (req, res) => {
