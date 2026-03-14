@@ -312,9 +312,7 @@ export default function PerfectChallenge() {
             key={slot.slot}
             slot={slot.slot}
             player={slot.player}
-            onSelect={
-              isReadOnlyView ? undefined : () => setModalSlot(slot)
-            }
+            onSelect={isReadOnlyView ? undefined : () => setModalSlot(slot)}
             readOnly={isReadOnlyView}
           />
         ))}
