@@ -185,7 +185,6 @@ export default function PerfectChallenge() {
             <ScoreCard
               title="Weekly points"
               value={formatScore(summary.weeklyPoints)}
-              sub={`${summary.selectedCount}/8 selected`}
             />
 
             <ScoreCard
