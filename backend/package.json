@@ -6,7 +6,11 @@
   "main": "src/app.js",
   "scripts": {
     "dev": "nodemon src/app.js",
-    "start": "node src/app.js"
+    "start": "node src/app.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "seed:perfect-test": "node src/scripts/seedPerfectChallengeTestData.js",
+    "seed:playoff-test": "node src/scripts/seedPlayoffChallengeTestData.js"
   },
   "keywords": [],
   "author": "",
