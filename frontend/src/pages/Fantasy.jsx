@@ -3,16 +3,18 @@ import { Link } from "react-router-dom";
 function FeaturePill({ children }) {
   return (
     <span
-      className="pill"
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: 8,
+        padding: "6px 10px",
+        borderRadius: 999,
+        border: "1px solid rgba(255,255,255,.10)",
+        background: "rgba(255,255,255,.05)",
+        color: "rgba(255,255,255,.85)",
         fontSize: 12,
-        fontWeight: 800,
+        fontWeight: 700,
       }}
     >
-      <span className="dot" />
       {children}
     </span>
   );
@@ -35,14 +37,13 @@ function StatusBadge({ children, tone = "default" }) {
   return (
     <span
       style={{
-        ...styles,
         display: "inline-flex",
         alignItems: "center",
-        padding: "8px 12px",
         borderRadius: 999,
+        padding: "6px 10px",
         fontSize: 12,
         fontWeight: 800,
-        letterSpacing: ".02em",
+        ...styles,
       }}
     >
       {children}
@@ -66,125 +67,70 @@ function GameCard({
     <div
       className="card"
       style={{
-        position: "relative",
-        overflow: "hidden",
-        minHeight: 280,
+        padding: 20,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
-        padding: 22,
-        border: featured
-          ? "1px solid rgba(59,130,246,.34)"
-          : "1px solid rgba(255,255,255,.08)",
-        background: featured
-          ? "linear-gradient(180deg, rgba(18,32,72,.96), rgba(7,16,38,.96))"
-          : "linear-gradient(180deg, rgba(11,22,48,.92), rgba(7,13,30,.92))",
+        gap: 14,
+        minHeight: 260,
+        border:
+          featured
+            ? "1px solid rgba(59,130,246,.28)"
+            : "1px solid rgba(255,255,255,.08)",
+        background:
+          featured
+            ? "linear-gradient(180deg, rgba(16,32,74,.96), rgba(9,18,42,.96))"
+            : "linear-gradient(180deg, rgba(14,20,36,.96), rgba(9,14,26,.96))",
       }}
     >
       <div
         style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          background: featured
-            ? "radial-gradient(circle at top right, rgba(96,165,250,.18), transparent 34%)"
-            : "radial-gradient(circle at top right, rgba(255,255,255,.06), transparent 30%)",
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 12,
+          alignItems: "flex-start",
         }}
-      />
+      >
+        <div>
+          <div className="muted" style={{ fontSize: 12, fontWeight: 800 }}>
+            {subtitle}
+          </div>
+          <h3 style={{ margin: "8px 0 0 0" }}>{title}</h3>
+        </div>
 
-      <div style={{ position: "relative", zIndex: 1 }}>
+        <StatusBadge tone={statusTone}>{status}</StatusBadge>
+      </div>
+
+      <div className="muted" style={{ lineHeight: 1.6 }}>
+        {description}
+      </div>
+
+      {!!features.length && (
         <div
           style={{
             display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            gap: 12,
-            marginBottom: 18,
+            flexWrap: "wrap",
+            gap: 8,
           }}
         >
-          <div>
-            <div
-              style={{
-                fontSize: 12,
-                fontWeight: 800,
-                textTransform: "uppercase",
-                letterSpacing: ".08em",
-                color: "rgba(255,255,255,.58)",
-                marginBottom: 8,
-              }}
-            >
-              {subtitle}
-            </div>
-
-            <h3
-              style={{
-                margin: 0,
-                fontSize: featured ? 30 : 24,
-                lineHeight: 1.08,
-                fontWeight: 900,
-              }}
-            >
-              {title}
-            </h3>
-          </div>
-
-          <StatusBadge tone={statusTone}>{status}</StatusBadge>
+          {features.map((item) => (
+            <FeaturePill key={item}>{item}</FeaturePill>
+          ))}
         </div>
+      )}
 
-        <p
-          className="muted"
-          style={{
-            margin: 0,
-            fontSize: 16,
-            lineHeight: 1.55,
-            maxWidth: 540,
-          }}
-        >
-          {description}
-        </p>
-
-        {!!features.length && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 18 }}>
-            {features.map((item) => (
-              <FeaturePill key={item}>{item}</FeaturePill>
-            ))}
-          </div>
-        )}
+      <div className="muted" style={{ marginTop: "auto", fontSize: 12, fontWeight: 800 }}>
+        {featured ? "Aktív fantasy játék" : disabled ? "Fejlesztés alatt" : "Elérhető játék"}
       </div>
 
-      <div
-        style={{
-          position: "relative",
-          zIndex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 12,
-          marginTop: 24,
-        }}
-      >
-        <div className="muted" style={{ fontSize: 13, fontWeight: 700 }}>
-          {featured
-            ? "Aktív fantasy játék"
-            : disabled
-            ? "Fejlesztés alatt"
-            : "Elérhető játék"}
-        </div>
-
-        {disabled ? (
-          <button className="btn" disabled style={{ opacity: 0.72, minWidth: 132 }}>
-            {cta}
-          </button>
-        ) : (
-          <Link
-            to={href}
-            className={`btn ${featured ? "primary" : ""}`}
-            style={{ minWidth: 132, textAlign: "center" }}
-          >
-            {cta}
-          </Link>
-        )}
-      </div>
+      {disabled ? (
+        <button className="btn" disabled>
+          {cta}
+        </button>
+      ) : (
+        <Link className={`btn ${featured ? "primary" : ""}`} to={href}>
+          {cta}
+        </Link>
+      )}
     </div>
   );
 }
@@ -200,62 +146,53 @@ export default function Fantasy() {
 
         <h1 className="h1">Fantasy Game Center</h1>
 
-        <p className="sub" style={{ maxWidth: 760 }}>
-          Válassz egy fantasy játékmódot. A Weekly Pick&apos;Em és a Perfect
-          Challenge már tesztelhető UI/DB alapon, a végleges szabályok később
-          finomíthatók.
+        <p className="sub" style={{ maxWidth: 900 }}>
+          Válassz egy fantasy játékmódot. A Weekly Pick&apos;Em és a Perfect Challenge
+          már tesztelhető UI/DB alapon, a Playoff Challenge pedig most külön playoff
+          körös szorzólogikával indul.
         </p>
-
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 16 }}>
-          <FeaturePill>Weekly picks</FeaturePill>
-          <FeaturePill>Leaderboard</FeaturePill>
-          <FeaturePill>Perfect Challenge roster</FeaturePill>
-          <FeaturePill>Card flip stats</FeaturePill>
-        </div>
       </div>
 
       <div
         style={{
-          marginTop: 18,
           display: "grid",
-          gridTemplateColumns: "minmax(0, 1.05fr) minmax(0, 1.05fr) minmax(0, .9fr)",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
           gap: 18,
-          alignItems: "stretch",
+          marginTop: 18,
         }}
       >
         <GameCard
-          featured
           title="Weekly Pick'Em"
-          subtitle="Available now"
-          description="Tippeld meg minden heti NFL meccs győztesét, kövesd a heti és szezon leaderboardot, és nézd meg más játékosok pickjeit kickoff után."
+          subtitle="NFL Regular Season"
+          description="Tippeld meg minden meccs győztesét, nézd a leaderboardot, és hasonlítsd össze a választásaidat más játékosokkal."
           status="Live"
           statusTone="primary"
           href="/fantasy/weekly-pickem"
-          cta="Open game"
-          features={["Weekly picks", "Leaderboard", "Kickoff lock", "User picks view"]}
+          cta="Open"
+          featured
+          features={["Weekly picks", "Leaderboard", "User picks"]}
         />
 
         <GameCard
-          featured
           title="Perfect Challenge"
-          subtitle="UI demo"
-          description="Állíts össze heti 8 fős fantasy csapatot fix pozíciókra bontva. A játékos kártyák front/back nézetben mutatják a pontot és a szezon statokat."
-          status="New"
+          subtitle="Weekly roster game"
+          description="Válassz heti 8 játékost fix pozíciókra bontva. Kártyás roster nézet, selector modal és detailed stat / fantasy breakdown."
+          status="Live"
           statusTone="primary"
           href="/fantasy/perfect-challenge"
-          cta="Open game"
-          features={["8 fixed slots", "Player swap", "Overall stats", "Dummy data"]}
+          cta="Open"
+          features={["Perfect lineup", "Leaderboard", "Card flip stats"]}
         />
 
         <GameCard
           title="Playoff Challenge"
-          subtitle="Future mode"
-          description="Külön fantasy élmény a rájátszásra szabva, dedikált playoff bracket és speciális pontozási logikával."
-          status="Coming soon"
-          href="#"
-          cta="Coming soon"
-          disabled
-          features={["Playoff bracket", "Special scoring", "Postseason mode"]}
+          subtitle="NFL Playoffs"
+          description="A Perfect Challenge playoff változata. Ugyanazt a játékost egymást követő playoff körökben megtartva növekvő szorzót kapsz."
+          status="Live"
+          statusTone="primary"
+          href="/fantasy/playoff-challenge"
+          cta="Open"
+          features={["Wildcard", "Divisional", "Conference", "Super Bowl multipliers"]}
         />
       </div>
     </div>

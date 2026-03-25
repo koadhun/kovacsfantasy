@@ -10,8 +10,9 @@ import adminStandingsRoutes from "./routes/adminStandingsRoutes.js";
 import statsRoutes from "./routes/statsRoutes.js";
 import scheduleRoutes from "./routes/scheduleRoutes.js";
 import pickemRoutes from "./routes/pickemRoutes.js";
-import adminScheduleRoutes from "./routes/adminScheduleRoutes.js";
 import perfectChallengeRoutes from "./routes/perfectChallengeRoutes.js";
+import playoffChallengeRoutes from "./routes/playoffChallengeRoutes.js";
+import adminScheduleRoutes from "./routes/adminScheduleRoutes.js";
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.json({ message: "KovacsFantasy backend OK" });
 });
 
@@ -33,6 +34,7 @@ app.use("/api/stats", statsRoutes);
 app.use("/api/schedule", scheduleRoutes);
 app.use("/api/pickem", pickemRoutes);
 app.use("/api/perfect-challenge", perfectChallengeRoutes);
+app.use("/api/playoff-challenge", playoffChallengeRoutes);
 app.use("/api/admin", adminScheduleRoutes);
 
 const PORT = process.env.PORT || 5000;
