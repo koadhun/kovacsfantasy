@@ -74,6 +74,19 @@ function normalizeTeamKey(value) {
   return TEAM_NAME_TO_CODE[trimmed] || trimmed.toUpperCase();
 }
 
+/**
+ * DEV helper: idő override
+ * .env -> NOW_OVERRIDE=2025-03-16T18:05:00.000Z
+ */
+function getNow() {
+  const raw = process.env.NOW_OVERRIDE;
+  if (raw) {
+    const d = new Date(raw);
+    if (!Number.isNaN(d.getTime())) return d;
+  }
+  return new Date();
+}
+
 function getPlayerScore(player) {
   if (!player) return 0;
 
@@ -128,16 +141,14 @@ function getOrCreate(map, key, factory) {
   return map.get(key);
 }
 
-function isGameVisibleToOthers(game, now = new Date()) {
+function isGameStarted(game, now = getNow()) {
   if (!game) return false;
-
   if (game.status === "FINAL") return true;
   if (game.status === "ONGOING") return true;
-
   return new Date(game.kickoffAt) <= now;
 }
 
-async function getVisibleTeamMap(season, week) {
+async function getStartedTeamMap(season, week) {
   const games = await prisma.game.findMany({
     where: { season, week },
     select: {
@@ -148,13 +159,13 @@ async function getVisibleTeamMap(season, week) {
     },
   });
 
-  const now = new Date();
+  const now = getNow();
   const map = new Map();
 
   for (const game of games) {
-    const visible = isGameVisibleToOthers(game, now);
-    map.set(game.homeTeam, visible);
-    map.set(game.awayTeam, visible);
+    const started = isGameStarted(game, now);
+    map.set(game.homeTeam, started);
+    map.set(game.awayTeam, started);
   }
 
   return map;
@@ -437,7 +448,7 @@ async function getSeasonSummary(userId, season) {
   };
 }
 
-async function getMaskedSeasonPoints(userId, season, viewedWeek, visibleByTeam) {
+async function getMaskedSeasonPoints(userId, season, viewedWeek, startedByTeam) {
   const rosters = await prisma.perfectChallengeRoster.findMany({
     where: {
       userId: parseUserId(userId),
@@ -464,7 +475,7 @@ async function getMaskedSeasonPoints(userId, season, viewedWeek, visibleByTeam) 
 
     const visibleSlots = roster.slots.filter((slot) => {
       const teamCode = slot.player?.teamCode;
-      return teamCode ? visibleByTeam.get(teamCode) === true : false;
+      return teamCode ? startedByTeam.get(teamCode) === true : false;
     });
 
     total += sumRosterScoreFromSlots(visibleSlots);
@@ -663,7 +674,7 @@ router.get("/user/:userId/roster", requireAuth, async (req, res) => {
     );
 
     const isOwnRoster = String(requestedUserId) === String(req.user?.id);
-    const visibleByTeam = await getVisibleTeamMap(season, week);
+    const startedByTeam = await getStartedTeamMap(season, week);
 
     let visibleSlots = weekState.slots;
 
@@ -671,8 +682,8 @@ router.get("/user/:userId/roster", requireAuth, async (req, res) => {
       visibleSlots = weekState.slots.map((slot) => {
         if (!slot.player) return slot;
 
-        const isVisible = visibleByTeam.get(slot.player.teamCode) === true;
-        if (isVisible) return slot;
+        const started = startedByTeam.get(slot.player.teamCode) === true;
+        if (started) return slot;
 
         return {
           ...slot,
@@ -683,14 +694,17 @@ router.get("/user/:userId/roster", requireAuth, async (req, res) => {
     }
 
     const visibleWeeklyPoints = roundToOne(
-      visibleSlots.reduce((sum, slot) => sum + Number(slot.player?.currentScore || 0), 0)
+      visibleSlots.reduce(
+        (sum, slot) => sum + Number(slot.player?.currentScore || 0),
+        0
+      )
     );
 
     const visibleSelectedCount = visibleSlots.filter((slot) => !!slot.player).length;
 
     const seasonPoints = isOwnRoster
       ? (await getSeasonSummary(requestedUserId, season)).totalPoints
-      : await getMaskedSeasonPoints(requestedUserId, season, week, visibleByTeam);
+      : await getMaskedSeasonPoints(requestedUserId, season, week, startedByTeam);
 
     return res.json({
       season,
