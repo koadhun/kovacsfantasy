@@ -19,6 +19,13 @@ const ROUND_LABELS = {
   SUPER_BOWL: "Super Bowl",
 };
 
+const ROUND_GAME_TYPES = {
+  WILDCARD: "WC",
+  DIVISIONAL: "DIV",
+  CONFERENCE: "CONF",
+  SUPER_BOWL: "SB",
+};
+
 const SLOT_TO_POSITION = {
   QB: "QB",
   RB1: "RB",
@@ -65,10 +72,23 @@ const TEAM_NAME_TO_CODE = {
   "Tampa Bay Buccaneers": "TB",
   "Tennessee Titans": "TEN",
   "Washington Commanders": "WAS",
+  BYE: "BYE",
 };
 
 function roundToOne(value) {
   return Number(Number(value || 0).toFixed(1));
+}
+
+function getNow() {
+  const raw = process.env.NOW_OVERRIDE;
+  if (raw) {
+    const date = new Date(raw);
+    if (!Number.isNaN(date.getTime())) {
+      return date;
+    }
+  }
+
+  return new Date();
 }
 
 function normalizeTeamKey(value) {
@@ -155,6 +175,25 @@ async function getOrCreateRoster(userId, season, round) {
   return roster;
 }
 
+async function getExistingRoster(userId, season, round) {
+  return prisma.playoffChallengeRoster.findUnique({
+    where: {
+      userId_season_round: {
+        userId,
+        season,
+        round,
+      },
+    },
+    include: {
+      slots: {
+        include: {
+          player: true,
+        },
+      },
+    },
+  });
+}
+
 function createDefenseAccumulator() {
   return {
     games: 0,
@@ -189,9 +228,50 @@ function getOrCreate(map, key, factory) {
   return map.get(key);
 }
 
+function isGameStarted(game, now = getNow()) {
+  if (!game) return false;
+  if (game.status === "FINAL") return true;
+  if (game.status === "ONGOING") return true;
+  return new Date(game.kickoffAt) <= now;
+}
+
+async function getStartedTeamMap(season, round) {
+  const gameType = ROUND_GAME_TYPES[round];
+
+  if (!gameType) {
+    return new Map();
+  }
+
+  const games = await prisma.game.findMany({
+    where: {
+      season,
+      gameType,
+    },
+    select: {
+      kickoffAt: true,
+      status: true,
+      homeTeam: true,
+      awayTeam: true,
+    },
+  });
+
+  const now = getNow();
+  const map = new Map();
+
+  for (const game of games) {
+    const started = isGameStarted(game, now);
+
+    map.set(normalizeTeamKey(game.homeTeam), started);
+    map.set(normalizeTeamKey(game.awayTeam), started);
+  }
+
+  return map;
+}
+
 async function buildAverageMaps(season, currentRound) {
   const activeRounds = getActiveRoundsThrough(currentRound);
   const currentIdx = getRoundIndex(currentRound);
+
   if (currentIdx <= 0) {
     return {
       defenseByTeam: new Map(),
@@ -245,7 +325,7 @@ async function buildAverageMaps(season, currentRound) {
       }
 
       const opponentKey = normalizeTeamKey(player.currentWeekOpponentTeam);
-      if (opponentKey) {
+      if (opponentKey && opponentKey !== "BYE") {
         const offenseAcc = getOrCreate(
           offenseByTeam,
           opponentKey,
@@ -346,6 +426,7 @@ function normalizePlayer(player, averageMaps) {
 
   return {
     id: player.id,
+    playerKey: player.playerKey,
     position: player.position,
     teamCode: player.teamCode,
     firstName: player.firstName,
@@ -376,25 +457,30 @@ function buildAppearanceMap(rosters) {
   const map = new Map();
 
   for (const round of ROUND_ORDER) {
-    const roster = rosters.find((r) => r.round === round);
+    const roster = rosters.find((item) => item.round === round);
+
     map.set(
       round,
-      new Set((roster?.slots || []).map((slot) => slot.playerId))
+      new Set(
+        (roster?.slots || [])
+          .map((slot) => slot.player?.playerKey)
+          .filter(Boolean)
+      )
     );
   }
 
   return map;
 }
 
-function getMultiplierForPlayer(playerId, round, appearanceMap) {
+function getMultiplierForPlayer(playerKey, round, appearanceMap) {
   const currentIdx = getRoundIndex(round);
-  if (currentIdx === -1) return 1;
+  if (currentIdx === -1 || !playerKey) return 1;
 
   let multiplier = 1;
 
   for (let i = currentIdx - 1; i >= 0; i -= 1) {
     const prevRound = ROUND_ORDER[i];
-    const selectedPrevRound = appearanceMap.get(prevRound)?.has(playerId) === true;
+    const selectedPrevRound = appearanceMap.get(prevRound)?.has(playerKey) === true;
 
     if (!selectedPrevRound) break;
     multiplier += 1;
@@ -413,8 +499,14 @@ function decorateSlotsWithMultipliers(slots, round, appearanceMap) {
       };
     }
 
-    const multiplier = getMultiplierForPlayer(slot.player.id, round, appearanceMap);
-    const multipliedScore = roundToOne(Number(slot.player.currentScore || 0) * multiplier);
+    const multiplier = getMultiplierForPlayer(
+      slot.player.playerKey,
+      round,
+      appearanceMap
+    );
+    const multipliedScore = roundToOne(
+      Number(slot.player.currentScore || 0) * multiplier
+    );
 
     return {
       ...slot,
@@ -430,6 +522,7 @@ function buildMultiplierDetails(slots) {
     .map((slot) => ({
       slot: slot.slot,
       playerId: slot.player.id,
+      playerKey: slot.player.playerKey,
       displayName:
         slot.player.displayName ||
         `${slot.player.firstName || ""} ${slot.player.lastName || ""}`.trim(),
@@ -437,6 +530,25 @@ function buildMultiplierDetails(slots) {
       baseScore: roundToOne(slot.player.currentScore || 0),
       multipliedScore: roundToOne(slot.multipliedScore || 0),
     }));
+}
+
+function computeRoundScore(roster, appearanceMap) {
+  if (!roster) return 0;
+
+  return roundToOne(
+    (roster.slots || []).reduce((sum, slot) => {
+      if (!slot.player) return sum;
+
+      const baseScore = getPlayerScore(slot.player);
+      const multiplier = getMultiplierForPlayer(
+        slot.player.playerKey,
+        roster.round,
+        appearanceMap
+      );
+
+      return sum + baseScore * multiplier;
+    }, 0)
+  );
 }
 
 function computePlayoffTotal(rosters) {
@@ -448,16 +560,239 @@ function computePlayoffTotal(rosters) {
   let total = 0;
 
   for (const roster of ordered) {
+    total += computeRoundScore(roster, appearanceMap);
+  }
+
+  return roundToOne(total);
+}
+
+async function buildRoundStateForUser(userId, season, round, createIfMissing = false) {
+  const [averageMaps, pool, roster, previousAndCurrentRosters] = await Promise.all([
+    buildAverageMaps(season, round),
+    prisma.playoffChallengePlayer.findMany({
+      where: {
+        season,
+        round,
+        isActive: true,
+      },
+      orderBy: [{ position: "asc" }, { lastName: "asc" }, { firstName: "asc" }],
+    }),
+    createIfMissing
+      ? getOrCreateRoster(userId, season, round)
+      : getExistingRoster(userId, season, round),
+    prisma.playoffChallengeRoster.findMany({
+      where: {
+        userId,
+        season,
+        round: { in: getActiveRoundsThrough(round) },
+      },
+      include: {
+        slots: {
+          include: {
+            player: true,
+          },
+        },
+      },
+    }),
+  ]);
+
+  const slotMap = Object.fromEntries(
+    (roster?.slots || []).map((slot) => [
+      slot.slot,
+      normalizePlayer(slot.player, averageMaps),
+    ])
+  );
+
+  const baseSlots = SLOT_ORDER.map((slotKey) => ({
+    slot: slotKey,
+    position: SLOT_TO_POSITION[slotKey],
+    player: slotMap[slotKey] || null,
+    canSwap: true,
+    hidden: false,
+  }));
+
+  const appearanceMap = buildAppearanceMap(previousAndCurrentRosters);
+  const slots = decorateSlotsWithMultipliers(baseSlots, round, appearanceMap);
+
+  const normalizedPool = pool.map((player) => normalizePlayer(player, averageMaps));
+
+  const poolByPosition = {
+    QB: sortByAvgScoreDesc(normalizedPool.filter((player) => player.position === "QB")),
+    RB: sortByAvgScoreDesc(normalizedPool.filter((player) => player.position === "RB")),
+    WR: sortByAvgScoreDesc(normalizedPool.filter((player) => player.position === "WR")),
+    TE: sortByAvgScoreDesc(normalizedPool.filter((player) => player.position === "TE")),
+    K: sortByAvgScoreDesc(normalizedPool.filter((player) => player.position === "K")),
+    DEF: sortByAvgScoreDesc(normalizedPool.filter((player) => player.position === "DEF")),
+  };
+
+  const roundPoints = roundToOne(
+    slots.reduce((sum, slot) => sum + Number(slot.multipliedScore || 0), 0)
+  );
+
+  const playoffTotal = computePlayoffTotal(previousAndCurrentRosters);
+
+  return {
+    roster,
+    slots,
+    poolByPosition,
+    summary: {
+      roundPoints,
+      playoffTotal,
+      selectedCount: slots.filter((slot) => !!slot.player).length,
+    },
+    multiplierDetails: buildMultiplierDetails(slots),
+  };
+}
+
+function maskSlotsForVisibility(slots, startedByTeam) {
+  return slots.map((slot) => {
+    if (!slot.player) return slot;
+
+    const started = startedByTeam.get(normalizeTeamKey(slot.player.teamCode)) === true;
+    if (started) return slot;
+
+    return {
+      ...slot,
+      hidden: true,
+      player: null,
+      multiplier: 1,
+      multipliedScore: 0,
+    };
+  });
+}
+
+async function getMaskedPlayoffTotal(userId, season, viewedRound) {
+  const activeRounds = getActiveRoundsThrough(viewedRound);
+
+  const [rosters, startedMapsEntries] = await Promise.all([
+    prisma.playoffChallengeRoster.findMany({
+      where: {
+        userId,
+        season,
+        round: { in: activeRounds },
+      },
+      include: {
+        slots: {
+          include: {
+            player: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "asc" },
+    }),
+    Promise.all(
+      activeRounds.map(async (round) => [round, await getStartedTeamMap(season, round)])
+    ),
+  ]);
+
+  const startedByRound = new Map(startedMapsEntries);
+  const appearanceMap = buildAppearanceMap(rosters);
+
+  let total = 0;
+
+  for (const roster of rosters) {
+    const startedByTeam = startedByRound.get(roster.round) || new Map();
+
     for (const slot of roster.slots || []) {
-      if (!slot.player) continue;
+      const teamCode = normalizeTeamKey(slot.player?.teamCode);
+      const started = teamCode ? startedByTeam.get(teamCode) === true : false;
+
+      if (!started || !slot.player) continue;
 
       const baseScore = getPlayerScore(slot.player);
-      const multiplier = getMultiplierForPlayer(slot.playerId, roster.round, appearanceMap);
+      const multiplier = getMultiplierForPlayer(
+        slot.player.playerKey,
+        roster.round,
+        appearanceMap
+      );
+
       total += baseScore * multiplier;
     }
   }
 
   return roundToOne(total);
+}
+
+function buildRoundLeaderboardRows(users, rosters, round) {
+  const byUser = new Map();
+
+  for (const user of users) {
+    byUser.set(String(user.id), []);
+  }
+
+  for (const roster of rosters) {
+    const key = String(roster.userId);
+    if (!byUser.has(key)) {
+      byUser.set(key, []);
+    }
+    byUser.get(key).push(roster);
+  }
+
+  return users
+    .map((user) => {
+      const userRosters = (byUser.get(String(user.id)) || []).sort(
+        (a, b) => getRoundIndex(a.round) - getRoundIndex(b.round)
+      );
+      const appearanceMap = buildAppearanceMap(userRosters);
+      const currentRoster = userRosters.find((item) => item.round === round);
+      const points = computeRoundScore(currentRoster, appearanceMap);
+      const selectedCount = currentRoster?.slots?.length || 0;
+
+      return {
+        user: {
+          id: user.id,
+          username: user.username,
+        },
+        points,
+        selectedCount,
+        totalSlots: 8,
+      };
+    })
+    .sort(
+      (a, b) =>
+        b.points - a.points ||
+        b.selectedCount - a.selectedCount ||
+        a.user.username.localeCompare(b.user.username)
+    );
+}
+
+function buildPlayoffTotalsLeaderboardRows(users, rosters) {
+  const byUser = new Map();
+
+  for (const user of users) {
+    byUser.set(String(user.id), []);
+  }
+
+  for (const roster of rosters) {
+    const key = String(roster.userId);
+    if (!byUser.has(key)) {
+      byUser.set(key, []);
+    }
+    byUser.get(key).push(roster);
+  }
+
+  return users
+    .map((user) => {
+      const userRosters = (byUser.get(String(user.id)) || []).sort(
+        (a, b) => getRoundIndex(a.round) - getRoundIndex(b.round)
+      );
+
+      return {
+        userId: user.id,
+        username: user.username,
+        points: computePlayoffTotal(userRosters),
+        selectedCount: userRosters.reduce(
+          (sum, roster) => sum + (roster.slots?.length || 0),
+          0
+        ),
+      };
+    })
+    .sort(
+      (a, b) =>
+        b.points - a.points ||
+        b.selectedCount - a.selectedCount ||
+        a.username.localeCompare(b.username)
+    );
 }
 
 router.get("/rounds", requireAuth, async (_req, res) => {
@@ -470,33 +805,25 @@ router.get("/rounds", requireAuth, async (_req, res) => {
   });
 });
 
-router.get("/round", requireAuth, async (req, res) => {
+router.get("/leaderboard", requireAuth, async (req, res) => {
   try {
     const season = Number(req.query.season || DEFAULT_SEASON);
     const round = String(req.query.round || "WILDCARD");
-    const userId = req.user?.id;
 
     if (!isValidRound(round)) {
       return res.status(400).json({ error: "Érvénytelen playoff round." });
     }
 
-    const roster = await getOrCreateRoster(userId, season, round);
+    const activeRounds = getActiveRoundsThrough(round);
 
-    const [pool, averageMaps, previousAndCurrentRosters] = await Promise.all([
-      prisma.playoffChallengePlayer.findMany({
-        where: {
-          season,
-          round,
-          isActive: true,
-        },
-        orderBy: [{ position: "asc" }, { lastName: "asc" }, { firstName: "asc" }],
+    const [users, rosters] = await Promise.all([
+      prisma.user.findMany({
+        select: { id: true, username: true },
       }),
-      buildAverageMaps(season, round),
       prisma.playoffChallengeRoster.findMany({
         where: {
-          userId,
           season,
-          round: { in: getActiveRoundsThrough(round) },
+          round: { in: activeRounds },
         },
         include: {
           slots: {
@@ -508,54 +835,107 @@ router.get("/round", requireAuth, async (req, res) => {
       }),
     ]);
 
-    const slotMap = Object.fromEntries(
-      roster.slots.map((slot) => [
-        slot.slot,
-        normalizePlayer(slot.player, averageMaps),
-      ])
-    );
-
-    const baseSlots = SLOT_ORDER.map((slotKey) => ({
-      slot: slotKey,
-      position: SLOT_TO_POSITION[slotKey],
-      player: slotMap[slotKey] || null,
-      canSwap: true,
-    }));
-
-    const appearanceMap = buildAppearanceMap(previousAndCurrentRosters);
-    const slots = decorateSlotsWithMultipliers(baseSlots, round, appearanceMap);
-
-    const normalizedPool = pool.map((player) =>
-      normalizePlayer(player, averageMaps)
-    );
-
-    const poolByPosition = {
-      QB: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "QB")),
-      RB: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "RB")),
-      WR: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "WR")),
-      TE: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "TE")),
-      K: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "K")),
-      DEF: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "DEF")),
-    };
-
-    const roundPoints = roundToOne(
-      slots.reduce((sum, slot) => sum + Number(slot.multipliedScore || 0), 0)
-    );
-
-    const playoffTotal = computePlayoffTotal(previousAndCurrentRosters);
+    const roundRows = buildRoundLeaderboardRows(users, rosters, round);
+    const totals = buildPlayoffTotalsLeaderboardRows(users, rosters);
 
     return res.json({
       season,
       round,
       roundLabel: ROUND_LABELS[round],
-      slots,
-      poolByPosition,
-      summary: {
-        roundPoints,
-        playoffTotal,
-        selectedCount: slots.filter((slot) => !!slot.player).length,
+      roundRows,
+      totals,
+    });
+  } catch (error) {
+    console.error("GET /api/playoff-challenge/leaderboard error:", error);
+    return res.status(500).json({
+      error: "Nem sikerült betölteni a Playoff Challenge leaderboard adatokat.",
+    });
+  }
+});
+
+router.get("/user/:userId/roster", requireAuth, async (req, res) => {
+  try {
+    const season = Number(req.query.season || DEFAULT_SEASON);
+    const round = String(req.query.round || "WILDCARD");
+    const requestedUserId = String(req.params.userId || "");
+
+    if (!isValidRound(round)) {
+      return res.status(400).json({ error: "Érvénytelen playoff round." });
+    }
+
+    const viewedUser = await ensureUserExists(requestedUserId);
+    if (!viewedUser) {
+      return res.status(404).json({ error: "Felhasználó nem található." });
+    }
+
+    const roundState = await buildRoundStateForUser(
+      requestedUserId,
+      season,
+      round,
+      false
+    );
+
+    const isOwnRoster = String(requestedUserId) === String(req.user?.id);
+    const startedByTeam = await getStartedTeamMap(season, round);
+
+    const visibleSlots = isOwnRoster
+      ? roundState.slots
+      : maskSlotsForVisibility(roundState.slots, startedByTeam);
+
+    const visibleRoundPoints = roundToOne(
+      visibleSlots.reduce((sum, slot) => sum + Number(slot.multipliedScore || 0), 0)
+    );
+
+    const playoffTotal = isOwnRoster
+      ? roundState.summary.playoffTotal
+      : await getMaskedPlayoffTotal(requestedUserId, season, round);
+
+    return res.json({
+      season,
+      round,
+      roundLabel: ROUND_LABELS[round],
+      user: {
+        id: viewedUser.id,
+        username: viewedUser.username,
       },
-      multiplierDetails: buildMultiplierDetails(slots),
+      slots: visibleSlots,
+      summary: {
+        roundPoints: visibleRoundPoints,
+        playoffTotal,
+        selectedCount: visibleSlots.filter((slot) => !!slot.player).length,
+      },
+      multiplierDetails: buildMultiplierDetails(
+        visibleSlots.filter((slot) => !!slot.player)
+      ),
+    });
+  } catch (error) {
+    console.error("GET /api/playoff-challenge/user/:userId/roster error:", error);
+    return res.status(500).json({
+      error: "Nem sikerült betölteni a felhasználó Playoff Challenge rosterét.",
+    });
+  }
+});
+
+router.get("/round", requireAuth, async (req, res) => {
+  try {
+    const season = Number(req.query.season || DEFAULT_SEASON);
+    const round = String(req.query.round || "WILDCARD");
+    const userId = req.user?.id;
+
+    if (!isValidRound(round)) {
+      return res.status(400).json({ error: "Érvénytelen playoff round." });
+    }
+
+    const roundState = await buildRoundStateForUser(userId, season, round, true);
+
+    return res.json({
+      season,
+      round,
+      roundLabel: ROUND_LABELS[round],
+      slots: roundState.slots,
+      poolByPosition: roundState.poolByPosition,
+      summary: roundState.summary,
+      multiplierDetails: roundState.multiplierDetails,
     });
   } catch (error) {
     console.error("GET /api/playoff-challenge/round error:", error);

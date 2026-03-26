@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../api";
 import PerfectChallengeCard from "../components/perfect/PerfectChallengeCard";
 import PerfectChallengeSelectorModal from "../components/perfect/PerfectChallengeSelectorModal";
@@ -49,13 +50,14 @@ function ScoreCard({ title, value, sub }) {
           fontWeight: 900,
           lineHeight: 1,
           marginBottom: sub ? 8 : 0,
+          textAlign: "center",
         }}
       >
         {value}
       </div>
 
       {sub ? (
-        <div className="muted" style={{ fontSize: 13 }}>
+        <div className="muted" style={{ fontSize: 13, textAlign: "center" }}>
           {sub}
         </div>
       ) : null}
@@ -115,8 +117,13 @@ function RoundDropdown({ value, options, onChange }) {
 }
 
 export default function PlayoffChallenge() {
+  const [sp, setSp] = useSearchParams();
+
+  const requestedRound = String(sp.get("round") || "WILDCARD");
+  const viewedUserId = sp.get("userId") || "";
+
   const [rounds, setRounds] = useState([]);
-  const [round, setRound] = useState("WILDCARD");
+  const [round, setRound] = useState(requestedRound);
   const [roundLabel, setRoundLabel] = useState("Wildcard Weekend");
   const [slots, setSlots] = useState([]);
   const [poolByPosition, setPoolByPosition] = useState({});
@@ -125,23 +132,32 @@ export default function PlayoffChallenge() {
     playoffTotal: 0,
     selectedCount: 0,
   });
+  const [viewingUser, setViewingUser] = useState(null);
   const [multiplierDetails, setMultiplierDetails] = useState([]);
   const [modalSlot, setModalSlot] = useState(null);
   const [err, setErr] = useState("");
 
+  const isReadOnlyView = Boolean(viewedUserId);
+
   async function loadRounds() {
     const res = await api.get("/playoff-challenge/rounds");
-    const items = res.data?.rounds || [];
+    const items = Array.isArray(res.data?.rounds) ? res.data.rounds : [];
+
     setRounds(items);
 
-    if (items.length && !items.some((item) => item.value === round)) {
-      setRound(items[0].value);
+    if (!items.length) {
+      setRound("WILDCARD");
+      return;
     }
+
+    const safeRound = items.some((item) => item.value === requestedRound)
+      ? requestedRound
+      : items[0].value;
+
+    setRound(safeRound);
   }
 
-  async function loadRoundData(targetRound) {
-    setErr("");
-
+  async function loadMyRoundData(targetRound) {
     const res = await api.get("/playoff-challenge/round", {
       params: { season: SEASON, round: targetRound },
     });
@@ -157,6 +173,26 @@ export default function PlayoffChallenge() {
       }
     );
     setMultiplierDetails(res.data?.multiplierDetails || []);
+    setViewingUser(null);
+  }
+
+  async function loadViewedUserRoundData(targetUserId, targetRound) {
+    const res = await api.get(`/playoff-challenge/user/${targetUserId}/roster`, {
+      params: { season: SEASON, round: targetRound },
+    });
+
+    setRoundLabel(res.data?.roundLabel || targetRound);
+    setSlots(res.data?.slots || []);
+    setPoolByPosition({});
+    setSummary(
+      res.data?.summary || {
+        roundPoints: 0,
+        playoffTotal: 0,
+        selectedCount: 0,
+      }
+    );
+    setMultiplierDetails(res.data?.multiplierDetails || []);
+    setViewingUser(res.data?.user || null);
   }
 
   useEffect(() => {
@@ -169,13 +205,34 @@ export default function PlayoffChallenge() {
   useEffect(() => {
     if (!round) return;
 
-    loadRoundData(round).catch(() =>
-      setErr("Nem sikerült betölteni a Playoff Challenge adatokat.")
+    const nextParams = { round };
+    if (viewedUserId) nextParams.userId = viewedUserId;
+
+    const currentRound = sp.get("round") || "";
+    const currentUserId = sp.get("userId") || "";
+
+    if (currentRound !== round || currentUserId !== (viewedUserId || "")) {
+      setSp(nextParams, { replace: true });
+    }
+
+    setErr("");
+    setModalSlot(null);
+
+    const loader = viewedUserId
+      ? loadViewedUserRoundData(viewedUserId, round)
+      : loadMyRoundData(round);
+
+    loader.catch((e) =>
+      setErr(
+        e?.response?.data?.error ||
+          "Nem sikerült betölteni a Playoff Challenge adatokat."
+      )
     );
-  }, [round]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [round, viewedUserId]);
 
   async function pickPlayer(playerId) {
-    if (!modalSlot) return;
+    if (!modalSlot || isReadOnlyView) return;
 
     try {
       await api.put("/playoff-challenge/slot", {
@@ -186,7 +243,7 @@ export default function PlayoffChallenge() {
       });
 
       setModalSlot(null);
-      await loadRoundData(round);
+      await loadMyRoundData(round);
     } catch (e) {
       setErr(
         e?.response?.data?.error || "Nem sikerült frissíteni a playoff slotot."
@@ -198,7 +255,7 @@ export default function PlayoffChallenge() {
     ? poolByPosition[SLOT_TO_POOL_KEY[modalSlot.slot]] || []
     : [];
 
-  const filledCount = useMemo(
+  const visibleCount = useMemo(
     () => slots.filter((slot) => !!slot.player).length,
     [slots]
   );
@@ -217,15 +274,21 @@ export default function PlayoffChallenge() {
           <div>
             <div className="kicker">
               <span className="tag">FANTASY</span>
-              <span>Playoff Challenge</span>
+              <span>
+                {isReadOnlyView ? "Playoff Challenge Viewer" : "Playoff Challenge"}
+              </span>
             </div>
 
-            <h1 className="h1">Playoff Challenge</h1>
+            <h1 className="h1">
+              {isReadOnlyView && viewingUser
+                ? `${viewingUser.username} · Playoff Challenge`
+                : "Playoff Challenge"}
+            </h1>
 
             <p className="sub" style={{ maxWidth: 900 }}>
-              Válassz 8 játékost playoff körönként. Az alap pontszámítás megegyezik a
-              Perfect Challenge-ével, viszont ugyanazt a játékost egymást követő
-              playoff körökben megtartva növekvő szorzót kapsz.
+              {isReadOnlyView
+                ? "Itt az adott felhasználó playoff rosterét látod a kiválasztott körre. A még el nem kezdett meccsekhez tartozó pickek rejtve maradnak, és a playoff total is csak a már látható pontokat számolja bele."
+                : "Válassz 8 játékost playoff körönként. Az alap pontszámítás megegyezik a Perfect Challenge-ével, viszont ugyanazt a játékost egymást követő körökben megtartva növekvő szorzót kapsz."}
             </p>
 
             <div
@@ -258,7 +321,7 @@ export default function PlayoffChallenge() {
             <ScoreCard
               title="Playoff total"
               value={formatScore(summary.playoffTotal)}
-              sub={`${summary.selectedCount}/8 selected`}
+              sub={`${summary.selectedCount}/8 visible`}
             />
           </div>
         </div>
@@ -268,9 +331,34 @@ export default function PlayoffChallenge() {
 
           <div className="filters-spacer" />
 
+          {isReadOnlyView ? (
+            <>
+              <Link
+                to={`/fantasy/playoff-challenge/leaderboard?round=${round}`}
+                className="btn"
+              >
+                Back to Leaderboard
+              </Link>
+
+              <Link
+                to={`/fantasy/playoff-challenge?round=${round}`}
+                className="btn primary"
+              >
+                My Playoff Challenge
+              </Link>
+            </>
+          ) : (
+            <Link
+              to={`/fantasy/playoff-challenge/leaderboard?round=${round}`}
+              className="btn"
+            >
+              Leaderboard
+            </Link>
+          )}
+
           <span className="pill">
             <span className="dot" />
-            {filledCount}/8 selected
+            {visibleCount}/8 visible
           </span>
         </div>
       </div>
@@ -303,7 +391,7 @@ export default function PlayoffChallenge() {
           >
             {multiplierDetails.map((item) => (
               <span
-                key={`${item.slot}-${item.playerId}`}
+                key={`${item.slot}-${item.playerKey}`}
                 className="pill"
                 style={{ fontWeight: 800 }}
               >
@@ -321,18 +409,24 @@ export default function PlayoffChallenge() {
             key={slot.slot}
             slot={slot.slot}
             player={slot.player}
-            onSelect={() => setModalSlot(slot)}
+            hidden={Boolean(slot.hidden)}
+            onSelect={isReadOnlyView ? undefined : () => setModalSlot(slot)}
+            readOnly={isReadOnlyView}
           />
         ))}
       </div>
 
-      <PerfectChallengeSelectorModal
-        open={!!modalSlot}
-        title={modalSlot ? `Select player for ${modalSlot.slot}` : ""}
-        players={modalPlayers}
-        onClose={() => setModalSlot(null)}
-        onPick={pickPlayer}
-      />
+      {!isReadOnlyView && (
+        <PerfectChallengeSelectorModal
+          open={!!modalSlot}
+          title={modalSlot ? `Select player for ${modalSlot.slot}` : ""}
+          players={modalPlayers}
+          onClose={() => setModalSlot(null)}
+          onPick={pickPlayer}
+          modeLabel="Playoff Challenge"
+          periodType="round"
+        />
+      )}
     </div>
   );
 }

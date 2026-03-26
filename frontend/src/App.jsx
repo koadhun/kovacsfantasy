@@ -22,6 +22,7 @@ import PickEmUserPicks from "./pages/PickEmUserPicks";
 import PerfectChallenge from "./pages/PerfectChallenge";
 import PerfectChallengeLeaderboard from "./pages/PerfectChallengeLeaderboard";
 import PlayoffChallenge from "./pages/PlayoffChallenge";
+import PlayoffChallengeLeaderboard from "./pages/PlayoffChallengeLeaderboard";
 
 import Users from "./pages/Users";
 import ScheduleResultsEditor from "./pages/admin/ScheduleResultsEditor";
@@ -155,6 +156,17 @@ export default function App() {
           <ProtectedRoute>
             <Layout>
               <PlayoffChallenge />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/fantasy/playoff-challenge/leaderboard"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <PlayoffChallengeLeaderboard />
             </Layout>
           </ProtectedRoute>
         }
