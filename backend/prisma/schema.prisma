@@ -8,17 +8,17 @@ datasource db {
 }
 
 model User {
-  id                       String                    @id @default(uuid())
-  username                 String                    @unique
-  email                    String                    @unique
-  passwordHash             String
-  role                     Role                      @default(USER)
-  createdAt                DateTime                  @default(now())
-  passwordResetTokens      PasswordResetToken[]
-  pickEmPicks              PickEmPick[]
-  pickEmWeekScores         PickEmWeekScore[]
-  perfectChallengeRosters  PerfectChallengeRoster[]
-  playoffChallengeRosters  PlayoffChallengeRoster[]
+  id                        String                    @id @default(uuid())
+  username                  String                    @unique
+  email                     String                    @unique
+  passwordHash              String
+  role                      Role                      @default(USER)
+  createdAt                 DateTime                  @default(now())
+  passwordResetTokens       PasswordResetToken[]
+  pickEmPicks               PickEmPick[]
+  pickEmWeekScores          PickEmWeekScore[]
+  perfectChallengeRosters   PerfectChallengeRoster[]
+  playoffChallengeRosters   PlayoffChallengeRoster[]
 }
 
 enum Role {
@@ -39,7 +39,7 @@ enum ClinchFlag {
 }
 
 model StandingsRow {
-  id         String       @id @default(uuid())
+  id         String        @id @default(uuid())
   season     Int
   conference Conference
   division   String
@@ -52,8 +52,8 @@ model StandingsRow {
   pa         Int
   net        Int
   clinched   ClinchFlag[]
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
 
   @@unique([season, conference, division, team])
   @@index([season, conference])
@@ -74,23 +74,22 @@ model PasswordResetToken {
 }
 
 model Game {
-  id                       String                   @id @default(uuid())
-  season                   Int
-  week                     Int
-  gameType                 String                   @default("REG")
-  kickoffAt                DateTime
-  homeTeam                 String
-  awayTeam                 String
-  homeScore                Int?
-  awayScore                Int?
-  status                   String                   @default("SCHEDULED")
-  createdAt                DateTime                 @default(now())
-  updatedAt                DateTime                 @updatedAt
-  pickEmPicks              PickEmPick[]
-  playoffChallengePlayers  PlayoffChallengePlayer[]
+  id                      String                   @id @default(uuid())
+  season                  Int
+  week                    Int
+  gameType                String                   @default("REG")
+  kickoffAt               DateTime
+  homeTeam                String
+  awayTeam                String
+  homeScore               Int?
+  awayScore               Int?
+  status                  String                   @default("SCHEDULED")
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  pickEmPicks             PickEmPick[]
+  playoffChallengePlayers PlayoffChallengePlayer[]
 
   @@index([season, week])
-  @@index([gameType, season, week])
   @@index([kickoffAt])
 }
 
@@ -110,15 +109,15 @@ model PickEmPick {
 }
 
 model PickEmWeekScore {
-  id          String   @id @default(uuid())
-  userId      String
-  season      Int
-  week        Int
-  correct     Int      @default(0)
-  totalGames  Int      @default(0)
-  points      Int      @default(0)
+  id           String   @id @default(uuid())
+  userId       String
+  season       Int
+  week         Int
+  correct      Int      @default(0)
+  totalGames   Int      @default(0)
+  points       Int      @default(0)
   calculatedAt DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, season, week])
   @@index([season, week])
@@ -136,43 +135,43 @@ enum PerfectChallengeSlot {
 }
 
 model PerfectChallengePlayer {
-  id                              String                        @id @default(uuid())
-  season                          Int
-  week                            Int
-  position                        String
-  teamCode                        String
-  firstName                       String
-  lastName                        String
-  displayName                     String?
-  headshotUrl                     String?
-  isDefense                       Boolean                       @default(false)
-  currentScore                    Float                         @default(0)
-  avgScore                        Float                         @default(0)
-  lastWeekOpponentTeam            String?
-  opponentDefenseTeamCode         String?
-  currentWeekOpponentTeam         String?
+  id                                String                         @id @default(uuid())
+  season                            Int
+  week                              Int
+  position                          String
+  teamCode                          String
+  firstName                         String
+  lastName                          String
+  displayName                       String?
+  headshotUrl                       String?
+  isDefense                         Boolean                        @default(false)
+  currentScore                      Float                          @default(0)
+  avgScore                          Float                          @default(0)
+  lastWeekOpponentTeam              String?
+  opponentDefenseTeamCode           String?
+  currentWeekOpponentTeam           String?
   currentWeekOpponentDefenseTeamCode String?
-  allowedPassingYards             Float?
-  allowedRushingYards             Float?
-  overallStats                    Json
-  weeklyStats                     Json
-  isActive                        Boolean                       @default(true)
-  createdAt                       DateTime                      @default(now())
-  updatedAt                       DateTime                      @updatedAt
-  rosterSlots                     PerfectChallengeRosterSlot[]
+  allowedPassingYards               Float?
+  allowedRushingYards               Float?
+  overallStats                      Json
+  weeklyStats                       Json
+  isActive                          Boolean                        @default(true)
+  createdAt                         DateTime                       @default(now())
+  updatedAt                         DateTime                       @updatedAt
+  rosterSlots                       PerfectChallengeRosterSlot[]
 
   @@index([season, week, position])
   @@index([teamCode])
 }
 
 model PerfectChallengeRoster {
-  id        String                      @id @default(uuid())
+  id        String                       @id @default(uuid())
   userId    String
   season    Int
   week      Int
-  createdAt DateTime                    @default(now())
-  updatedAt DateTime                    @updatedAt
-  user      User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime                     @default(now())
+  updatedAt DateTime                     @updatedAt
+  user      User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
   slots     PerfectChallengeRosterSlot[]
 
   @@unique([userId, season, week])
@@ -181,13 +180,13 @@ model PerfectChallengeRoster {
 
 model PerfectChallengeRosterSlot {
   id        String               @id @default(uuid())
-  rosterId  String
-  slot      PerfectChallengeSlot
-  playerId  String
-  createdAt DateTime             @default(now())
-  updatedAt DateTime             @updatedAt
-  roster    PerfectChallengeRoster @relation(fields: [rosterId], references: [id], onDelete: Cascade)
-  player    PerfectChallengePlayer @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  rosterId   String
+  slot       PerfectChallengeSlot
+  playerId   String
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+  roster     PerfectChallengeRoster @relation(fields: [rosterId], references: [id], onDelete: Cascade)
+  player     PerfectChallengePlayer @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
   @@unique([rosterId, slot])
   @@index([playerId])
@@ -200,60 +199,50 @@ enum PlayoffChallengeRound {
   SUPER_BOWL
 }
 
-enum PlayoffChallengeSlot {
-  QB
-  RB1
-  RB2
-  WR1
-  WR2
-  TE
-  K
-  DEF
-}
-
 model PlayoffChallengePlayer {
-  id                               String                 @id @default(uuid())
-  season                           Int
-  round                            PlayoffChallengeRound
-  playerKey                        String
-  position                         String
-  teamCode                         String
-  firstName                        String
-  lastName                         String
-  displayName                      String?
-  headshotUrl                      String?
-  isDefense                        Boolean                @default(false)
-  gameId                           String?
-  currentScore                     Float                  @default(0)
-  avgScore                         Float                  @default(0)
-  lastWeekOpponentTeam             String?
-  opponentDefenseTeamCode          String?
-  currentWeekOpponentTeam          String?
+  id                                 String                  @id @default(uuid())
+  season                             Int
+  round                              PlayoffChallengeRound
+  playerKey                          String
+  gameId                             String?
+  position                           String
+  teamCode                           String
+  firstName                          String
+  lastName                           String
+  displayName                        String?
+  headshotUrl                        String?
+  isDefense                          Boolean                 @default(false)
+  currentScore                       Float                   @default(0)
+  avgScore                           Float                   @default(0)
+  lastWeekOpponentTeam               String?
+  opponentDefenseTeamCode            String?
+  currentWeekOpponentTeam            String?
   currentWeekOpponentDefenseTeamCode String?
-  allowedPassingYards              Float?
-  allowedRushingYards              Float?
-  overallStats                     Json
-  weeklyStats                      Json
-  isActive                         Boolean                @default(true)
-  createdAt                        DateTime               @default(now())
-  updatedAt                        DateTime               @updatedAt
-  game                             Game?                  @relation(fields: [gameId], references: [id], onDelete: SetNull)
-  rosterSlots                      PlayoffChallengeRosterSlot[]
+  allowedPassingYards                Float?
+  allowedRushingYards                Float?
+  overallStats                       Json
+  weeklyStats                        Json
+  isActive                           Boolean                 @default(true)
+  createdAt                          DateTime                @default(now())
+  updatedAt                          DateTime                @updatedAt
+  game                               Game?                   @relation(fields: [gameId], references: [id], onDelete: SetNull)
+  rosterSlots                        PlayoffChallengeRosterSlot[]
 
   @@unique([season, round, playerKey])
   @@index([season, round, position])
-  @@index([season, round, teamCode])
+  @@index([teamCode])
+  @@index([playerKey])
   @@index([gameId])
 }
 
 model PlayoffChallengeRoster {
-  id        String                      @id @default(uuid())
+  id        String                       @id @default(uuid())
   userId    String
   season    Int
   round     PlayoffChallengeRound
-  createdAt DateTime                    @default(now())
-  updatedAt DateTime                    @updatedAt
-  user      User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime                     @default(now())
+  updatedAt DateTime                     @updatedAt
+  user      User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
   slots     PlayoffChallengeRosterSlot[]
 
   @@unique([userId, season, round])
@@ -261,14 +250,14 @@ model PlayoffChallengeRoster {
 }
 
 model PlayoffChallengeRosterSlot {
-  id        String                  @id @default(uuid())
+  id        String                 @id @default(uuid())
   rosterId  String
-  slot      PlayoffChallengeSlot
+  slot      PerfectChallengeSlot
   playerId  String
-  createdAt DateTime                @default(now())
-  updatedAt DateTime                @updatedAt
-  roster    PlayoffChallengeRoster  @relation(fields: [rosterId], references: [id], onDelete: Cascade)
-  player    PlayoffChallengePlayer  @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+  roster    PlayoffChallengeRoster @relation(fields: [rosterId], references: [id], onDelete: Cascade)
+  player    PlayoffChallengePlayer @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
   @@unique([rosterId, slot])
   @@index([playerId])
