@@ -33,7 +33,12 @@ export async function register(req, res) {
   });
 
   // Email küldés (ha be van állítva az EMAIL_USER/PASS)
+ // Email küldés (ha be van állítva az EMAIL_USER/PASS) - hiba esetén nem akasztjuk meg a regisztrációt
+try {
   await sendWelcomeEmail({ to: email, username });
+} catch (err) {
+  console.error("Nem sikerült az üdvözlő emailt elküldeni:", err.message);
+}
 
   return res.json({ message: "Sikeres regisztráció", userId: user.id });
 }

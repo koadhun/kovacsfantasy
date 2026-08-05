@@ -52,6 +52,7 @@ router.post("/forgot-password", async (req, res) => {
   const resetLink =
     `${process.env.FRONTEND_URL}/reset-password?token=${rawToken}`;
 
+ try {
   await sendMail({
     to: user.email,
     subject: "KovacsFantasy - Jelszó visszaállítás",
@@ -64,8 +65,12 @@ ${resetLink}
 
 A link 30 percig érvényes.`
   });
+} catch (err) {
+  console.error("Nem sikerült a jelszó-visszaállító emailt elküldeni:", err.message);
+  return res.status(502).json({ error: "Az email küldése sikertelen volt. Próbáld meg később." });
+}
 
-  res.json({ message: "Jelszó visszaállító email elküldve." });
+res.json({ message: "Jelszó visszaállító email elküldve." });
 });
 
 
