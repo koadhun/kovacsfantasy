@@ -2,8 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import TeamLogo from "../components/TeamLogo";
 import WeekDropdown from "../components/WeekDropdown";
+import SimpleDropdown from "../components/SimpleDropdown";
 
-const SEASON = 2025;
+const STAGE_OPTIONS = [
+  { value: "PRE", label: "Pre-Season" },
+  { value: "REG", label: "Regular Season" },
+  { value: "POST", label: "Post Season" },
+];
 
 const TEAM_NAMES = {
   ARI: "Arizona Cardinals",
@@ -143,41 +148,67 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
 }
 
 export default function Schedule() {
+  const [seasons, setSeasons] = useState([]);
+  const [season, setSeason] = useState(new Date().getFullYear());
+  const [stage, setStage] = useState("REG");
   const [weeks, setWeeks] = useState([]);
   const [week, setWeek] = useState(1);
   const [games, setGames] = useState([]);
   const [err, setErr] = useState("");
 
+  async function loadSeasons() {
+    const res = await api.get("/schedule/seasons");
+    const ss = res.data.seasons || [];
+    setSeasons(ss);
+    if (ss.length && !ss.includes(season)) setSeason(ss[0]);
+  }
+
   async function loadWeeks() {
     const res = await api.get("/schedule/weeks", {
-      params: { season: SEASON },
+      params: { season, stage },
     });
     const ws = res.data.weeks || [];
     setWeeks(ws);
-    if (ws.length && !ws.includes(week)) setWeek(ws[0]);
+    if (ws.length) {
+      if (!ws.includes(week)) setWeek(ws[0]);
+    } else {
+      setGames([]);
+    }
   }
 
   async function loadWeekGames(w) {
     setErr("");
     const res = await api.get("/schedule/by-week", {
-      params: { season: SEASON, week: w },
+      params: { season, week: w, stage },
     });
     setGames(res.data.games || []);
   }
 
   useEffect(() => {
-    loadWeeks().catch(() => setErr("Nem sikerült betölteni a heteket."));
+    loadSeasons().catch(() => setErr("Nem sikerült betölteni a szezonokat."));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    loadWeekGames(week).catch(() => setErr("Nem sikerült betölteni a meccseket."));
+    loadWeeks().catch(() => setErr("Nem sikerült betölteni a heteket."));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [week]);
+  }, [season, stage]);
+
+  useEffect(() => {
+    if (weeks.length) {
+      loadWeekGames(week).catch(() => setErr("Nem sikerült betölteni a meccseket."));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [week, season, stage]);
+
+  const stageLabel = useMemo(
+    () => STAGE_OPTIONS.find((s) => s.value === stage)?.label || stage,
+    [stage]
+  );
 
   const headerTitle = useMemo(
-    () => `Schedule · ${SEASON} · Week ${week}`,
-    [week]
+    () => `Schedule · ${season} · ${stageLabel}${weeks.length ? ` · Week ${week}` : ""}`,
+    [season, stageLabel, week, weeks.length]
   );
 
   return (
@@ -195,13 +226,31 @@ export default function Schedule() {
         </p>
 
         <div className="filters-bar">
-          <WeekDropdown
-            value={week}
-            options={weeks}
-            onChange={setWeek}
-            label="WEEK"
-            width={170}
+          <SimpleDropdown
+            value={season}
+            options={seasons.map((s) => ({ value: s, label: String(s) }))}
+            onChange={setSeason}
+            label="SEASON"
+            width={110}
           />
+
+          <SimpleDropdown
+            value={stage}
+            options={STAGE_OPTIONS}
+            onChange={setStage}
+            label="STAGE"
+            width={180}
+          />
+
+          {weeks.length > 0 && (
+            <WeekDropdown
+              value={week}
+              options={weeks}
+              onChange={setWeek}
+              label="WEEK"
+              width={170}
+            />
+          )}
 
           <div className="filters-spacer" />
 
@@ -290,7 +339,7 @@ export default function Schedule() {
 
         {!games.length && !err && (
           <div className="card" style={{ padding: 14 }}>
-            <div className="muted">Ehhez a héthez nincs adat.</div>
+            <div className="muted">Ehhez a szűréshez nincs adat.</div>
           </div>
         )}
       </div>

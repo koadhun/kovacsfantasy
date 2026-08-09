@@ -5,6 +5,14 @@ import { teamCodeFromApiId } from "../lib/nflTeams.js";
 const LEAGUE_ID = 1; // NFL
 const API_BASE = "https://v1.american-football.api-sports.io";
 
+// A Playoff Challenge modul saját logikával kezeli a rájátszást (más csapat-
+// elnevezéssel is), ezért azt itt szándékosan NEM szinkronizáljuk, hogy ne
+// duplikáljuk / zavarjuk össze a meglévő adatait.
+const STAGE_TO_GAME_TYPE = {
+  "Pre Season": "PRE",
+  "Regular Season": "REG",
+};
+
 function parseWeekNumber(weekStr = "") {
   const m = /Week\s+(\d+)/i.exec(weekStr);
   return m ? parseInt(m[1], 10) : null;
@@ -38,9 +46,10 @@ async function syncSeason(season) {
   let skipped = 0;
 
   for (const g of games) {
-    // Csak az alapszakasz (Regular Season) kell az általános Schedule/Standings/Stats oldalakhoz.
-    // Az előszezon nincs használva sehol, a rájátszást a Playoff Challenge modul kezeli külön.
-    if (g.game?.stage !== "Regular Season") {
+    const gameType = STAGE_TO_GAME_TYPE[g.game?.stage];
+
+    // Rájátszás vagy ismeretlen stage -> kihagyjuk
+    if (!gameType) {
       skipped++;
       continue;
     }
@@ -49,12 +58,15 @@ async function syncSeason(season) {
     const awayCode = teamCodeFromApiId(g.teams?.away?.id);
     const week = parseWeekNumber(g.game?.week);
 
-    if (!homeCode || !awayCode || week == null) {
+    // Az "előszezon" API-nál néha nem "Week N" formátumú (pl. "Hall of Fame
+    // Weekend") - ezt 0. hétként kezeljük, hogy legyen egyáltalán megjeleníthető.
+    const resolvedWeek = week != null ? week : (gameType === "PRE" ? 0 : null);
+
+    if (!homeCode || !awayCode || resolvedWeek == null) {
       skipped++;
       continue;
     }
 
-    const gameType = "REG";
     const kickoffAt = new Date((g.game?.date?.timestamp || 0) * 1000);
     const isFinal = ["FT", "AOT"].includes(g.game?.status?.short);
     const status = isFinal ? "FINAL" : "SCHEDULED";
@@ -62,7 +74,7 @@ async function syncSeason(season) {
     const awayScore = isFinal ? g.scores?.away?.total ?? null : null;
 
     const existing = await prisma.game.findFirst({
-      where: { season, week, gameType, homeTeam: homeCode, awayTeam: awayCode }
+      where: { season, week: resolvedWeek, gameType, homeTeam: homeCode, awayTeam: awayCode }
     });
 
     if (existing) {
@@ -74,7 +86,7 @@ async function syncSeason(season) {
     } else {
       await prisma.game.create({
         data: {
-          season, week, gameType, kickoffAt,
+          season, week: resolvedWeek, gameType, kickoffAt,
           homeTeam: homeCode, awayTeam: awayCode,
           homeScore, awayScore, status
         }
@@ -83,7 +95,7 @@ async function syncSeason(season) {
     }
   }
 
-  console.log(`Kész. Új: ${created}, frissítve: ${updated}, kihagyva (nem alapszakasz vagy ismeretlen csapat): ${skipped}`);
+  console.log(`Kész. Új: ${created}, frissítve: ${updated}, kihagyva (rájátszás vagy ismeretlen csapat): ${skipped}`);
 }
 
 const season = Number(process.argv[2]) || new Date().getFullYear();
