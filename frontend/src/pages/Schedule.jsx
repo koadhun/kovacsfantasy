@@ -194,12 +194,12 @@ export default function Schedule() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [season, stage]);
 
-  useEffect(() => {
+useEffect(() => {
     if (weeks.length) {
       loadWeekGames(week).catch(() => setErr("Nem sikerült betölteni a meccseket."));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [week, season, stage]);
+  }, [week, season, stage, weeks]);
 
   const stageLabel = useMemo(
     () => STAGE_OPTIONS.find((s) => s.value === stage)?.label || stage,
