@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { PLAYER_STATS_SEED } from "../data/PlayerStatsSeed.js";
+import { prisma } from "../lib/prisma.js";
 
 const router = Router();
 
@@ -9,12 +9,9 @@ const CATEGORIES = [
   { key: "receiving", label: "Receiving" },
   { key: "fumbles", label: "Fumbles" },
   { key: "tackles", label: "Tackles" },
-  { key: "interceptions", label: "Interceptions" },
   { key: "field_goals", label: "Field Goals" },
-  { key: "kickoffs", label: "Kickoffs" },
   { key: "kickoff_returns", label: "Kickoff Returns" },
   { key: "punting", label: "Punting" },
-  { key: "punt_returns", label: "Punt Returns" },
 ];
 
 const COLUMNS_BY_CATEGORY = {
@@ -28,11 +25,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "td", label: "TD" },
     { key: "int", label: "INT" },
     { key: "rate", label: "Rate" },
-    { key: "first", label: "1st" },
-    { key: "firstPct", label: "1st%" },
-    { key: "20+", label: "20+" },
-    { key: "40+", label: "40+" },
-    { key: "lng", label: "Lng" },
     { key: "sck", label: "Sck" },
     { key: "sckY", label: "SckY" },
   ],
@@ -42,10 +34,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "att", label: "Att" },
     { key: "ydsAtt", label: "Yds/Att" },
     { key: "td", label: "TD" },
-    { key: "first", label: "1st" },
-    { key: "firstPct", label: "1st%" },
-    { key: "20+", label: "20+" },
-    { key: "40+", label: "40+" },
     { key: "lng", label: "Lng" },
     { key: "fum", label: "Fum" },
   ],
@@ -56,10 +44,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "yds", label: "Yds" },
     { key: "ydsRec", label: "Yds/Rec" },
     { key: "td", label: "TD" },
-    { key: "first", label: "1st" },
-    { key: "firstPct", label: "1st%" },
-    { key: "20+", label: "20+" },
-    { key: "40+", label: "40+" },
     { key: "lng", label: "Lng" },
     { key: "fum", label: "Fum" },
   ],
@@ -67,8 +51,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "player", label: "Player" },
     { key: "fum", label: "Fum" },
     { key: "lost", label: "Lost" },
-    { key: "oob", label: "OOB" },
-    { key: "forced", label: "Forced" },
     { key: "ownRec", label: "Own Rec" },
     { key: "oppRec", label: "Opp Rec" },
   ],
@@ -83,14 +65,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "ff", label: "FF" },
     { key: "fr", label: "FR" },
   ],
-  interceptions: [
-    { key: "player", label: "Player" },
-    { key: "int", label: "INT" },
-    { key: "yds", label: "Yds" },
-    { key: "td", label: "TD" },
-    { key: "lng", label: "Lng" },
-    { key: "pd", label: "PD" },
-  ],
   field_goals: [
     { key: "player", label: "Player" },
     { key: "fgm", label: "FGM" },
@@ -101,15 +75,6 @@ const COLUMNS_BY_CATEGORY = {
     { key: "xpa", label: "XPA" },
     { key: "pts", label: "Pts" },
   ],
-  kickoffs: [
-    { key: "player", label: "Player" },
-    { key: "ko", label: "KO" },
-    { key: "yds", label: "Yds" },
-    { key: "tb", label: "TB" },
-    { key: "tbPct", label: "TB %" },
-    { key: "ret", label: "Ret" },
-    { key: "retYds", label: "Ret Yds" },
-  ],
   kickoff_returns: [
     { key: "player", label: "Player" },
     { key: "ret", label: "Ret" },
@@ -117,28 +82,15 @@ const COLUMNS_BY_CATEGORY = {
     { key: "avg", label: "Avg" },
     { key: "td", label: "TD" },
     { key: "lng", label: "Lng" },
-    { key: "fc", label: "FC" },
-    { key: "fum", label: "Fum" },
   ],
   punting: [
     { key: "player", label: "Player" },
     { key: "punts", label: "Punts" },
     { key: "yds", label: "Yds" },
     { key: "avg", label: "Avg" },
-    { key: "net", label: "Net" },
     { key: "lng", label: "Lng" },
     { key: "in20", label: "In20" },
     { key: "tb", label: "TB" },
-  ],
-  punt_returns: [
-    { key: "player", label: "Player" },
-    { key: "ret", label: "Ret" },
-    { key: "yds", label: "Yds" },
-    { key: "avg", label: "Avg" },
-    { key: "td", label: "TD" },
-    { key: "lng", label: "Lng" },
-    { key: "fc", label: "FC" },
-    { key: "fum", label: "Fum" },
   ],
 };
 
@@ -158,73 +110,55 @@ function compare(a, b, dir) {
 
 function defaultSortKeyForCategory(category) {
   switch (category) {
-    case "passing":
-      return "passYds";
-    case "rushing":
-      return "rushYds";
-    case "receiving":
-      return "yds";
-    case "fumbles":
-      return "fum";
-    case "tackles":
-      return "comb";
-    case "interceptions":
-      return "int";
-    case "field_goals":
-      return "fgm";
-    case "kickoffs":
-      return "ko";
-    case "kickoff_returns":
-      return "yds";
-    case "punting":
-      return "avg";
-    case "punt_returns":
-      return "yds";
-    default:
-      return "player";
+    case "passing": return "passYds";
+    case "rushing": return "rushYds";
+    case "receiving": return "yds";
+    case "fumbles": return "fum";
+    case "tackles": return "comb";
+    case "field_goals": return "fgm";
+    case "kickoff_returns": return "yds";
+    case "punting": return "avg";
+    default: return "player";
   }
 }
 
-router.get("/player", (req, res) => {
+async function loadCategoryRows(season, categoryKey) {
+  const dbRows = await prisma.playerStat.findMany({
+    where: { season, category: categoryKey },
+  });
+  return dbRows.map((r) => ({ ...r.stats, team: r.team }));
+}
+
+router.get("/player", async (req, res) => {
   const season = Number(req.query.season || 2025);
   const category = String(req.query.category || "passing");
   const q = String(req.query.q || "").toLowerCase().trim();
   const page = Math.max(1, Number(req.query.page || 1));
   const limit = Math.min(50, Math.max(5, Number(req.query.limit || 10)));
 
-  const seasonData = PLAYER_STATS_SEED[season] || {};
   const searchMode = !!q;
 
   let rows = [];
   let columns = [];
   let requestedSortKey = String(
-    req.query.sortKey ||
-      (searchMode ? "player" : defaultSortKeyForCategory(category))
+    req.query.sortKey || (searchMode ? "player" : defaultSortKeyForCategory(category))
   );
-  let sortDir =
-    req.query.sortDir === "asc" ? "asc" : searchMode ? "asc" : "desc";
+  let sortDir = req.query.sortDir === "asc" ? "asc" : searchMode ? "asc" : "desc";
 
   if (searchMode) {
     const results = [];
 
     for (const cat of CATEGORIES) {
-      const sourceRows = Array.isArray(seasonData[cat.key]) ? seasonData[cat.key] : [];
-      const categoryColumns = COLUMNS_BY_CATEGORY[cat.key] || [
-        { key: "player", label: "Player" },
-      ];
+      const sourceRows = await loadCategoryRows(season, cat.key);
+      const categoryColumns = COLUMNS_BY_CATEGORY[cat.key] || [{ key: "player", label: "Player" }];
 
       for (const row of sourceRows) {
         if (!String(row.player || "").toLowerCase().includes(q)) continue;
 
-        results.push({
-          ...row,
-          statCategory: cat.key,
-          statCategoryLabel: cat.label,
-        });
+        results.push({ ...row, statCategory: cat.key, statCategoryLabel: cat.label });
 
         for (const col of categoryColumns) {
           if (col.key === "player") continue;
-
           if (!columns.some((existing) => existing.key === col.key)) {
             columns.push(col);
           }
@@ -238,11 +172,7 @@ router.get("/player", (req, res) => {
       { key: "player", label: "Player" },
       { key: "statCategoryLabel", label: "Category" },
       { key: "team", label: "Team" },
-      { key: "pos", label: "Pos" },
-      ...columns.filter(
-        (col) =>
-          !["team", "pos", "statCategoryLabel"].includes(col.key)
-      ),
+      ...columns.filter((col) => !["team", "statCategoryLabel"].includes(col.key)),
     ];
 
     const validSearchKeys = new Set(columns.map((c) => c.key));
@@ -251,7 +181,7 @@ router.get("/player", (req, res) => {
       sortDir = "asc";
     }
   } else {
-    rows = Array.isArray(seasonData[category]) ? seasonData[category] : [];
+    rows = await loadCategoryRows(season, category);
     columns = COLUMNS_BY_CATEGORY[category] || [{ key: "player", label: "Player" }];
 
     const validKeys = new Set(columns.map((c) => c.key));
@@ -270,18 +200,9 @@ router.get("/player", (req, res) => {
 
   return res.json({
     meta: {
-      season,
-      category,
-      categories: CATEGORIES,
-      columns,
-      total,
-      page: safePage,
-      totalPages,
-      limit,
-      sortKey: requestedSortKey,
-      sortDir,
-      q,
-      searchMode,
+      season, category, categories: CATEGORIES, columns, total,
+      page: safePage, totalPages, limit,
+      sortKey: requestedSortKey, sortDir, q, searchMode,
     },
     rows: paged,
   });

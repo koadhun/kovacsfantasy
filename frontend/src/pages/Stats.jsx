@@ -18,18 +18,15 @@ export default function Stats() {
   const [sortDir, setSortDir] = useState("desc");
   const [hoverKey, setHoverKey] = useState(null);
 
-  const categories = meta?.categories || [
+const categories = meta?.categories || [
     { key: "passing", label: "Passing" },
     { key: "rushing", label: "Rushing" },
     { key: "receiving", label: "Receiving" },
     { key: "fumbles", label: "Fumbles" },
     { key: "tackles", label: "Tackles" },
-    { key: "interceptions", label: "Interceptions" },
     { key: "field_goals", label: "Field Goals" },
-    { key: "kickoffs", label: "Kickoffs" },
     { key: "kickoff_returns", label: "Kickoff Returns" },
     { key: "punting", label: "Punting" },
-    { key: "punt_returns", label: "Punt Returns" },
   ];
 
   const columns = meta?.columns || [{ key: "player", label: "Player" }];

@@ -262,3 +262,18 @@ model PlayoffChallengeRosterSlot {
   @@unique([rosterId, slot])
   @@index([playerId])
 }
+
+model PlayerStat {
+  id          String   @id @default(uuid())
+  season      Int
+  category    String
+  apiPlayerId Int
+  playerName  String
+  team        String
+  stats       Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([season, category, apiPlayerId])
+  @@index([season, category])
+}
