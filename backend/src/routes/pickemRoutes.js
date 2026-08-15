@@ -34,7 +34,7 @@ function getWinner(game) {
  * - visszaadja a heti meccseket + a bejelentkezett user pickjeit
  */
 router.get("/week", requireAuth, async (req, res) => {
-  const season = Number(req.query.season || 2025);
+  const season = Number(req.query.season || 2026);
   const week = Number(req.query.week || 1);
   const userId = req.user.id;
 
@@ -176,7 +176,7 @@ async function recomputeWeekScore(season, week, userId) {
  * GET /api/pickem/leaderboard?season=2025&week=1
  */
 router.get("/leaderboard", requireAuth, async (req, res) => {
-  const season = Number(req.query.season || 2025);
+  const season = Number(req.query.season || 2026);
   const week = Number(req.query.week || 1);
 
   const users = await prisma.user.findMany({
@@ -186,7 +186,7 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
   await Promise.all(users.map((u) => recomputeWeekScore(season, week, u.id)));
 
   const weekly = await prisma.pickEmWeekScore.findMany({
-    where: { season, week, gameType: "REG" },
+    where: { season, week },
     include: {
       user: { select: { id: true, username: true } },
     },
@@ -220,7 +220,7 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
  * - FINAL / elkezdődött meccsnél látszik
  */
 router.get("/user/:userId/picks", requireAuth, async (req, res) => {
-  const season = Number(req.query.season || 2025);
+  const season = Number(req.query.season || 2026);
   const week = Number(req.query.week || 1);
   const targetUserId = req.params.userId;
 
