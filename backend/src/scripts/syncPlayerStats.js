@@ -40,8 +40,22 @@ async function fetchGameStats(gameId) {
   const res = await fetch(`${API_BASE}/games/statistics/players?id=${gameId}`, {
     headers: { "x-apisports-key": process.env.API_FOOTBALL_KEY }
   });
+
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status} ${res.statusText}`);
+  }
+
   const data = await res.json();
+
+  if (data.errors && Object.keys(data.errors).length > 0) {
+    throw new Error(JSON.stringify(data.errors));
+  }
+
   return data.response || [];
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function ensurePlayer(bucket, id, name, team) {
@@ -73,9 +87,27 @@ async function syncPlayerStats(season) {
   const punting = {};
 
   let processed = 0;
+  const failedGames = [];
 
   for (const g of games) {
-    const teamsStats = await fetchGameStats(g.game.id);
+    let teamsStats = null;
+
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        teamsStats = await fetchGameStats(g.game.id);
+        break;
+      } catch (err) {
+        console.warn(`  Hiba a ${g.game.id} meccsnél (${attempt}. próbálkozás): ${err.message}`);
+        await sleep(1500 * attempt);
+      }
+    }
+
+    if (!teamsStats) {
+      failedGames.push(g.game.id);
+      processed++;
+      await sleep(300);
+      continue;
+    }
 
     for (const teamBlock of teamsStats) {
       const teamCode = teamCodeFromApiId(teamBlock.team?.id) || teamBlock.team?.name;
@@ -169,6 +201,11 @@ async function syncPlayerStats(season) {
 
     processed++;
     if (processed % 20 === 0) console.log(`  ...${processed}/${games.length} meccs feldolgozva`);
+    await sleep(300);
+  }
+
+  if (failedGames.length) {
+    console.warn(`FIGYELEM: ${failedGames.length} meccs sikertelen maradt 3 próbálkozás után: ${failedGames.join(", ")}`);
   }
 
   console.log("Meccsek feldolgozva, végleges sorok összeállítása...");
