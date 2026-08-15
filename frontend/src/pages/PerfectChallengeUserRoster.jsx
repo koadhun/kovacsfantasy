@@ -3,7 +3,7 @@ import { api } from "../api";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import PerfectChallengeCard from "../components/perfect/PerfectChallengeCard";
 
-const SEASON = 2025;
+const SEASON = 2026;
 
 function formatScore(value) {
   return Number(value || 0).toFixed(1);

@@ -5,7 +5,7 @@ import WeekDropdown from "../components/WeekDropdown";
 import PerfectChallengeCard from "../components/perfect/PerfectChallengeCard";
 import PerfectChallengeSelectorModal from "../components/perfect/PerfectChallengeSelectorModal";
 
-const SEASON = 2025;
+const SEASON = 2026;
 
 const SLOT_TO_POOL_KEY = {
   QB: "QB",

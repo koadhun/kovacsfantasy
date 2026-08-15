@@ -8,7 +8,7 @@ import {
 
 const router = Router();
 
-const DEFAULT_SEASON = 2025;
+const DEFAULT_SEASON = 2026;
 const DEFAULT_WEEKS = [1, 2, 3];
 
 const SLOT_TO_POSITION = {
@@ -598,10 +598,21 @@ function buildSeasonLeaderboardRows(users, rosters) {
   );
 }
 
-router.get("/weeks", requireAuth, async (_req, res) => {
+router.get("/weeks", requireAuth, async (req, res) => {
+  const season = Number(req.query.season || DEFAULT_SEASON);
+
+  const rows = await prisma.perfectChallengePlayer.findMany({
+    where: { season },
+    select: { week: true },
+    distinct: ["week"],
+    orderBy: { week: "asc" },
+  });
+
+  const weeks = rows.map((r) => r.week);
+
   return res.json({
-    season: DEFAULT_SEASON,
-    weeks: DEFAULT_WEEKS,
+    season,
+    weeks: weeks.length ? weeks : DEFAULT_WEEKS,
   });
 });
 
