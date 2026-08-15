@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { api } from "../api";
 import TeamLogo from "../components/TeamLogo";
 import WeekDropdown from "../components/WeekDropdown";
@@ -150,13 +151,20 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
 }
 
 export default function Schedule() {
+  const [sp, setSp] = useSearchParams();
+
   const [seasons, setSeasons] = useState([]);
-  const [season, setSeason] = useState(new Date().getFullYear());
-  const [stage, setStage] = useState("REG");
+  const [season, setSeason] = useState(Number(sp.get("season")) || new Date().getFullYear());
+  const [stage, setStage] = useState(sp.get("stage") || "REG");
   const [weeks, setWeeks] = useState([]);
-  const [week, setWeek] = useState(1);
+  const [week, setWeek] = useState(Number(sp.get("week")) || 1);
   const [games, setGames] = useState([]);
   const [err, setErr] = useState("");
+
+  useEffect(() => {
+    setSp({ season: String(season), stage, week: String(week) }, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [season, stage, week]);
 
   async function loadSeasons() {
     const res = await api.get("/schedule/seasons");

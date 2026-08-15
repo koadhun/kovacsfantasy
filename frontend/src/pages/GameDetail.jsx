@@ -187,6 +187,16 @@ export default function GameDetail() {
 
   const game = data?.game;
 
+  const stageFromGameType = (gameType) => {
+    if (gameType === "PRE") return "PRE";
+    if (gameType === "REG") return "REG";
+    return "POST";
+  };
+
+  const backHref = game
+    ? `/schedule?season=${game.season}&week=${game.week}&stage=${stageFromGameType(game.gameType)}`
+    : "/schedule";
+
   const dateLabel = useMemo(() => {
     if (!game) return "";
     return new Date(game.kickoffAt).toLocaleDateString(undefined, {
@@ -197,7 +207,7 @@ export default function GameDetail() {
 
   return (
     <div className="container page">
-      <Link to="/schedule" className="btn" style={{ marginBottom: 14, display: "inline-block" }}>
+      <Link to={backHref} className="btn" style={{ marginBottom: 14, display: "inline-block" }}>
         ← Back to Schedule
       </Link>
 
