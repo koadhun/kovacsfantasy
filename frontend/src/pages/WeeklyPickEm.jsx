@@ -4,7 +4,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import TeamLogo from "../components/TeamLogo";
 import WeekDropdown from "../components/WeekDropdown";
 
-const SEASON = 2025;
+const SEASON = 2026;
 
 function formatKickoff(iso) {
   const d = new Date(iso);

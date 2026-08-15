@@ -3,7 +3,7 @@ import { api } from "../api";
 import { Link, useSearchParams } from "react-router-dom";
 import WeekDropdown from "../components/WeekDropdown";
 
-const SEASON = 2025;
+const SEASON = 2026;
 
 export default function PickEmLeaderboard() {
   const [sp, setSp] = useSearchParams();

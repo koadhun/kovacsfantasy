@@ -39,7 +39,7 @@ router.get("/week", requireAuth, async (req, res) => {
   const userId = req.user.id;
 
   const games = await prisma.game.findMany({
-    where: { season, week },
+    where: { season, week, gameType: "REG" },
     orderBy: { kickoffAt: "asc" },
   });
 
@@ -120,7 +120,7 @@ router.post("/pick", requireAuth, async (req, res) => {
  */
 async function recomputeWeekScore(season, week, userId) {
   const games = await prisma.game.findMany({
-    where: { season, week },
+    where: { season, week, gameType: "REG" },
     orderBy: { kickoffAt: "asc" },
   });
 
@@ -181,7 +181,7 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
   await Promise.all(users.map((u) => recomputeWeekScore(season, week, u.id)));
 
   const weekly = await prisma.pickEmWeekScore.findMany({
-    where: { season, week },
+    where: { season, week, gameType: "REG" },
     include: {
       user: { select: { id: true, username: true } },
     },
@@ -229,7 +229,7 @@ router.get("/user/:userId/picks", requireAuth, async (req, res) => {
   }
 
   const games = await prisma.game.findMany({
-    where: { season, week },
+    where: { season, week, gameType: "REG" },
     orderBy: { kickoffAt: "asc" },
   });
 

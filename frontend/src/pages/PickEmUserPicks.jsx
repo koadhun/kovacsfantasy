@@ -3,7 +3,7 @@ import { api } from "../api";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import TeamLogo from "../components/TeamLogo";
 
-const SEASON = 2025;
+const SEASON = 2026;
 
 function formatKickoff(iso) {
   const d = new Date(iso);
