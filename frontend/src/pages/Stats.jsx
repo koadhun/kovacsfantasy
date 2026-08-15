@@ -3,7 +3,7 @@ import { api } from "../api";
 import TeamLogo from "../components/TeamLogo";
 import SeasonDropdown from "../components/SeasonDropdown";
 
-const YEARS = [2026, 2025, 2024, 2023, 2022, 2021, 2020];
+const YEARS = [2026, 2025];
 
 export default function Stats() {
   const [season, setSeason] = useState(2026);
@@ -82,7 +82,7 @@ const categories = meta?.categories || [
   const currentPage = meta?.page || page;
   const currentLimit = meta?.limit || limit;
 
-  return (
+ return (
     <div className="container page">
       <div className="hero">
         <div className="kicker">
@@ -96,7 +96,8 @@ const categories = meta?.categories || [
           NFL-szerű player statisztika nézet: tabok, év, keresés, rendezés, rangsor.
         </p>
 
-        <SeasonDropdown
+        <div className="filters-bar">
+          <SeasonDropdown
             value={season}
             options={YEARS}
             onChange={(year) => {
@@ -107,7 +108,6 @@ const categories = meta?.categories || [
             width={170}
           />
 
-        <div className="filters-bar">
           <div className="filters-group">
             <span className="filters-label">CATEGORY</span>
             {categories.map((c) => (
@@ -123,8 +123,6 @@ const categories = meta?.categories || [
               </button>
             ))}
           </div>
-
-          
 
           <div className="filters-group" style={{ minWidth: 310 }}>
             <span className="filters-label">SEARCH</span>
