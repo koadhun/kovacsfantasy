@@ -4,6 +4,8 @@ import TeamLogo from "../components/TeamLogo";
 import WeekDropdown from "../components/WeekDropdown";
 import SimpleDropdown from "../components/SimpleDropdown";
 
+import { Link } from "react-router-dom";
+
 const STAGE_OPTIONS = [
   { value: "PRE", label: "Pre-Season" },
   { value: "REG", label: "Regular Season" },
@@ -330,7 +332,7 @@ useEffect(() => {
                     {formatDay(g.kickoffAt)}
                   </div>
 
-                  <button className="btn">Details</button>
+                  <Link className="btn" to={`/schedule/game/${g.id}`}>Details</Link>
                 </div>
               </div>
             </div>

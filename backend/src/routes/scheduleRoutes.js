@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { prisma } from "../lib/prisma.js";
+import { fetchGameBoxscore } from "../lib/gameBoxscore.js";
 
 const router = Router();
 
@@ -47,6 +48,27 @@ router.get("/by-week", async (req, res) => {
   });
 
   res.json({ season, week, stage, games });
+});
+
+// GET /api/schedule/game/:id
+router.get("/game/:id", async (req, res) => {
+  try {
+    const game = await prisma.game.findUnique({ where: { id: req.params.id } });
+
+    if (!game) {
+      return res.status(404).json({ error: "Meccs nem található." });
+    }
+
+    if (!game.apiGameId) {
+      return res.json({ game, boxscore: null, message: "Ehhez a meccshez nincs részletes statisztika." });
+    }
+
+    const boxscore = await fetchGameBoxscore(game.apiGameId);
+    res.json({ game, boxscore });
+  } catch (err) {
+    console.error("Hiba a meccs-részletek lekérésénél:", err);
+    res.status(500).json({ error: "Nem sikerült betölteni a meccs statisztikáit." });
+  }
 });
 
 export default router;

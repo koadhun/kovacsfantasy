@@ -78,6 +78,7 @@ model Game {
   season                  Int
   week                    Int
   gameType                String                   @default("REG")
+  apiGameId               Int?
   kickoffAt               DateTime
   homeTeam                String
   awayTeam                String

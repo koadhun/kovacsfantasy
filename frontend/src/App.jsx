@@ -28,6 +28,8 @@ import Users from "./pages/Users";
 import ScheduleResultsEditor from "./pages/admin/ScheduleResultsEditor";
 import AdminStandings from "./pages/AdminStandings.jsx";
 
+import GameDetail from "./pages/GameDetail";
+
 function hasToken() {
   return !!localStorage.getItem("token");
 }
@@ -57,6 +59,17 @@ export default function App() {
           <ProtectedRoute>
             <Layout>
               <Schedule />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/schedule/game/:gameId"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <GameDetail />
             </Layout>
           </ProtectedRoute>
         }

@@ -80,15 +80,22 @@ async function syncSeason(season) {
     if (existing) {
       await prisma.game.update({
         where: { id: existing.id },
-        data: { kickoffAt, homeScore, awayScore, status }
+        data: { kickoffAt, homeScore, awayScore, status, apiGameId: g.game.id }
       });
       updated++;
     } else {
       await prisma.game.create({
         data: {
-          season, week: resolvedWeek, gameType, kickoffAt,
-          homeTeam: homeCode, awayTeam: awayCode,
-          homeScore, awayScore, status
+          season,
+          week: resolvedWeek,
+          gameType,
+          kickoffAt,
+          homeTeam: homeCode,
+          awayTeam: awayCode,
+          homeScore,
+          awayScore,
+          status,
+          apiGameId: g.game.id
         }
       });
       created++;
