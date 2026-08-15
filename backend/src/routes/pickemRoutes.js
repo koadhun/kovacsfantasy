@@ -81,38 +81,43 @@ router.get("/week", requireAuth, async (req, res) => {
  * - menti / frissíti a picket, csak kickoff előtt engedi
  */
 router.post("/pick", requireAuth, async (req, res) => {
-  const userId = req.user.id;
-  const { gameId, picked } = req.body || {};
+  try {
+    const userId = req.user.id;
+    const { gameId, picked } = req.body || {};
 
-  if (!gameId || !picked) {
-    return res.status(400).json({ error: "Hiányzó gameId vagy picked." });
+    if (!gameId || !picked) {
+      return res.status(400).json({ error: "Hiányzó gameId vagy picked." });
+    }
+
+    const game = await prisma.game.findUnique({ where: { id: gameId } });
+    if (!game) return res.status(404).json({ error: "Meccs nem található." });
+
+    const now = getNow();
+    const final = isFinalGame(game);
+    const started = final || new Date(game.kickoffAt) <= now;
+
+    if (started) {
+      return res.status(400).json({ error: "A mérkőzés már elkezdődött, nem lehet tippelni." });
+    }
+
+    const validTeams = [game.homeTeam, game.awayTeam];
+    const pickedUp = String(picked).toUpperCase();
+
+    if (!validTeams.includes(pickedUp)) {
+      return res.status(400).json({ error: "Érvénytelen csapat választás." });
+    }
+
+    const saved = await prisma.pickEmPick.upsert({
+      where: { userId_gameId: { userId, gameId } },
+      create: { userId, gameId, picked: pickedUp },
+      update: { picked: pickedUp },
+    });
+
+    res.json({ message: "Tipp elmentve.", pick: saved });
+  } catch (err) {
+    console.error("Hiba a pick mentésénél:", err);
+    res.status(500).json({ error: "Váratlan szerverhiba történt a tipp mentésekor." });
   }
-
-  const game = await prisma.game.findUnique({ where: { id: gameId } });
-  if (!game) return res.status(404).json({ error: "Meccs nem található." });
-
-  const now = getNow();
-  const final = isFinalGame(game);
-  const started = final || new Date(game.kickoffAt) <= now;
-
-  if (started) {
-    return res.status(400).json({ error: "A mérkőzés már elkezdődött, nem lehet tippelni." });
-  }
-
-  const validTeams = [game.homeTeam, game.awayTeam];
-  const pickedUp = String(picked).toUpperCase();
-
-  if (!validTeams.includes(pickedUp)) {
-    return res.status(400).json({ error: "Érvénytelen csapat választás." });
-  }
-
-  const saved = await prisma.pickEmPick.upsert({
-    where: { userId_gameId: { userId, gameId } },
-    create: { userId, gameId, picked: pickedUp },
-    update: { picked: pickedUp },
-  });
-
-  res.json({ message: "Tipp elmentve.", pick: saved });
 });
 
 /**
