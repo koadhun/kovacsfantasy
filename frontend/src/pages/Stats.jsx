@@ -6,7 +6,7 @@ import SeasonDropdown from "../components/SeasonDropdown";
 const YEARS = [2026, 2025, 2024, 2023, 2022, 2021, 2020];
 
 export default function Stats() {
-  const [season, setSeason] = useState(2025);
+  const [season, setSeason] = useState(2026);
   const [category, setCategory] = useState("passing");
   const [q, setQ] = useState("");
   const [meta, setMeta] = useState(null);
@@ -96,6 +96,17 @@ const categories = meta?.categories || [
           NFL-szerű player statisztika nézet: tabok, év, keresés, rendezés, rangsor.
         </p>
 
+        <SeasonDropdown
+            value={season}
+            options={YEARS}
+            onChange={(year) => {
+              setSeason(Number(year));
+              setPage(1);
+            }}
+            label="SEASON"
+            width={170}
+          />
+
         <div className="filters-bar">
           <div className="filters-group">
             <span className="filters-label">CATEGORY</span>
@@ -113,16 +124,7 @@ const categories = meta?.categories || [
             ))}
           </div>
 
-          <SeasonDropdown
-            value={season}
-            options={YEARS}
-            onChange={(year) => {
-              setSeason(Number(year));
-              setPage(1);
-            }}
-            label="SEASON"
-            width={170}
-          />
+          
 
           <div className="filters-group" style={{ minWidth: 310 }}>
             <span className="filters-label">SEARCH</span>
