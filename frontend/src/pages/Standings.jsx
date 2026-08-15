@@ -3,8 +3,8 @@ import { api } from "../api";
 import TeamLogo from "../components/TeamLogo";
 import SeasonDropdown from "../components/SeasonDropdown";
 
-const DEFAULT_SEASON = 2025;
-const SEASONS = [2026, 2025, 2024, 2023, 2022, 2021, 2020];
+const DEFAULT_SEASON = 2026;
+const SEASONS = [2026, 2025];
 
 const TEAM_NAME_TO_CODE = {
   "Arizona Cardinals": "ARI",
