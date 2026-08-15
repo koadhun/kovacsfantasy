@@ -80,6 +80,19 @@ async function syncRoster(season, weeks) {
   console.log(`${relevantPlayers.length} releváns (QB/RB/WR/TE/K) játékos található összesen.`);
   console.log(`Sorok létrehozása ${weeks.length} hétre...`);
 
+  // Ellenfél-lekérdezés a már betöltött Schedule (Game) adatokból
+  const allWeeksNeeded = [...new Set(weeks.flatMap((w) => [w - 1, w]))].filter((w) => w > 0);
+  const games = await prisma.game.findMany({
+    where: { season, gameType: "REG", week: { in: allWeeksNeeded } },
+  });
+
+  const opponentByWeekTeam = {}; // opponentByWeekTeam[week][teamCode] = opponentCode
+  for (const g of games) {
+    opponentByWeekTeam[g.week] ||= {};
+    opponentByWeekTeam[g.week][g.homeTeam] = g.awayTeam;
+    opponentByWeekTeam[g.week][g.awayTeam] = g.homeTeam;
+  }
+
   let count = 0;
   const totalToWrite = relevantPlayers.length * weeks.length;
 
@@ -87,6 +100,8 @@ async function syncRoster(season, weeks) {
     for (const p of relevantPlayers) {
       const { firstName, lastName } = splitName(p.name);
       const id = `${season}-${week}-${p.apiPlayerId}`;
+      const currentWeekOpponentTeam = opponentByWeekTeam[week]?.[p.teamCode] || null;
+      const lastWeekOpponentTeam = opponentByWeekTeam[week - 1]?.[p.teamCode] || null;
 
       await prisma.perfectChallengePlayer.upsert({
         where: { id },
@@ -96,6 +111,8 @@ async function syncRoster(season, weeks) {
           lastName,
           displayName: p.name,
           headshotUrl: p.headshotUrl,
+          currentWeekOpponentTeam,
+          lastWeekOpponentTeam,
           isActive: true,
         },
         create: {
@@ -111,6 +128,8 @@ async function syncRoster(season, weeks) {
           isDefense: false,
           currentScore: 0,
           avgScore: 0,
+          currentWeekOpponentTeam,
+          lastWeekOpponentTeam,
           overallStats: {},
           weeklyStats: {},
           isActive: true,

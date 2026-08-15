@@ -10,7 +10,7 @@ export function roundScore(value) {
   export function getDefAllowedPointsPenalty(allowedPoints) {
     const points = num(allowedPoints);
   
-    if (points >= 0 && points <= 6) return 3;
+    if (points >= 1 && points <= 6) return 3;
     if (points >= 7 && points <= 13) return 6;
     if (points >= 14 && points <= 20) return 9;
     if (points >= 21 && points <= 27) return 10;
