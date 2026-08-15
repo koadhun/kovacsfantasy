@@ -180,7 +180,6 @@ export default function PlayoffChallengeLeaderboard() {
                   <th>#</th>
                   <th>User</th>
                   <th>Round Points</th>
-                  <th>Selected</th>
                 </tr>
               </thead>
               <tbody>
@@ -196,15 +195,12 @@ export default function PlayoffChallengeLeaderboard() {
                       </Link>
                     </td>
                     <td>{formatScore(row.points)}</td>
-                    <td>
-                      {row.selectedCount}/{row.totalSlots}
-                    </td>
                   </tr>
                 ))}
 
                 {!roundRows.length && (
                   <tr>
-                    <td colSpan="4" className="muted">
+                    <td colSpan="3" className="muted">
                       Nincs adat.
                     </td>
                   </tr>
@@ -243,13 +239,12 @@ export default function PlayoffChallengeLeaderboard() {
                       </Link>
                     </td>
                     <td>{formatScore(row.points)}</td>
-                    <td>{row.selectedCount}</td>
                   </tr>
                 ))}
 
                 {!totals.length && (
                   <tr>
-                    <td colSpan="4" className="muted">
+                    <td colSpan="3" className="muted">
                       Nincs adat.
                     </td>
                   </tr>
