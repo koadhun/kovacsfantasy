@@ -130,7 +130,6 @@ export default function PerfectChallengeLeaderboard() {
               <th>#</th>
               <th>User</th>
               <th>Points</th>
-              <th>Selected</th>
             </tr>
           </thead>
 
@@ -147,15 +146,12 @@ export default function PerfectChallengeLeaderboard() {
                   </Link>
                 </td>
                 <td>{formatScore(row.points)}</td>
-                <td>
-                  {row.selectedCount}/{row.totalSlots}
-                </td>
               </tr>
             ))}
 
             {!weekly.length && (
               <tr>
-                <td colSpan="4" className="muted">
+                <td colSpan="3" className="muted">
                   Nincs adat.
                 </td>
               </tr>
