@@ -64,7 +64,7 @@ export default function Login() {
                 style={{ position: "absolute", right: 8, top: 8, padding: "8px 10px" }}
                 aria-label="Jelszó megjelenítése"
               >
-                {showPw ? "🙈" : "👁️"}
+                {showPw ? <EyeOffIcon /> : <EyeIcon />}
               </button>
             </div>
 

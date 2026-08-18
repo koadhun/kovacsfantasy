@@ -80,7 +80,7 @@ const navigate = useNavigate();
                 onClick={() => setShow1((s) => !s)}
                 style={{ position: "absolute", right: 8, top: 8, padding: "8px 10px" }}
               >
-                {show1 ? "🙈" : "👁️"}
+                {showPw ? <EyeOffIcon /> : <EyeIcon />}
               </button>
             </div>
 
@@ -100,7 +100,7 @@ const navigate = useNavigate();
                 onClick={() => setShow2((s) => !s)}
                 style={{ position: "absolute", right: 8, top: 8, padding: "8px 10px" }}
               >
-                {show2 ? "🙈" : "👁️"}
+                {showPw ? <EyeOffIcon /> : <EyeIcon />}
               </button>
             </div>
 
