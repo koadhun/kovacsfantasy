@@ -60,9 +60,25 @@ export default function Login() {
               />
               <button
                 type="button"
-                className="btn"
                 onClick={() => setShowPw((s) => !s)}
-                style={{ position: "absolute", right: 8, top: 8, padding: "8px 10px" }}
+                style={{
+                  position: "absolute",
+                  right: 12,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "transparent",
+                  border: "none",
+                  boxShadow: "none",
+                  borderRadius: 0,
+                  WebkitAppearance: "none",
+                  appearance: "none",
+                  padding: 4,
+                  display: "flex",
+                  alignItems: "center",
+                  lineHeight: 0,
+                  color: "#64748b",
+                  cursor: "pointer",
+                }}
                 aria-label="Jelszó megjelenítése"
               >
                 {showPw ? <EyeOffIcon /> : <EyeIcon />}
