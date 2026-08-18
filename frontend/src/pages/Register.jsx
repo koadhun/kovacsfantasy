@@ -1,6 +1,26 @@
 import { useState } from "react";
 import { api } from "../api";
 import { Link, useNavigate } from "react-router-dom";
+import { EyeIcon, EyeOffIcon } from "../components/PasswordIcons";
+
+const eyeButtonStyle = {
+  position: "absolute",
+  right: 12,
+  top: "50%",
+  transform: "translateY(-50%)",
+  background: "transparent",
+  border: "none",
+  boxShadow: "none",
+  borderRadius: 0,
+  WebkitAppearance: "none",
+  appearance: "none",
+  padding: 4,
+  display: "flex",
+  alignItems: "center",
+  lineHeight: 0,
+  color: "#64748b",
+  cursor: "pointer",
+};
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -10,6 +30,8 @@ export default function Register() {
     confirmPassword: ""
   });
   const [error, setError] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [showConfirmPw, setShowConfirmPw] = useState(false);
   const navigate = useNavigate();
 
   function setField(k, v) {
@@ -52,14 +74,20 @@ export default function Register() {
                 onChange={(e) => setField("email", e.target.value)} />
             </div>
 
-            <div className="field">
-              <input className="input" placeholder="Jelszó" type="password" value={form.password}
-                onChange={(e) => setField("password", e.target.value)} />
+            <div className="field" style={{ position: "relative" }}>
+              <input className="input" placeholder="Jelszó" type={showPw ? "text" : "password"} value={form.password}
+                onChange={(e) => setField("password", e.target.value)} style={{ paddingRight: 54 }} />
+              <button type="button" onClick={() => setShowPw((s) => !s)} style={eyeButtonStyle} aria-label="Jelszó megjelenítése">
+                {showPw ? <EyeOffIcon /> : <EyeIcon />}
+              </button>
             </div>
 
-            <div className="field">
-              <input className="input" placeholder="Jelszó megerősítése" type="password" value={form.confirmPassword}
-                onChange={(e) => setField("confirmPassword", e.target.value)} />
+            <div className="field" style={{ position: "relative" }}>
+              <input className="input" placeholder="Jelszó megerősítése" type={showConfirmPw ? "text" : "password"} value={form.confirmPassword}
+                onChange={(e) => setField("confirmPassword", e.target.value)} style={{ paddingRight: 54 }} />
+              <button type="button" onClick={() => setShowConfirmPw((s) => !s)} style={eyeButtonStyle} aria-label="Jelszó megjelenítése">
+                {showConfirmPw ? <EyeOffIcon /> : <EyeIcon />}
+              </button>
             </div>
 
             {error && <p className="error">{error}</p>}
