@@ -42,7 +42,7 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function syncRoster(season, weeks) {
+export async function syncRoster(season, weeks) {
   const apiTeamIds = Object.keys(TEAM_CODE_BY_API_ID).map(Number);
   const relevantPlayers = [];
 
@@ -144,16 +144,18 @@ async function syncRoster(season, weeks) {
   console.log(`Kész. ${count} PerfectChallengePlayer sor létrehozva/frissítve.`);
 }
 
-const season = Number(process.argv[2]) || new Date().getFullYear();
-const weeksArg = process.argv[3];
-const weeks = weeksArg
-  ? weeksArg.split(",").map(Number)
-  : Array.from({ length: 18 }, (_, i) => i + 1);
+if (process.argv[1] && process.argv[1].endsWith("syncPerfectChallengeRoster.js")) {
+  const season = Number(process.argv[2]) || new Date().getFullYear();
+  const weeksArg = process.argv[3];
+  const weeks = weeksArg
+    ? weeksArg.split(",").map(Number)
+    : Array.from({ length: 18 }, (_, i) => i + 1);
 
-syncRoster(season, weeks)
-  .then(() => prisma.$disconnect())
-  .catch((err) => {
-    console.error("Hiba:", err);
-    prisma.$disconnect();
-    process.exit(1);
-  });
+  syncRoster(season, weeks)
+    .then(() => prisma.$disconnect())
+    .catch((err) => {
+      console.error("Hiba:", err);
+      prisma.$disconnect();
+      process.exit(1);
+    });
+}

@@ -13,6 +13,7 @@ import pickemRoutes from "./routes/pickemRoutes.js";
 import perfectChallengeRoutes from "./routes/perfectChallengeRoutes.js";
 import playoffChallengeRoutes from "./routes/playoffChallengeRoutes.js";
 import adminScheduleRoutes from "./routes/adminScheduleRoutes.js";
+import syncRoutes from "./routes/syncRoutes.js";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ const app = express();
 
 app.use(cors({ origin: true }));
 app.use(express.json());
+app.use("/api/sync", syncRoutes);
 
 app.get("/", (_req, res) => {
   res.json({ message: "KovacsFantasy backend OK" });
