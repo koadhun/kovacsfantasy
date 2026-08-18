@@ -125,6 +125,12 @@ function buildKicking(players) {
     const s = statMap(p.statistics);
     const [fgm, fga] = parseSplit(s["field goals"]);
     const [xpm, xpa] = parseSplit(s["extra point"]);
+    const fg0to49 =
+      num(s["field goals from 1 19 yards"]) +
+      num(s["field goals from 20 29 yards"]) +
+      num(s["field goals from 30 39 yards"]) +
+      num(s["field goals from 40 49 yards"]);
+    const fg50plus = num(s["field goals from 50 yards"]);
     return {
       player: p.player.name,
       fgm, fga,
@@ -132,9 +138,11 @@ function buildKicking(players) {
       long: num(s["long"]),
       xpm, xpa,
       pts: num(s["points"]),
+      fg0to49,
+      fg50plus,
     };
   });
-  const total = sumRows(rows, ["fgm", "fga", "xpm", "xpa", "pts"]);
+  const total = sumRows(rows, ["fgm", "fga", "xpm", "xpa", "pts", "fg0to49", "fg50plus"]);
   total.pct = total.fga ? Math.round((total.fgm / total.fga) * 1000) / 10 : 0;
   total.long = rows.length ? Math.max(...rows.map((r) => r.long)) : 0;
   return { rows, total };

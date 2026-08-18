@@ -85,6 +85,8 @@ const SECTIONS = [
       { key: "fgm", label: "FGM" },
       { key: "fga", label: "FGA" },
       { key: "pct", label: "FG%" },
+      { key: "fg0to49", label: "FG 0-49" },
+      { key: "fg50plus", label: "FG 50+" },
       { key: "long", label: "Long" },
       { key: "xpm", label: "XPM" },
       { key: "xpa", label: "XPA" },
