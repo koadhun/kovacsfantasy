@@ -4,6 +4,24 @@ import { api } from "../api";
 import { useSearchParams, Link } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "../components/PasswordIcons";
 
+const eyeButtonStyle = {
+  position: "absolute",
+  right: 12,
+  top: "50%",
+  transform: "translateY(-50%)",
+  background: "transparent",
+  border: "none",
+  boxShadow: "none",
+  borderRadius: 0,
+  WebkitAppearance: "none",
+  appearance: "none",
+  padding: 4,
+  display: "flex",
+  alignItems: "center",
+  lineHeight: 0,
+  color: "#64748b",
+  cursor: "pointer",
+};
 
 export default function ResetPassword() {
 const navigate = useNavigate();
@@ -77,28 +95,11 @@ const navigate = useNavigate();
               />
               <button
                 type="button"
-                onClick={() => setShowPw((s) => !s)}
-                style={{
-                  position: "absolute",
-                  right: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "transparent",
-                  border: "none",
-                  boxShadow: "none",
-                  borderRadius: 0,
-                  WebkitAppearance: "none",
-                  appearance: "none",
-                  padding: 4,
-                  display: "flex",
-                  alignItems: "center",
-                  lineHeight: 0,
-                  color: "#64748b",
-                  cursor: "pointer",
-                }}
+                onClick={() => setShow1((s) => !s)}
+                style={eyeButtonStyle}
                 aria-label="Jelszó megjelenítése"
               >
-                {showPw ? <EyeOffIcon /> : <EyeIcon />}
+                {show1 ? <EyeOffIcon /> : <EyeIcon />}
               </button>
             </div>
 
@@ -114,28 +115,11 @@ const navigate = useNavigate();
               />
               <button
                 type="button"
-                onClick={() => setShowPw((s) => !s)}
-                style={{
-                  position: "absolute",
-                  right: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "transparent",
-                  border: "none",
-                  boxShadow: "none",
-                  borderRadius: 0,
-                  WebkitAppearance: "none",
-                  appearance: "none",
-                  padding: 4,
-                  display: "flex",
-                  alignItems: "center",
-                  lineHeight: 0,
-                  color: "#64748b",
-                  cursor: "pointer",
-                }}
+                onClick={() => setShow2((s) => !s)}
+                style={eyeButtonStyle}
                 aria-label="Jelszó megjelenítése"
               >
-                {showPw ? <EyeOffIcon /> : <EyeIcon />}
+                {show2 ? <EyeOffIcon /> : <EyeIcon />}
               </button>
             </div>
 

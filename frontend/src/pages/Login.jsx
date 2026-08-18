@@ -3,6 +3,25 @@ import { api } from "../api";
 import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "../components/PasswordIcons";
 
+const eyeButtonStyle = {
+  position: "absolute",
+  right: 12,
+  top: "50%",
+  transform: "translateY(-50%)",
+  background: "transparent",
+  border: "none",
+  boxShadow: "none",
+  borderRadius: 0,
+  WebkitAppearance: "none",
+  appearance: "none",
+  padding: 4,
+  display: "flex",
+  alignItems: "center",
+  lineHeight: 0,
+  color: "#64748b",
+  cursor: "pointer",
+};
+
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -61,24 +80,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setShowPw((s) => !s)}
-                style={{
-                  position: "absolute",
-                  right: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "transparent",
-                  border: "none",
-                  boxShadow: "none",
-                  borderRadius: 0,
-                  WebkitAppearance: "none",
-                  appearance: "none",
-                  padding: 4,
-                  display: "flex",
-                  alignItems: "center",
-                  lineHeight: 0,
-                  color: "#64748b",
-                  cursor: "pointer",
-                }}
+                style={eyeButtonStyle}
                 aria-label="Jelszó megjelenítése"
               >
                 {showPw ? <EyeOffIcon /> : <EyeIcon />}

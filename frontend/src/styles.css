@@ -2624,3 +2624,9 @@ th.col-active {
   font-weight: 700;
   color: rgba(148, 163, 184, 0.9);
 }
+
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
