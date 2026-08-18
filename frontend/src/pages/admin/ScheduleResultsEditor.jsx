@@ -61,7 +61,7 @@ export default function ScheduleResultsEditor() {
         </div>
 
         <h1 className="h1">Schedule Results Editor</h1>
-        <p className="sub">Eredmények és státusz szerkesztése (SCHEDULED / FINAL).</p>
+        <p className="sub">Eredmények és státusz szerkesztése (SCHEDULED / IN_PROGRESS / FINAL).</p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <div className="filters-group">
@@ -103,6 +103,8 @@ export default function ScheduleResultsEditor() {
                 <th>Away Score</th>
                 <th>Home Score</th>
                 <th>Status</th>
+                <th>Quarter</th>
+                <th>Clock (mm:ss)</th>
               </tr>
             </thead>
 
@@ -141,15 +143,41 @@ export default function ScheduleResultsEditor() {
                       onChange={(e) => updateGame(g.id, "status", e.target.value)}
                     >
                       <option value="SCHEDULED">SCHEDULED</option>
+                      <option value="IN_PROGRESS">IN_PROGRESS</option>
                       <option value="FINAL">FINAL</option>
                     </select>
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min={1}
+                      max={5}
+                      placeholder="1-4 (5=OT)"
+                      style={{ width: 90 }}
+                      value={g.liveQuarter ?? ""}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        updateGame(g.id, "liveQuarter", v === "" ? null : Number(v));
+                      }}
+                    />
+                  </td>
+
+                  <td>
+                    <input
+                      type="text"
+                      placeholder="pl. 5:42"
+                      style={{ width: 90 }}
+                      value={g.liveClock ?? ""}
+                      onChange={(e) => updateGame(g.id, "liveClock", e.target.value || null)}
+                    />
                   </td>
                 </tr>
               ))}
 
               {!games.length && (
                 <tr>
-                  <td colSpan={6} className="muted" style={{ padding: 12 }}>
+                  <td colSpan={8} className="muted" style={{ padding: 12 }}>
                     Nincs meccs ehhez a héthez.
                   </td>
                 </tr>

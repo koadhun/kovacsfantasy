@@ -77,6 +77,10 @@ function isFinal(game) {
   );
 }
 
+function isLive(game) {
+  return game.status === "IN_PROGRESS";
+}
+
 function winnerSide(game) {
   if (!isFinal(game)) return null;
   if (game.homeScore === game.awayScore) return "TIE";
@@ -280,6 +284,7 @@ useEffect(() => {
       <div style={{ marginTop: 14, display: "grid", gap: 12 }}>
         {games.map((g) => {
           const final = isFinal(g);
+          const live = isLive(g);
           const win = winnerSide(g);
 
           return (
@@ -311,15 +316,15 @@ useEffect(() => {
                 >
                   <TeamScoreRow
                     team={g.awayTeam}
-                    score={final ? g.awayScore : "—"}
-                    highlighted={!final}
+                    score={(final || live) ? g.awayScore : "—"}
+                    highlighted={!final && !live}
                     winner={final && win === "AWAY"}
                   />
 
                   <TeamScoreRow
                     team={g.homeTeam}
-                    score={final ? g.homeScore : "—"}
-                    highlighted={!final}
+                    score={(final || live) ? g.homeScore : "—"}
+                    highlighted={!final && !live}
                     winner={final && win === "HOME"}
                   />
                 </div>
@@ -333,7 +338,11 @@ useEffect(() => {
                   }}
                 >
                   <span className="pill" style={{ fontWeight: 800 }}>
-                    {final ? "FINAL" : formatKickoff(g.kickoffAt)}
+                    {final
+  ? "FINAL"
+  : isLive(g)
+  ? `Q${g.liveQuarter ?? "?"} · ${g.liveClock ?? "--:--"}`
+  : formatKickoff(g.kickoffAt)}
                   </span>
 
                   <div className="muted" style={{ fontWeight: 700 }}>

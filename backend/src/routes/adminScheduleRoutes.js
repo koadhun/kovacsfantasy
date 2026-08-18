@@ -11,7 +11,7 @@ router.get("/schedule", requireAuth, requireAdmin, async (req, res) => {
   if (!season || !week) return res.status(400).json({ error: "season és week kötelező." });
 
   const games = await prisma.game.findMany({
-    where: { season, week },
+    where: { season, week, gameType: "REG" },
     orderBy: { kickoffAt: "asc" }
   });
 
@@ -29,7 +29,9 @@ router.post("/schedule", requireAuth, requireAdmin, async (req, res) => {
         data: {
           homeScore: g.homeScore,
           awayScore: g.awayScore,
-          status: g.status
+          status: g.status,
+          liveQuarter: g.liveQuarter ?? null,
+          liveClock: g.liveClock ?? null
         }
       })
     )

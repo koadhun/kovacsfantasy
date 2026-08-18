@@ -85,6 +85,8 @@ model Game {
   homeScore               Int?
   awayScore               Int?
   status                  String                   @default("SCHEDULED")
+  liveQuarter             Int?
+  liveClock               String?
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
   pickEmPicks             PickEmPick[]
