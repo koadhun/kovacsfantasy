@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { useSearchParams, Link } from "react-router-dom";
+import { EyeIcon, EyeOffIcon } from "../components/PasswordIcons";
 
 
 export default function ResetPassword() {
