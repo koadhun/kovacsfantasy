@@ -165,6 +165,46 @@ export default function PerfectChallengeCard({
               </div>
             </div>
 
+            {player ? (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 14,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  zIndex: 5,
+                  height: 31,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  fontSize: 13,
+                  lineHeight: 1,
+                  fontWeight: 800,
+                  color: "#fff",
+                  letterSpacing: ".03em",
+                }}
+              >
+                {player.gameStatus === "IN_PROGRESS" ? (
+                  <>
+                    <span
+                      style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        background: "#ef4444",
+                        display: "inline-block",
+                      }}
+                    />
+                    LIVE
+                  </>
+                ) : player.gameStatus === "FINAL" ? (
+                  "FINAL"
+                ) : (
+                  "SCHEDULED"
+                )}
+              </div>
+            ) : null}
+
             {hidden ? (
               <div
                 style={{

@@ -171,6 +171,20 @@ async function getStartedTeamMap(season, week) {
   return map;
 }
 
+async function getGameStatusMap(season, week) {
+  const games = await prisma.game.findMany({
+    where: { season, week, gameType: "REG" },
+    select: { status: true, homeTeam: true, awayTeam: true },
+  });
+
+  const map = new Map();
+  for (const game of games) {
+    map.set(game.homeTeam, game.status);
+    map.set(game.awayTeam, game.status);
+  }
+  return map;
+}
+
 async function buildAverageMaps(season, currentWeek) {
   if (currentWeek <= 1) {
     return {
@@ -308,7 +322,7 @@ async function buildAverageMaps(season, currentWeek) {
   };
 }
 
-function normalizePlayer(player, averageMaps) {
+function normalizePlayer(player, averageMaps, statusByTeam) {
   if (!player) return null;
 
   const currentScore = getPlayerScore(player);
@@ -336,6 +350,7 @@ function normalizePlayer(player, averageMaps) {
     overallStats: player.overallStats,
     weeklyStats: player.weeklyStats,
     weeklyScoreBreakdown,
+    gameStatus: statusByTeam?.get(player.teamCode) || "SCHEDULED",
     lastWeekOpponentTeam: player.lastWeekOpponentTeam,
     opponentDefenseTeamCode: player.opponentDefenseTeamCode,
     currentWeekOpponentTeam: player.currentWeekOpponentTeam,
@@ -485,7 +500,7 @@ async function getMaskedSeasonPoints(userId, season, viewedWeek, startedByTeam) 
 }
 
 async function buildWeekStateForUser(userId, season, week, createIfMissing = false) {
-  const [averageMaps, pool, roster, startedByTeam] = await Promise.all([
+  const [averageMaps, pool, roster, startedByTeam, statusByTeam] = await Promise.all([
     buildAverageMaps(season, week),
     prisma.perfectChallengePlayer.findMany({
       where: {
@@ -499,12 +514,13 @@ async function buildWeekStateForUser(userId, season, week, createIfMissing = fal
       ? getOrCreateRoster(userId, season, week)
       : getExistingRoster(userId, season, week),
     getStartedTeamMap(season, week),
+    getGameStatusMap(season, week),
   ]);
 
   const slotMap = Object.fromEntries(
     (roster?.slots || []).map((slot) => [
       slot.slot,
-      normalizePlayer(slot.player, averageMaps),
+      normalizePlayer(slot.player, averageMaps, statusByTeam),
     ])
   );
 
@@ -524,7 +540,7 @@ async function buildWeekStateForUser(userId, season, week, createIfMissing = fal
 
   // A pool-ból (választható lista) kivesszük azokat, akiknek a csapata mérkőzése már elkezdődött.
   const normalizedPool = pool
-    .map((player) => normalizePlayer(player, averageMaps))
+    .map((player) => normalizePlayer(player, averageMaps, statusByTeam))
     .filter((player) => startedByTeam.get(player.teamCode) !== true);
 
   const poolByPosition = {

@@ -310,6 +310,7 @@ export default function WeeklyPickEm() {
           const isSaving = savingId === g.id;
           const canPick = !!g.canPick && !isSaving;
           const final = !!g.final;
+          const live = g.status === "IN_PROGRESS";
 
           const leftSelected = g.picked === g.awayTeam;
           const rightSelected = g.picked === g.homeTeam;
@@ -326,8 +327,8 @@ export default function WeeklyPickEm() {
             return g.correct ? "correct" : "wrong";
           })();
 
-          const leftScore = final ? g.awayScore : "—";
-          const rightScore = final ? g.homeScore : "—";
+          const leftScore = (final || live) ? g.awayScore : "—";
+          const rightScore = (final || live) ? g.homeScore : "—";
 
           let verdict = null;
           if (final && g.picked) {
@@ -394,7 +395,11 @@ export default function WeeklyPickEm() {
 
                   <div className="pickMeta muted" style={{ textAlign: "center" }}>
                     <div style={{ fontWeight: 900 }}>
-                      {final ? "FINAL" : formatKickoff(g.kickoffAt)}
+                      {final
+                        ? "FINAL"
+                        : live
+                        ? `${g.liveQuarter === 5 ? "OT" : `Q${g.liveQuarter ?? "?"}`} · ${g.liveClock ?? "--:--"}`
+                        : formatKickoff(g.kickoffAt)}
                     </div>
                     <div style={{ opacity: 0.9 }}>
                       {g.canPick ? (isSaving ? "Saving..." : "Open") : "Locked"}

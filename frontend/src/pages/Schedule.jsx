@@ -314,7 +314,7 @@ useEffect(() => {
                     borderRight: "1px solid rgba(255,255,255,.08)",
                   }}
                 >
-                  <TeamScoreRow
+                   <TeamScoreRow
                     team={g.awayTeam}
                     score={(final || live) ? g.awayScore : "—"}
                     highlighted={!final && !live}
@@ -339,10 +339,10 @@ useEffect(() => {
                 >
                   <span className="pill" style={{ fontWeight: 800 }}>
                     {final
-  ? "FINAL"
-  : isLive(g)
-  ? `Q${g.liveQuarter ?? "?"} · ${g.liveClock ?? "--:--"}`
-  : formatKickoff(g.kickoffAt)}
+                      ? "FINAL"
+                      : isLive(g)
+                      ? `${g.liveQuarter === 5 ? "OT" : `Q${g.liveQuarter ?? "?"}`} · ${g.liveClock ?? "--:--"}`
+                      : formatKickoff(g.kickoffAt)}
                   </span>
 
                   <div className="muted" style={{ fontWeight: 700 }}>
