@@ -16,7 +16,9 @@ export async function register(req, res) {
       .json({ error: "A megadott jelszó és jelszó megerősitése nem egyezik." });
   }
 
-  const existingUser = await prisma.user.findUnique({ where: { username } });
+const existingUser = await prisma.user.findFirst({
+    where: { username: { equals: username, mode: "insensitive" } }
+  });
   if (existingUser) {
     return res.status(400).json({ error: "A megadott felhasználónév már foglalt." });
   }
@@ -50,7 +52,9 @@ export async function login(req, res) {
     return res.status(400).json({ error: "Felhasználónév és jelszó kötelező." });
   }
 
-  const user = await prisma.user.findUnique({ where: { username } });
+  const user = await prisma.user.findFirst({
+    where: { username: { equals: username, mode: "insensitive" } }
+  });
   if (!user) {
     return res.status(400).json({ error: "Megadott felhasználónév vagy jelszó hibás!" });
   }
