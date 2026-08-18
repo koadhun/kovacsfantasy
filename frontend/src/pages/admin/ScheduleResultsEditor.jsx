@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../api";
 
-const SEASON = 2025;
+const SEASON = 2026;
 
 export default function ScheduleResultsEditor() {
   const [week, setWeek] = useState(1);
