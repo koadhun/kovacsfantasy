@@ -313,8 +313,8 @@ export default function PerfectChallenge() {
             slot={slot.slot}
             player={slot.player}
             hidden={Boolean(slot.hidden)}
-            onSelect={isReadOnlyView ? undefined : () => setModalSlot(slot)}
-            readOnly={isReadOnlyView}
+            onSelect={isReadOnlyView || slot.locked ? undefined : () => setModalSlot(slot)}
+            readOnly={isReadOnlyView || Boolean(slot.locked)}
           />
         ))}
       </div>

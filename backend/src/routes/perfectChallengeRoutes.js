@@ -8,7 +8,7 @@ import {
 
 const router = Router();
 
-const DEFAULT_SEASON = 2026;
+const DEFAULT_SEASON = 2025;
 const DEFAULT_WEEKS = [1, 2, 3];
 
 const SLOT_TO_POSITION = {
@@ -150,7 +150,7 @@ function isGameStarted(game, now = getNow()) {
 
 async function getStartedTeamMap(season, week) {
   const games = await prisma.game.findMany({
-    where: { season, week },
+    where: { season, week, gameType: "REG" },
     select: {
       kickoffAt: true,
       status: true,
@@ -485,7 +485,7 @@ async function getMaskedSeasonPoints(userId, season, viewedWeek, startedByTeam) 
 }
 
 async function buildWeekStateForUser(userId, season, week, createIfMissing = false) {
-  const [averageMaps, pool, roster] = await Promise.all([
+  const [averageMaps, pool, roster, startedByTeam] = await Promise.all([
     buildAverageMaps(season, week),
     prisma.perfectChallengePlayer.findMany({
       where: {
@@ -498,6 +498,7 @@ async function buildWeekStateForUser(userId, season, week, createIfMissing = fal
     createIfMissing
       ? getOrCreateRoster(userId, season, week)
       : getExistingRoster(userId, season, week),
+    getStartedTeamMap(season, week),
   ]);
 
   const slotMap = Object.fromEntries(
@@ -507,17 +508,24 @@ async function buildWeekStateForUser(userId, season, week, createIfMissing = fal
     ])
   );
 
-  const slots = SLOT_ORDER.map((slotKey) => ({
-    slot: slotKey,
-    position: SLOT_TO_POSITION[slotKey],
-    player: slotMap[slotKey] || null,
-    canSwap: true,
-    hidden: false,
-  }));
+  const slots = SLOT_ORDER.map((slotKey) => {
+    const player = slotMap[slotKey] || null;
+    const locked = player ? startedByTeam.get(player.teamCode) === true : false;
 
-  const normalizedPool = pool.map((player) =>
-    normalizePlayer(player, averageMaps)
-  );
+    return {
+      slot: slotKey,
+      position: SLOT_TO_POSITION[slotKey],
+      player,
+      canSwap: !locked,
+      locked,
+      hidden: false,
+    };
+  });
+
+  // A pool-ból (választható lista) kivesszük azokat, akiknek a csapata mérkőzése már elkezdődött.
+  const normalizedPool = pool
+    .map((player) => normalizePlayer(player, averageMaps))
+    .filter((player) => startedByTeam.get(player.teamCode) !== true);
 
   const poolByPosition = {
     QB: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "QB")),
@@ -598,21 +606,10 @@ function buildSeasonLeaderboardRows(users, rosters) {
   );
 }
 
-router.get("/weeks", requireAuth, async (req, res) => {
-  const season = Number(req.query.season || DEFAULT_SEASON);
-
-  const rows = await prisma.perfectChallengePlayer.findMany({
-    where: { season },
-    select: { week: true },
-    distinct: ["week"],
-    orderBy: { week: "asc" },
-  });
-
-  const weeks = rows.map((r) => r.week);
-
+router.get("/weeks", requireAuth, async (_req, res) => {
   return res.json({
-    season,
-    weeks: weeks.length ? weeks : DEFAULT_WEEKS,
+    season: DEFAULT_SEASON,
+    weeks: DEFAULT_WEEKS,
   });
 });
 
@@ -820,7 +817,29 @@ router.put("/slot", requireAuth, async (req, res) => {
       });
     }
 
+    const startedByTeam = await getStartedTeamMap(Number(season), Number(week));
+
+    if (startedByTeam.get(player.teamCode) === true) {
+      return res.status(400).json({
+        error: "Ez a játékos mérkőzése már elkezdődött, nem választható.",
+      });
+    }
+
     const roster = await getOrCreateRoster(userId, Number(season), Number(week));
+
+    const currentSlot = await prisma.perfectChallengeRosterSlot.findUnique({
+      where: { rosterId_slot: { rosterId: roster.id, slot } },
+      include: { player: true },
+    });
+
+    if (
+      currentSlot?.player &&
+      startedByTeam.get(currentSlot.player.teamCode) === true
+    ) {
+      return res.status(400).json({
+        error: "Ez a slot már zárolva van, mert a mérkőzés elkezdődött.",
+      });
+    }
 
     const duplicate = await prisma.perfectChallengeRosterSlot.findFirst({
       where: {
