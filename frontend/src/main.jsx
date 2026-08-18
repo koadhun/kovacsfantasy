@@ -1,3 +1,26 @@
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App.jsx";
+import SiteGate from "./components/SiteGate.jsx";
+import "./styles.css";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <SiteGate>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </SiteGate>
+  </React.StrictMode>
+);
+
+
+
+
+/*Ez kell a fenti helyett, ha a construction page-t le szeretném venni.
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
@@ -10,4 +33,4 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <App />
     </BrowserRouter>
   </React.StrictMode>
-);
+);*/
