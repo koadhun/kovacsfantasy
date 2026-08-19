@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { prisma } from "../lib/prisma.js";
 import { requireAuth, requireAdmin } from "../middleware/requireAuth.js";
+import { syncStandings } from "../scripts/syncStandings.js";
 
 const router = Router();
 
@@ -36,6 +37,15 @@ router.post("/schedule", requireAuth, requireAdmin, async (req, res) => {
       })
     )
   );
+
+  const season = games[0]?.season;
+  if (season) {
+    try {
+      await syncStandings(season);
+    } catch (err) {
+      console.error("Standings frissítési hiba:", err);
+    }
+  }
 
   res.json({ message: "Results updated" });
 });

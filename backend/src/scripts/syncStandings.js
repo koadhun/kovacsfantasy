@@ -35,7 +35,7 @@ async function computeStandings(season) {
   return table;
 }
 
-async function syncStandings(season) {
+export async function syncStandings(season) {
   console.log(`Tabella számítása a ${season} szezonra a Game adatokból...`);
   const table = await computeStandings(season);
 
@@ -67,11 +67,13 @@ async function syncStandings(season) {
   console.log(`Kész, ${count} csapat tabellasora frissült/létrejött.`);
 }
 
-const season = Number(process.argv[2]) || new Date().getFullYear();
-syncStandings(season)
-  .then(() => prisma.$disconnect())
-  .catch((err) => {
-    console.error("Hiba:", err);
-    prisma.$disconnect();
-    process.exit(1);
-  });
+if (process.argv[1] && process.argv[1].endsWith("syncStandings.js")) {
+  const season = Number(process.argv[2]) || new Date().getFullYear();
+  syncStandings(season)
+    .then(() => prisma.$disconnect())
+    .catch((err) => {
+      console.error("Hiba:", err);
+      prisma.$disconnect();
+      process.exit(1);
+    });
+}
