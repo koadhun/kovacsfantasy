@@ -94,6 +94,7 @@ function extractGameSnapshots(teamsStats) {
               comb: num(s["tackles"]), solo: num(s["unassisted tackles"]),
               tfl: num(s["tfl"]), qbHits: num(s["qb hts"]),
               sacks: num(s["sacks"]), ff: num(s["ff"]),
+              intTd: num(s["interceptions for touch downs"]),
             },
           });
         }
@@ -101,9 +102,15 @@ function extractGameSnapshots(teamsStats) {
         if (group.name === "Kicking") {
           const [fgm, fga] = parseSplit(s["field goals"]);
           const [xpm, xpa] = parseSplit(s["extra point"]);
+          const fg0to49 =
+            num(s["field goals from 1 19 yards"]) +
+            num(s["field goals from 20 29 yards"]) +
+            num(s["field goals from 30 39 yards"]) +
+            num(s["field goals from 40 49 yards"]);
+          const fg50plus = num(s["field goals from 50 yards"]);
           snapshots.push({
             category: "field_goals", apiPlayerId, playerName, team: teamCode,
-            stats: { fgm, fga, xpm, xpa, pts: num(s["points"]), long: num(s["long"]) },
+            stats: { fgm, fga, xpm, xpa, pts: num(s["points"]), long: num(s["long"]), fg0to49, fg50plus },
           });
         }
 

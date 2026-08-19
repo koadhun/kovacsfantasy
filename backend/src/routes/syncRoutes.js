@@ -2,6 +2,7 @@ import { Router } from "express";
 import { syncRoster } from "../scripts/syncPerfectChallengeRoster.js";
 import { syncLiveGames } from "../scripts/syncLiveGames.js";
 import { syncLiveStats } from "../scripts/syncLiveStats.js";
+import { syncLivePerfectChallenge } from "../scripts/syncLivePerfectChallenge.js";
 
 const router = Router();
 
@@ -15,8 +16,6 @@ function checkSyncSecret(req, res) {
 }
 
 // POST /api/sync/perfect-challenge-roster
-// Külső cron szolgáltatás hívja hetente, x-sync-secret headerrel védve.
-// Azonnal válaszol, a sync a háttérben fut tovább (hogy ne legyen HTTP timeout).
 router.post("/perfect-challenge-roster", async (req, res) => {
   if (!checkSyncSecret(req, res)) return;
 
@@ -38,8 +37,8 @@ router.post("/perfect-challenge-roster", async (req, res) => {
 });
 
 // POST /api/sync/live-games
-// Külső cron szolgáltatás hívja 30 percenként, x-sync-secret headerrel védve.
-// Frissíti a meccs-állapotokat (Schedule/Weekly Pick'Em), majd a statisztikákat (Stats oldal).
+// Külső cron szolgáltatás hívja 30 percenként.
+// Sorban: 1) meccs-állapotok, 2) Stats oldal statisztikái, 3) Perfect Challenge élő statjai/pontszáma.
 router.post("/live-games", async (req, res) => {
   if (!checkSyncSecret(req, res)) return;
 
@@ -48,12 +47,14 @@ router.post("/live-games", async (req, res) => {
   try {
     const gamesResult = await syncLiveGames(season);
     const statsResult = await syncLiveStats(season);
+    const pcResult = await syncLivePerfectChallenge(season);
 
     res.json({
       message: "Live sync lefutott.",
       season,
       games: gamesResult,
       stats: statsResult,
+      perfectChallenge: pcResult,
     });
   } catch (err) {
     console.error("[cron] Live sync hiba:", err);

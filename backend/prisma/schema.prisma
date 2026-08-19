@@ -92,6 +92,7 @@ model Game {
   pickEmPicks             PickEmPick[]
   playoffChallengePlayers PlayoffChallengePlayer[]
   statsSynced Boolean @default(false)
+  pcStatsSynced           Boolean                  @default(false)
 
   @@index([season, week])
   @@index([kickoffAt])
