@@ -136,58 +136,19 @@ router.get("/player", async (req, res) => {
   const page = Math.max(1, Number(req.query.page || 1));
   const limit = Math.min(50, Math.max(5, Number(req.query.limit || 10)));
 
-  const searchMode = !!q;
+  let rows = await loadCategoryRows(season, category);
+  const columns = COLUMNS_BY_CATEGORY[category] || [{ key: "player", label: "Player" }];
 
-  let rows = [];
-  let columns = [];
-  let requestedSortKey = String(
-    req.query.sortKey || (searchMode ? "player" : defaultSortKeyForCategory(category))
-  );
-  let sortDir = req.query.sortDir === "asc" ? "asc" : searchMode ? "asc" : "desc";
+  if (q) {
+    rows = rows.filter((row) => String(row.player || "").toLowerCase().includes(q));
+  }
 
-  if (searchMode) {
-    const results = [];
+  let requestedSortKey = String(req.query.sortKey || defaultSortKeyForCategory(category));
+  let sortDir = req.query.sortDir === "asc" ? "asc" : "desc";
 
-    for (const cat of CATEGORIES) {
-      const sourceRows = await loadCategoryRows(season, cat.key);
-      const categoryColumns = COLUMNS_BY_CATEGORY[cat.key] || [{ key: "player", label: "Player" }];
-
-      for (const row of sourceRows) {
-        if (!String(row.player || "").toLowerCase().includes(q)) continue;
-
-        results.push({ ...row, statCategory: cat.key, statCategoryLabel: cat.label });
-
-        for (const col of categoryColumns) {
-          if (col.key === "player") continue;
-          if (!columns.some((existing) => existing.key === col.key)) {
-            columns.push(col);
-          }
-        }
-      }
-    }
-
-    rows = results;
-
-    columns = [
-      { key: "player", label: "Player" },
-      { key: "statCategoryLabel", label: "Category" },
-      { key: "team", label: "Team" },
-      ...columns.filter((col) => !["team", "statCategoryLabel"].includes(col.key)),
-    ];
-
-    const validSearchKeys = new Set(columns.map((c) => c.key));
-    if (!validSearchKeys.has(requestedSortKey)) {
-      requestedSortKey = "player";
-      sortDir = "asc";
-    }
-  } else {
-    rows = await loadCategoryRows(season, category);
-    columns = COLUMNS_BY_CATEGORY[category] || [{ key: "player", label: "Player" }];
-
-    const validKeys = new Set(columns.map((c) => c.key));
-    if (!validKeys.has(requestedSortKey)) {
-      requestedSortKey = defaultSortKeyForCategory(category);
-    }
+  const validKeys = new Set(columns.map((c) => c.key));
+  if (!validKeys.has(requestedSortKey)) {
+    requestedSortKey = defaultSortKeyForCategory(category);
   }
 
   rows = [...rows].sort((ra, rb) => compare(ra[requestedSortKey], rb[requestedSortKey], sortDir));
@@ -202,7 +163,7 @@ router.get("/player", async (req, res) => {
     meta: {
       season, category, categories: CATEGORIES, columns, total,
       page: safePage, totalPages, limit,
-      sortKey: requestedSortKey, sortDir, q, searchMode,
+      sortKey: requestedSortKey, sortDir, q, searchMode: false,
     },
     rows: paged,
   });
