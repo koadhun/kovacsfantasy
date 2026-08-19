@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { syncRoster } from "../scripts/syncPerfectChallengeRoster.js";
 import { syncLiveGames } from "../scripts/syncLiveGames.js";
+import { syncLiveStats } from "../scripts/syncLiveStats.js";
 
 const router = Router();
 
@@ -38,14 +39,22 @@ router.post("/perfect-challenge-roster", async (req, res) => {
 
 // POST /api/sync/live-games
 // Külső cron szolgáltatás hívja 30 percenként, x-sync-secret headerrel védve.
+// Frissíti a meccs-állapotokat (Schedule/Weekly Pick'Em), majd a statisztikákat (Stats oldal).
 router.post("/live-games", async (req, res) => {
   if (!checkSyncSecret(req, res)) return;
 
   const season = Number(req.query.season) || new Date().getFullYear();
 
   try {
-    const result = await syncLiveGames(season);
-    res.json({ message: "Live sync lefutott.", season, ...result });
+    const gamesResult = await syncLiveGames(season);
+    const statsResult = await syncLiveStats(season);
+
+    res.json({
+      message: "Live sync lefutott.",
+      season,
+      games: gamesResult,
+      stats: statsResult,
+    });
   } catch (err) {
     console.error("[cron] Live sync hiba:", err);
     res.status(500).json({ error: "Live sync sikertelen.", detail: err.message });

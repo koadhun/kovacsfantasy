@@ -91,6 +91,7 @@ model Game {
   updatedAt               DateTime                 @updatedAt
   pickEmPicks             PickEmPick[]
   playoffChallengePlayers PlayoffChallengePlayer[]
+  statsSynced Boolean @default(false)
 
   @@index([season, week])
   @@index([kickoffAt])
@@ -279,4 +280,21 @@ model PlayerStat {
 
   @@unique([season, category, apiPlayerId])
   @@index([season, category])
+}
+
+model PlayerGameStat {
+  id          String   @id @default(uuid())
+  season      Int
+  week        Int
+  apiGameId   Int
+  category    String
+  apiPlayerId Int
+  playerName  String
+  team        String
+  stats       Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([season, apiGameId, category, apiPlayerId])
+  @@index([season, category, apiPlayerId])
 }
