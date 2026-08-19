@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { prisma } from "../lib/prisma.js";
 import { teamCodeFromApiId } from "../lib/nflTeams.js";
+import { ACTIVE_GAME_TYPE } from "../lib/activeGameType.js";
 
 const API_BASE = "https://v1.american-football.api-sports.io";
 
@@ -274,7 +275,7 @@ export async function syncLiveStats(season) {
   const dirtyGames = await prisma.game.findMany({
     where: {
       season,
-      gameType: "REG",
+      gameType: ACTIVE_GAME_TYPE,
       OR: [
         { status: "IN_PROGRESS" },
         { status: "FINAL", statsSynced: false },

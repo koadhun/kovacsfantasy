@@ -5,6 +5,7 @@ import {
   calculatePerfectChallengeBreakdown,
   calculatePerfectChallengeScore,
 } from "../lib/perfectChallengeScoring.js";
+import { ACTIVE_GAME_TYPE } from "../lib/activeGameType.js";
 
 const router = Router();
 
@@ -150,7 +151,7 @@ function isGameStarted(game, now = getNow()) {
 
 async function getStartedTeamMap(season, week) {
   const games = await prisma.game.findMany({
-    where: { season, week, gameType: "REG" },
+    where: { season, week, gameType: ACTIVE_GAME_TYPE },
     select: {
       kickoffAt: true,
       status: true,
@@ -173,7 +174,7 @@ async function getStartedTeamMap(season, week) {
 
 async function getGameStatusMap(season, week) {
   const games = await prisma.game.findMany({
-    where: { season, week, gameType: "REG" },
+    where: { season, week, gameType: ACTIVE_GAME_TYPE },
     select: { status: true, homeTeam: true, awayTeam: true },
   });
 

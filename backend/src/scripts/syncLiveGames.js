@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { prisma } from "../lib/prisma.js";
 import { syncStandings } from "./syncStandings.js";
+import { ACTIVE_GAME_TYPE, ACTIVE_STAGE_NAME } from "../lib/activeGameType.js";
 
 const LEAGUE_ID = 1;
 const API_BASE = "https://v1.american-football.api-sports.io";
@@ -43,7 +44,7 @@ async function fetchSeasonGames(season) {
 
 async function findActiveWeek(season) {
   const rows = await prisma.game.findMany({
-    where: { season, gameType: "REG" },
+    where: { season, gameType: ACTIVE_GAME_TYPE },
     select: { week: true, status: true },
     orderBy: { week: "asc" },
   });
@@ -72,7 +73,7 @@ export async function syncLiveGames(season) {
   const apiGames = await fetchSeasonGames(season);
 
   const dbGames = await prisma.game.findMany({
-    where: { season, week: activeWeek, gameType: "REG" },
+    where: { season, week: activeWeek, gameType: ACTIVE_GAME_TYPE },
   });
 
   const dbById = new Map(dbGames.map((g) => [g.apiGameId, g]));
@@ -81,7 +82,7 @@ export async function syncLiveGames(season) {
   let newlyFinal = false;
 
   for (const apiGame of apiGames) {
-    if (apiGame.game?.stage !== "Regular Season") continue;
+    if (apiGame.game?.stage !== ACTIVE_STAGE_NAME) continue;
 
     const existing = dbById.get(apiGame.game.id);
     if (!existing) continue;

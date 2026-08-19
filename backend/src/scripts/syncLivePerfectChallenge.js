@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { prisma } from "../lib/prisma.js";
 import { calculatePerfectChallengeScore } from "../lib/perfectChallengeScoring.js";
+import { ACTIVE_GAME_TYPE } from "../lib/activeGameType.js";
 
 function buildWeeklyStatsForPosition(position, cats) {
   const passing = cats.passing || {};
@@ -97,7 +98,7 @@ export async function syncLivePerfectChallenge(season) {
   const dirtyGames = await prisma.game.findMany({
     where: {
       season,
-      gameType: "REG",
+      gameType: ACTIVE_GAME_TYPE,
       OR: [
         { status: "IN_PROGRESS" },
         { status: "FINAL", pcStatsSynced: false },

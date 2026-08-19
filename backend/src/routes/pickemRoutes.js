@@ -2,6 +2,7 @@ import { Router } from "express";
 import { prisma } from "../lib/prisma.js";
 import { computePickEmPoints } from "../services/pickemScoring.js";
 import { requireAuth } from "../middleware/requireAuth.js";
+import { ACTIVE_GAME_TYPE } from "../lib/activeGameType.js";
 
 const router = Router();
 
@@ -34,12 +35,12 @@ function getWinner(game) {
  * - visszaadja a heti meccseket + a bejelentkezett user pickjeit
  */
 router.get("/week", requireAuth, async (req, res) => {
-  const season = Number(req.query.season || 2026);
+  const season = Number(req.query.season || 2025);
   const week = Number(req.query.week || 1);
   const userId = req.user.id;
 
   const games = await prisma.game.findMany({
-    where: { season, week, gameType: "REG" },
+    where: { season, week, gameType: ACTIVE_GAME_TYPE },
     orderBy: { kickoffAt: "asc" },
   });
 
@@ -125,7 +126,7 @@ router.post("/pick", requireAuth, async (req, res) => {
  */
 async function recomputeWeekScore(season, week, userId) {
   const games = await prisma.game.findMany({
-    where: { season, week, gameType: "REG" },
+    where: { season, week, gameType: ACTIVE_GAME_TYPE },
     orderBy: { kickoffAt: "asc" },
   });
 
@@ -176,7 +177,7 @@ async function recomputeWeekScore(season, week, userId) {
  * GET /api/pickem/leaderboard?season=2025&week=1
  */
 router.get("/leaderboard", requireAuth, async (req, res) => {
-  const season = Number(req.query.season || 2026);
+  const season = Number(req.query.season || 2025);
   const week = Number(req.query.week || 1);
 
   const users = await prisma.user.findMany({
@@ -220,7 +221,7 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
  * - FINAL / elkezdődött meccsnél látszik
  */
 router.get("/user/:userId/picks", requireAuth, async (req, res) => {
-  const season = Number(req.query.season || 2026);
+  const season = Number(req.query.season || 2025);
   const week = Number(req.query.week || 1);
   const targetUserId = req.params.userId;
 
@@ -234,7 +235,7 @@ router.get("/user/:userId/picks", requireAuth, async (req, res) => {
   }
 
   const games = await prisma.game.findMany({
-    where: { season, week, gameType: "REG" },
+    where: { season, week, gameType: ACTIVE_GAME_TYPE },
     orderBy: { kickoffAt: "asc" },
   });
 

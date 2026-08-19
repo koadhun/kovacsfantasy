@@ -1,10 +1,11 @@
 import "dotenv/config";
 import { prisma } from "../lib/prisma.js";
 import { TEAM_CONFERENCE_DIVISION } from "../lib/nflTeams.js";
+import { ACTIVE_GAME_TYPE } from "../lib/activeGameType.js";
 
 async function computeStandings(season) {
   const games = await prisma.game.findMany({
-    where: { season, gameType: "REG", status: "FINAL" }
+    where: { season, gameType: ACTIVE_GAME_TYPE, status: "FINAL" }
   });
 
   const table = {};
