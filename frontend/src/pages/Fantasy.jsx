@@ -372,113 +372,13 @@ function GameCard({ mode }) {
 export default function Fantasy() {
   return (
     <div className="container page">
-      <div className="hero" style={{ padding: 0 }}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: 18,
-            padding: 24,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              gap: 18,
-              minWidth: 0,
-            }}
-          >
-            <div>
-              <div className="kicker">
-                <span className="tag">FANTASY</span>
-                <span>Game Center</span>
-              </div>
-
-              <h1 className="h1" style={{ marginBottom: 10, fontSize: 34 }}>
-                Fantasy Game Center
-              </h1>
-
-              <p className="sub" style={{ maxWidth: 720, lineHeight: 1.72, fontSize: 15 }}>
-                A fantasy főoldal ismét egységes, szellős és kártya-központú lett: a Weekly
-                Pick&apos;Em, a Perfect Challenge és a Playoff Challenge most azonos vizuális
-                rendszerben, kiegyensúlyozott arányokkal és tiszta CTA-hierarchiával jelenik meg.
-              </p>
-            </div>
-
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              <FeaturePill accentGlow="rgba(43,108,255,.18)">Unified card system</FeaturePill>
-              <FeaturePill accentGlow="rgba(43,108,255,.18)">Balanced CTAs</FeaturePill>
-              <FeaturePill accentGlow="rgba(43,108,255,.18)">Premium spacing</FeaturePill>
-            </div>
-          </div>
-
-          <div
-            className="card"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 14,
-              padding: 20,
-              background: "linear-gradient(180deg, rgba(18,30,58,.82), rgba(11,18,36,.78))",
-            }}
-          >
-            <div>
-              <div
-                className="muted"
-                style={{ fontSize: 12, fontWeight: 800, letterSpacing: ".10em", textTransform: "uppercase" }}
-              >
-                Quick overview
-              </div>
-              <h2 style={{ margin: "10px 0 0", fontSize: 22 }}>Egységes fantasy hub</h2>
-            </div>
-
-            <p className="muted" style={{ margin: 0, lineHeight: 1.65, fontSize: 14 }}>
-              A három játékmód most azonos magasságú, következetes szerkezetű kártyákban jelenik
-              meg, így a főoldal vizuálisan nyugodtabb és jobban illeszkedik a meglévő design
-              nyelvhez.
-            </p>
-
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12 }}>
-              <HeroStat value="3" label="aktív fantasy mód egy közös center oldalon" />
-              <HeroStat value="8" label="fős roster logika a roster-alapú challenge módokban" />
-              <HeroStat value="x4" label="max playoff lánc-szorzó a végig megtartott pickekre" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "end",
-          gap: 16,
-          margin: "22px 2px 14px",
-          flexWrap: "wrap",
-        }}
-      >
-        <div>
-          <div className="kicker" style={{ marginBottom: 8 }}>
-            <span className="tag">ACTIVE</span>
-            <span>Fantasy modes</span>
-          </div>
-          <h2 style={{ margin: 0, fontSize: 22 }}>Válassz játékmódot</h2>
-        </div>
-
-        <p className="muted" style={{ margin: 0, maxWidth: 640, lineHeight: 1.65, fontSize: 14 }}>
-          Az összes kártya ugyanarra a struktúrára épül, így a státusz, a feature pill-ek, a meta
-          blokkok és az Open CTA mindenhol azonos ritmusban jelenik meg.
-        </p>
-      </div>
-
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
           gap: 18,
           alignItems: "stretch",
+          marginTop: 24,
         }}
       >
         {GAME_MODES.map((mode) => (

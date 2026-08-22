@@ -15,6 +15,7 @@ export default function Navbar() {
 
   const isLoggedIn = !!token;
   const isAdmin = user?.role === "ADMIN";
+  const isVip = user?.role === "VIP";
 
   function logout() {
     localStorage.removeItem("token");
@@ -22,9 +23,11 @@ export default function Navbar() {
     navigate("/login");
   }
 
-  const statusDotColor = isAdmin ? "#ef4444" : "#3b82f6";
+  const statusDotColor = isAdmin ? "#ef4444" : isVip ? "#f5b301" : "#3b82f6";
   const statusDotGlow = isAdmin
     ? "rgba(239,68,68,.18)"
+    : isVip
+    ? "rgba(245,179,1,.22)"
     : "rgba(59,130,246,.18)";
 
   return (
