@@ -366,7 +366,10 @@ export default function PerfectChallengeSelectorModal({
                       <PlayerOptionImage player={player} displayName={displayName} />
 
                       <div>
-                        <div className="pc-player-option-name">{displayName}</div>
+                        <div className="pc-player-option-name">
+  {displayName}
+  <InjuryBadge injury={player.injury} />
+</div>
 
                         <div className="pc-player-option-meta">
                           <TeamLogo team={player.teamCode} size={14} />
@@ -447,10 +450,18 @@ export default function PerfectChallengeSelectorModal({
                       Injury report
                     </div>
 
-                    <div className="pc-side-stats pc-side-stats-tight">
+                                        <div className="pc-side-stats pc-side-stats-tight">
                       <div className="pc-side-stat-row pc-side-stat-row-tight">
                         <span>Status</span>
-                        <strong>{selectedPlayer.injury.status.toUpperCase()}</strong>
+                        <strong
+                          style={{
+                            color:
+                              (INJURY_COLORS[selectedPlayer.injury.status] ||
+                                INJURY_COLORS["I.L."]).text,
+                          }}
+                        >
+                          {selectedPlayer.injury.status.toUpperCase()}
+                        </strong>
                       </div>
                     </div>
 
