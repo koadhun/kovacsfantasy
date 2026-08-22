@@ -266,7 +266,11 @@ export default function PerfectChallenge() {
             width={170}
           />
 
-          <div className="filters-spacer" />
+         <div className="filters-spacer" />
+
+          <Link to="/fantasy/perfect-challenge/rules" className="btn">
+            Rules
+          </Link>
 
           {isReadOnlyView ? (
             <>

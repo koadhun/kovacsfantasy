@@ -30,6 +30,10 @@ import AdminStandings from "./pages/AdminStandings.jsx";
 
 import GameDetail from "./pages/GameDetail";
 
+import WeeklyPickEmRules from "./pages/WeeklyPickEmRules";
+import PerfectChallengeRules from "./pages/PerfectChallengeRules";
+import PlayoffChallengeRules from "./pages/PlayoffChallengeRules";
+
 function hasToken() {
   return !!localStorage.getItem("token");
 }
@@ -120,6 +124,17 @@ export default function App() {
       />
 
       <Route
+        path="/fantasy/weekly-pickem/rules"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <WeeklyPickEmRules />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
         path="/fantasy/weekly-pickem/leaderboard"
         element={
           <ProtectedRoute>
@@ -153,6 +168,17 @@ export default function App() {
       />
 
       <Route
+        path="/fantasy/perfect-challenge/rules"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <PerfectChallengeRules />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
         path="/fantasy/perfect-challenge/leaderboard"
         element={
           <ProtectedRoute>
@@ -169,6 +195,17 @@ export default function App() {
           <ProtectedRoute>
             <Layout>
               <PlayoffChallenge />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/fantasy/playoff-challenge/rules"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <PlayoffChallengeRules />
             </Layout>
           </ProtectedRoute>
         }

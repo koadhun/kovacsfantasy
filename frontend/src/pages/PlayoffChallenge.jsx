@@ -331,6 +331,10 @@ export default function PlayoffChallenge() {
 
           <div className="filters-spacer" />
 
+          <Link to="/fantasy/playoff-challenge/rules" className="btn">
+            Rules
+          </Link>
+
           {isReadOnlyView ? (
             <>
               <Link

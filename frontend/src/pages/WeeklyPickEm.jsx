@@ -284,6 +284,10 @@ export default function WeeklyPickEm() {
             {pickedCount}/{games.length} picked
           </span>
 
+          <Link to="/fantasy/weekly-pickem/rules" className="btn">
+            Rules
+          </Link>
+
           <Link
             to={`/fantasy/weekly-pickem/leaderboard?week=${week}`}
             className="btn primary"
