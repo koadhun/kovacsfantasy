@@ -231,6 +231,16 @@ export default function PerfectChallengeSelectorModal({
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const currentUser = useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "null");
+    } catch {
+      return null;
+    }
+  }, []);
+  const userRole = currentUser?.role || "USER";
+  const hasFullAccess = userRole === "VIP" || userRole === "ADMIN";
+
   const filteredPlayers = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
 
@@ -354,22 +364,22 @@ export default function PerfectChallengeSelectorModal({
                 const displayName = getDisplayName(player);
 
                 return (
-                  <button
+                  <div
                     key={player.id}
-                    type="button"
                     className={`pc-player-option ${
-                      selectedPlayerId === player.id ? "active" : ""
+                      hasFullAccess && selectedPlayerId === player.id ? "active" : ""
                     }`}
-                    onClick={() => setSelectedPlayerId(player.id)}
+                    onClick={hasFullAccess ? () => setSelectedPlayerId(player.id) : undefined}
+                    style={hasFullAccess ? { cursor: "pointer" } : undefined}
                   >
                     <div className="pc-player-option-left">
                       <PlayerOptionImage player={player} displayName={displayName} />
 
                       <div>
                         <div className="pc-player-option-name">
-  {displayName}
-  <InjuryBadge injury={player.injury} />
-</div>
+                          {displayName}
+                          {hasFullAccess && <InjuryBadge injury={player.injury} />}
+                        </div>
 
                         <div className="pc-player-option-meta">
                           <TeamLogo team={player.teamCode} size={14} />
@@ -394,8 +404,22 @@ export default function PerfectChallengeSelectorModal({
                       <div className="muted" style={{ fontSize: 11 }}>
                         pts
                       </div>
+
+                      {!hasFullAccess && (
+                        <button
+                          type="button"
+                          className="btn primary"
+                          style={{ marginTop: 8 }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onPick(player.id);
+                          }}
+                        >
+                          Select player
+                        </button>
+                      )}
                     </div>
-                  </button>
+                  </div>
                 );
               })}
 
@@ -409,6 +433,7 @@ export default function PerfectChallengeSelectorModal({
             </div>
           </div>
 
+          {hasFullAccess && (
           <div className="pc-picker-right">
             {selectedPlayer ? (
               <>
@@ -450,7 +475,7 @@ export default function PerfectChallengeSelectorModal({
                       Injury report
                     </div>
 
-                                        <div className="pc-side-stats pc-side-stats-tight">
+                    <div className="pc-side-stats pc-side-stats-tight">
                       <div className="pc-side-stat-row pc-side-stat-row-tight">
                         <span>Status</span>
                         <strong
@@ -570,6 +595,7 @@ export default function PerfectChallengeSelectorModal({
               </div>
             )}
           </div>
+          )}
         </div>
       </div>
     </div>
