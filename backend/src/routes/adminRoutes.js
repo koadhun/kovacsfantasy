@@ -18,8 +18,8 @@ router.patch("/users/:id/role", requireAuth, requireAdmin, async (req, res) => {
   const { id } = req.params;
   const { role } = req.body;
 
-  if (!role || !["USER", "ADMIN"].includes(role)) {
-    return res.status(400).json({ error: "Érvénytelen role. USER vagy ADMIN lehet." });
+    if (!role || !["USER", "ADMIN", "VIP"].includes(role)) {
+    return res.status(400).json({ error: "Érvénytelen role. USER, VIP vagy ADMIN lehet." });
   }
 
   // opcionális: ne tudja saját magát USER-re tenni

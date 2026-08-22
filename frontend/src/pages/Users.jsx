@@ -81,15 +81,33 @@ export default function Users() {
                 </td>
                 <td>
                   <div className="actions">
-                    {u.role !== "ADMIN" ? (
+                    {u.role !== "ADMIN" && (
                       <button className="btn primary" onClick={() => setRole(u.id, "ADMIN")}>
                         Make ADMIN
                       </button>
-                    ) : (
+                    )}
+
+                    {u.role !== "VIP" && (
+                      <button
+                        className="btn"
+                        onClick={() => setRole(u.id, "VIP")}
+                        style={{
+                          background: "linear-gradient(135deg, #fde68a, #f5b301 60%, #d99400)",
+                          color: "#1a1206",
+                          fontWeight: 800,
+                          border: "none",
+                        }}
+                      >
+                        Make VIP
+                      </button>
+                    )}
+
+                    {u.role !== "USER" && (
                       <button className="btn" onClick={() => setRole(u.id, "USER")}>
                         Make USER
                       </button>
                     )}
+
                     <button className="btn danger" onClick={() => removeUser(u.id, u.username)}>
                       Delete
                     </button>
