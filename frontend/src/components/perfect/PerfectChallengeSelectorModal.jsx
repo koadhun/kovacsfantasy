@@ -337,8 +337,14 @@ export default function PerfectChallengeSelectorModal({
           </button>
         </div>
 
-        <div className="pc-picker-layout pc-picker-layout-tight">
-          <div className="pc-picker-left">
+        <div
+          className="pc-picker-layout pc-picker-layout-tight"
+          style={!hasFullAccess ? { display: "block" } : undefined}
+        >
+          <div
+            className="pc-picker-left"
+            style={!hasFullAccess ? { width: "100%" } : undefined}
+          >
             <div style={{ marginBottom: 12 }}>
               <input
                 type="text"
