@@ -410,7 +410,7 @@ async function buildAverageMaps(season, currentRound) {
   };
 }
 
-function normalizePlayer(player, averageMaps) {
+function normalizePlayer(player, averageMaps, injuryByName) {
   if (!player) return null;
 
   const currentScore = getPlayerScore(player);
@@ -423,6 +423,8 @@ function normalizePlayer(player, averageMaps) {
     player.currentWeekOpponentDefenseTeamCode || player.currentWeekOpponentTeam
   );
   const opponentOffenseKey = normalizeTeamKey(player.currentWeekOpponentTeam);
+
+  const injury = injuryByName?.get(String(player.displayName || "").toLowerCase()) || null;
 
   return {
     id: player.id,
@@ -439,6 +441,9 @@ function normalizePlayer(player, averageMaps) {
     overallStats: player.overallStats,
     weeklyStats: player.weeklyStats,
     weeklyScoreBreakdown,
+    injury: injury
+      ? { status: injury.status, description: injury.description }
+      : null,
     lastWeekOpponentTeam: player.lastWeekOpponentTeam,
     opponentDefenseTeamCode: player.opponentDefenseTeamCode,
     currentWeekOpponentTeam: player.currentWeekOpponentTeam,
@@ -567,7 +572,7 @@ function computePlayoffTotal(rosters) {
 }
 
 async function buildRoundStateForUser(userId, season, round, createIfMissing = false) {
-  const [averageMaps, pool, roster, previousAndCurrentRosters] = await Promise.all([
+  const [averageMaps, pool, roster, previousAndCurrentRosters, injuryRows] = await Promise.all([
     buildAverageMaps(season, round),
     prisma.playoffChallengePlayer.findMany({
       where: {
@@ -594,12 +599,15 @@ async function buildRoundStateForUser(userId, season, round, createIfMissing = f
         },
       },
     }),
+    prisma.injury.findMany(),
   ]);
+
+  const injuryByName = new Map(injuryRows.map((i) => [i.playerName.toLowerCase(), i]));
 
   const slotMap = Object.fromEntries(
     (roster?.slots || []).map((slot) => [
       slot.slot,
-      normalizePlayer(slot.player, averageMaps),
+      normalizePlayer(slot.player, averageMaps, injuryByName),
     ])
   );
 
@@ -614,7 +622,7 @@ async function buildRoundStateForUser(userId, season, round, createIfMissing = f
   const appearanceMap = buildAppearanceMap(previousAndCurrentRosters);
   const slots = decorateSlotsWithMultipliers(baseSlots, round, appearanceMap);
 
-  const normalizedPool = pool.map((player) => normalizePlayer(player, averageMaps));
+  const normalizedPool = pool.map((player) => normalizePlayer(player, averageMaps, injuryByName));
 
   const poolByPosition = {
     QB: sortByAvgScoreDesc(normalizedPool.filter((player) => player.position === "QB")),
@@ -995,7 +1003,7 @@ router.put("/slot", requireAuth, async (req, res) => {
       });
     }
 
-        if (player.position !== expectedPosition) {
+    if (player.position !== expectedPosition) {
       return res.status(400).json({
         error: `Ehhez a slothoz csak ${expectedPosition} pozíciójú játékos választható.`,
       });

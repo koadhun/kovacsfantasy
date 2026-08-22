@@ -1,6 +1,42 @@
 import { useEffect, useMemo, useState } from "react";
 import TeamLogo from "../TeamLogo";
 
+const INJURY_COLORS = {
+  Out: { bg: "rgba(239,68,68,.18)", text: "#fca5a5" },
+  Doubtful: { bg: "rgba(249,115,22,.18)", text: "#fdba74" },
+  Questionable: { bg: "rgba(234,179,8,.18)", text: "#fde047" },
+  "I.L.": { bg: "rgba(148,163,184,.18)", text: "#cbd5e1" },
+};
+
+function injuryLabel(status) {
+  if (status === "Questionable") return "Q";
+  if (status === "Doubtful") return "D";
+  if (status === "Out") return "OUT";
+  return status;
+}
+
+function InjuryBadge({ injury }) {
+  if (!injury) return null;
+  const c = INJURY_COLORS[injury.status] || INJURY_COLORS["I.L."];
+
+  return (
+    <span
+      style={{
+        marginLeft: 6,
+        padding: "2px 7px",
+        borderRadius: 6,
+        fontSize: 11,
+        fontWeight: 900,
+        background: c.bg,
+        color: c.text,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {injuryLabel(injury.status)}
+    </span>
+  );
+}
+
 const PLAYER_WEEKLY_LABELS = {
   passingYards: "Passing yards",
   passingTDs: "Passing TDs",
@@ -330,7 +366,10 @@ export default function PerfectChallengeSelectorModal({
                       <PlayerOptionImage player={player} displayName={displayName} />
 
                       <div>
-                        <div className="pc-player-option-name">{displayName}</div>
+                                                <div className="pc-player-option-name">
+                          {displayName}
+                          <InjuryBadge injury={player.injury} />
+                        </div>
 
                         <div className="pc-player-option-meta">
                           <TeamLogo team={player.teamCode} size={14} />
@@ -382,8 +421,9 @@ export default function PerfectChallengeSelectorModal({
                       />
 
                       <div>
-                        <div className="pc-side-player-name pc-side-player-name-tight">
+                                                <div className="pc-side-player-name pc-side-player-name-tight">
                           {getDisplayName(selectedPlayer)}
+                          <InjuryBadge injury={selectedPlayer.injury} />
                         </div>
 
                         <div className="pc-side-player-meta">
@@ -403,6 +443,30 @@ export default function PerfectChallengeSelectorModal({
                     </button>
                   </div>
 
+                                    {selectedPlayer.injury && (
+                    <>
+                      <div className="pc-side-section-title" style={{ marginBottom: 10 }}>
+                        Injury report
+                      </div>
+
+                      <div className="pc-side-stats pc-side-stats-tight" style={{ marginBottom: 14 }}>
+                        <div className="pc-side-stat-row pc-side-stat-row-tight">
+                          <span>Status</span>
+                          <strong>
+                            <InjuryBadge injury={selectedPlayer.injury} />
+                          </strong>
+                        </div>
+
+                        <div
+                          className="muted"
+                          style={{ fontSize: 13, marginTop: 6, lineHeight: 1.5 }}
+                        >
+                          {selectedPlayer.injury.description}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  
                   <div className="pc-side-section-title">{previousStatsTitle}</div>
 
                   {initialPeriod ? (
