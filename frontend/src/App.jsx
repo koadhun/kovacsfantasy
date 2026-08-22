@@ -38,6 +38,8 @@ import RoleProtectedRoute from "./components/RoleProtectedRoute";
 
 import Injuries from "./pages/Injuries";
 
+import BecomeVip from "./pages/BecomeVip";
+
 function hasToken() {
   return !!localStorage.getItem("token");
 }
@@ -235,6 +237,17 @@ export default function App() {
                 <Injuries />
               </Layout>
             </RoleProtectedRoute>
+          </ProtectedRoute>
+        }
+      />
+
+            <Route
+        path="/become-vip"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <BecomeVip />
+            </Layout>
           </ProtectedRoute>
         }
       />

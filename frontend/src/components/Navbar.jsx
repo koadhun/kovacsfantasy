@@ -62,7 +62,7 @@ export default function Navbar() {
                 Stats
               </NavLink>
 
-                            <NavLink
+              <NavLink
                 to="/fantasy"
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
@@ -92,6 +92,31 @@ export default function Navbar() {
 
         {isLoggedIn && (
           <div className="navbar-right">
+            {!isAdmin && !isVip && (
+              <Link
+                to="/become-vip"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 7,
+                  padding: "8px 14px",
+                  borderRadius: 999,
+                  fontSize: 13,
+                  fontWeight: 800,
+                  letterSpacing: ".02em",
+                  textDecoration: "none",
+                  color: "#1a1206",
+                  background: "linear-gradient(135deg, #fde68a, #f5b301 60%, #d99400)",
+                  boxShadow: "0 0 0 1px rgba(245,179,1,.4), 0 4px 14px rgba(245,179,1,.28)",
+                }}
+              >
+                <span aria-hidden="true" style={{ fontSize: 14 }}>
+                  ✦
+                </span>
+                Become VIP
+              </Link>
+            )}
+
             <button
               type="button"
               className="profile-chip"
