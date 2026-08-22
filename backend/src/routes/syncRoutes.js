@@ -3,6 +3,7 @@ import { syncRoster } from "../scripts/syncPerfectChallengeRoster.js";
 import { syncLiveGames } from "../scripts/syncLiveGames.js";
 import { syncLiveStats } from "../scripts/syncLiveStats.js";
 import { syncLivePerfectChallenge } from "../scripts/syncLivePerfectChallenge.js";
+import { syncInjuries } from "../scripts/syncInjuries.js";
 
 const router = Router();
 
@@ -59,6 +60,22 @@ router.post("/live-games", async (req, res) => {
   } catch (err) {
     console.error("[cron] Live sync hiba:", err);
     res.status(500).json({ error: "Live sync sikertelen.", detail: err.message });
+  }
+});
+
+// POST /api/sync/injuries
+// Külső cron szolgáltatás hívja naponta.
+router.post("/injuries", async (req, res) => {
+  if (!checkSyncSecret(req, res)) return;
+
+  res.json({ message: "Injuries sync elindult a háttérben." });
+
+  try {
+    console.log(`[cron] Injuries sync indul...`);
+    const result = await syncInjuries();
+    console.log(`[cron] Injuries sync kész.`, result);
+  } catch (err) {
+    console.error("[cron] Injuries sync hiba:", err);
   }
 });
 
