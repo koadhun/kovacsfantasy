@@ -62,19 +62,21 @@ export default function Navbar() {
                 Stats
               </NavLink>
 
-              <NavLink
+                            <NavLink
                 to="/fantasy"
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
                 Fantasy
               </NavLink>
 
-              <NavLink
-                to="/injuries"
-                className={({ isActive }) => (isActive ? "active" : "")}
-              >
-                Injuries
-              </NavLink>
+              {(isVip || isAdmin) && (
+                <NavLink
+                  to="/injuries"
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  Injuries
+                </NavLink>
+              )}
 
               {isAdmin && (
                 <NavLink

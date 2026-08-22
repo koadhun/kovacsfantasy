@@ -34,6 +34,8 @@ import WeeklyPickEmRules from "./pages/WeeklyPickEmRules";
 import PerfectChallengeRules from "./pages/PerfectChallengeRules";
 import PlayoffChallengeRules from "./pages/PlayoffChallengeRules";
 
+import RoleProtectedRoute from "./components/RoleProtectedRoute";
+
 import Injuries from "./pages/Injuries";
 
 function hasToken() {
@@ -224,13 +226,15 @@ export default function App() {
         }
       />
 
-            <Route
+                  <Route
         path="/injuries"
         element={
           <ProtectedRoute>
-            <Layout>
-              <Injuries />
-            </Layout>
+            <RoleProtectedRoute allowedRoles={["VIP", "ADMIN"]}>
+              <Layout>
+                <Injuries />
+              </Layout>
+            </RoleProtectedRoute>
           </ProtectedRoute>
         }
       />
