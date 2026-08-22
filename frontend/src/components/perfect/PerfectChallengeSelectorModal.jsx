@@ -366,10 +366,7 @@ export default function PerfectChallengeSelectorModal({
                       <PlayerOptionImage player={player} displayName={displayName} />
 
                       <div>
-                                                <div className="pc-player-option-name">
-                          {displayName}
-                          <InjuryBadge injury={player.injury} />
-                        </div>
+                        <div className="pc-player-option-name">{displayName}</div>
 
                         <div className="pc-player-option-meta">
                           <TeamLogo team={player.teamCode} size={14} />
@@ -421,7 +418,7 @@ export default function PerfectChallengeSelectorModal({
                       />
 
                       <div>
-                                                <div className="pc-side-player-name pc-side-player-name-tight">
+                        <div className="pc-side-player-name pc-side-player-name-tight">
                           {getDisplayName(selectedPlayer)}
                           <InjuryBadge injury={selectedPlayer.injury} />
                         </div>
@@ -442,31 +439,31 @@ export default function PerfectChallengeSelectorModal({
                       Select player
                     </button>
                   </div>
+                </div>
 
-                                    {selectedPlayer.injury && (
-                    <>
-                      <div className="pc-side-section-title" style={{ marginBottom: 10 }}>
-                        Injury report
+                {selectedPlayer.injury && (
+                  <div className="pc-side-card pc-side-card-tight">
+                    <div className="pc-side-section-title" style={{ marginBottom: 10 }}>
+                      Injury report
+                    </div>
+
+                    <div className="pc-side-stats pc-side-stats-tight">
+                      <div className="pc-side-stat-row pc-side-stat-row-tight">
+                        <span>Status</span>
+                        <strong>{selectedPlayer.injury.status.toUpperCase()}</strong>
                       </div>
+                    </div>
 
-                      <div className="pc-side-stats pc-side-stats-tight" style={{ marginBottom: 14 }}>
-                        <div className="pc-side-stat-row pc-side-stat-row-tight">
-                          <span>Status</span>
-                          <strong>
-                            <InjuryBadge injury={selectedPlayer.injury} />
-                          </strong>
-                        </div>
+                    <div
+                      className="muted"
+                      style={{ fontSize: 13, marginTop: 8, lineHeight: 1.5 }}
+                    >
+                      {selectedPlayer.injury.description}
+                    </div>
+                  </div>
+                )}
 
-                        <div
-                          className="muted"
-                          style={{ fontSize: 13, marginTop: 6, lineHeight: 1.5 }}
-                        >
-                          {selectedPlayer.injury.description}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                  
+                <div className="pc-side-card pc-side-card-tight">
                   <div className="pc-side-section-title">{previousStatsTitle}</div>
 
                   {initialPeriod ? (
