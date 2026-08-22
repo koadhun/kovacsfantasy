@@ -995,13 +995,35 @@ router.put("/slot", requireAuth, async (req, res) => {
       });
     }
 
-    if (player.position !== expectedPosition) {
+        if (player.position !== expectedPosition) {
       return res.status(400).json({
         error: `Ehhez a slothoz csak ${expectedPosition} pozíciójú játékos választható.`,
       });
     }
 
+    const startedByTeam = await getStartedTeamMap(Number(season), round);
+
+    if (startedByTeam.get(normalizeTeamKey(player.teamCode)) === true) {
+      return res.status(400).json({
+        error: "Ez a játékos mérkőzése már elkezdődött, nem választható.",
+      });
+    }
+
     const roster = await getOrCreateRoster(userId, Number(season), round);
+
+    const currentSlot = await prisma.playoffChallengeRosterSlot.findUnique({
+      where: { rosterId_slot: { rosterId: roster.id, slot } },
+      include: { player: true },
+    });
+
+    if (
+      currentSlot?.player &&
+      startedByTeam.get(normalizeTeamKey(currentSlot.player.teamCode)) === true
+    ) {
+      return res.status(400).json({
+        error: "Ez a slot már zárolva van, mert a mérkőzés elkezdődött.",
+      });
+    }
 
     const duplicate = await prisma.playoffChallengeRosterSlot.findFirst({
       where: {
