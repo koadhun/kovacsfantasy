@@ -14,6 +14,7 @@ import perfectChallengeRoutes from "./routes/perfectChallengeRoutes.js";
 import playoffChallengeRoutes from "./routes/playoffChallengeRoutes.js";
 import adminScheduleRoutes from "./routes/adminScheduleRoutes.js";
 import syncRoutes from "./routes/syncRoutes.js";
+import injuriesRoutes from "./routes/injuriesRoutes.js";
 
 dotenv.config();
 
@@ -37,7 +38,9 @@ app.use("/api/schedule", scheduleRoutes);
 app.use("/api/pickem", pickemRoutes);
 app.use("/api/perfect-challenge", perfectChallengeRoutes);
 app.use("/api/playoff-challenge", playoffChallengeRoutes);
+app.use("/api/injuries", injuriesRoutes);
 app.use("/api/admin", adminScheduleRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 

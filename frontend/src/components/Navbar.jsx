@@ -69,6 +69,13 @@ export default function Navbar() {
                 Fantasy
               </NavLink>
 
+              <NavLink
+                to="/injuries"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                Injuries
+              </NavLink>
+
               {isAdmin && (
                 <NavLink
                   to="/admin"

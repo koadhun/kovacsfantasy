@@ -34,6 +34,8 @@ import WeeklyPickEmRules from "./pages/WeeklyPickEmRules";
 import PerfectChallengeRules from "./pages/PerfectChallengeRules";
 import PlayoffChallengeRules from "./pages/PlayoffChallengeRules";
 
+import Injuries from "./pages/Injuries";
+
 function hasToken() {
   return !!localStorage.getItem("token");
 }
@@ -217,6 +219,17 @@ export default function App() {
           <ProtectedRoute>
             <Layout>
               <PlayoffChallengeLeaderboard />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+            <Route
+        path="/injuries"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Injuries />
             </Layout>
           </ProtectedRoute>
         }
