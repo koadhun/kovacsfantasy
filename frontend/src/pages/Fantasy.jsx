@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useTheme } from "../theme/ThemeContext";
 
-function buildGameModes(t) {
+function buildGameModes(t, isLight) {
   return [
     {
       title: t("fantasy.weeklyPickem.title"),
@@ -11,12 +12,12 @@ function buildGameModes(t) {
       href: "/fantasy/weekly-pickem",
       cta: t("fantasy.open"),
       accent: {
-        glow: "rgba(43,108,255,.34)",
-        border: "rgba(59,130,246,.28)",
-        dot: "#66a3ff",
-        top: "rgba(18,38,84,.96)",
-        bottom: "rgba(9,18,42,.96)",
-        surface: "rgba(11, 23, 52, .86)",
+        glow: isLight ? "rgba(43,108,255,.10)" : "rgba(43,108,255,.34)",
+        border: isLight ? "rgba(59,130,246,.30)" : "rgba(59,130,246,.28)",
+        dot: "#3b7bff",
+        top: isLight ? "#ffffff" : "rgba(18,38,84,.96)",
+        bottom: isLight ? "#f4f7ff" : "rgba(9,18,42,.96)",
+        surface: isLight ? "rgba(59,130,246,.06)" : "rgba(11, 23, 52, .86)",
       },
       meta: [
         { label: t("fantasy.weeklyPickem.metaFlow"), value: t("fantasy.weeklyPickem.metaFlowValue") },
@@ -37,12 +38,12 @@ function buildGameModes(t) {
       href: "/fantasy/perfect-challenge",
       cta: t("fantasy.open"),
       accent: {
-        glow: "rgba(118,86,255,.28)",
-        border: "rgba(129,140,248,.24)",
-        dot: "#9aa5ff",
-        top: "rgba(20,24,64,.96)",
-        bottom: "rgba(11,15,38,.96)",
-        surface: "rgba(18, 21, 56, .84)",
+        glow: isLight ? "rgba(118,86,255,.10)" : "rgba(118,86,255,.28)",
+        border: isLight ? "rgba(129,140,248,.32)" : "rgba(129,140,248,.24)",
+        dot: "#7c6dfb",
+        top: isLight ? "#ffffff" : "rgba(20,24,64,.96)",
+        bottom: isLight ? "#f6f5ff" : "rgba(11,15,38,.96)",
+        surface: isLight ? "rgba(129,140,248,.07)" : "rgba(18, 21, 56, .84)",
       },
       meta: [
         { label: t("fantasy.perfectChallenge.metaRoster"), value: t("fantasy.perfectChallenge.metaRosterValue") },
@@ -63,12 +64,12 @@ function buildGameModes(t) {
       href: "/fantasy/playoff-challenge",
       cta: t("fantasy.open"),
       accent: {
-        glow: "rgba(88,156,255,.26)",
-        border: "rgba(96,165,250,.24)",
-        dot: "#7dc2ff",
-        top: "rgba(16,28,60,.96)",
-        bottom: "rgba(8,16,36,.96)",
-        surface: "rgba(13, 24, 48, .84)",
+        glow: isLight ? "rgba(88,156,255,.10)" : "rgba(88,156,255,.26)",
+        border: isLight ? "rgba(96,165,250,.32)" : "rgba(96,165,250,.24)",
+        dot: "#4f9cff",
+        top: isLight ? "#ffffff" : "rgba(16,28,60,.96)",
+        bottom: isLight ? "#f2f8ff" : "rgba(8,16,36,.96)",
+        surface: isLight ? "rgba(96,165,250,.07)" : "rgba(13, 24, 48, .84)",
       },
       meta: [
         { label: t("fantasy.playoffChallenge.metaRounds"), value: t("fantasy.playoffChallenge.metaRoundsValue") },
@@ -85,7 +86,7 @@ function buildGameModes(t) {
   ];
 }
 
-function FeaturePill({ children, accentGlow }) {
+function FeaturePill({ children, accentGlow, isLight }) {
   return (
     <span
       style={{
@@ -94,14 +95,16 @@ function FeaturePill({ children, accentGlow }) {
         gap: 8,
         padding: "7px 11px",
         borderRadius: 999,
-        border: "1px solid rgba(255,255,255,.10)",
-        background: "rgba(255,255,255,.05)",
-        color: "rgba(255,255,255,.88)",
+        border: isLight ? "1px solid rgba(16,24,40,.12)" : "1px solid rgba(255,255,255,.10)",
+        background: isLight ? "rgba(16,24,40,.04)" : "rgba(255,255,255,.05)",
+        color: isLight ? "rgba(16,24,40,.82)" : "rgba(255,255,255,.88)",
         fontSize: 12,
         fontWeight: 700,
         letterSpacing: ".01em",
         whiteSpace: "nowrap",
-        boxShadow: `inset 0 1px 0 rgba(255,255,255,.04), 0 0 0 1px ${accentGlow}`,
+        boxShadow: isLight
+          ? `0 0 0 1px ${accentGlow}`
+          : `inset 0 1px 0 rgba(255,255,255,.04), 0 0 0 1px ${accentGlow}`,
       }}
     >
       <span
@@ -119,7 +122,7 @@ function FeaturePill({ children, accentGlow }) {
   );
 }
 
-function StatusBadge({ children }) {
+function StatusBadge({ children, isLight }) {
   return (
     <span
       style={{
@@ -130,9 +133,9 @@ function StatusBadge({ children }) {
         padding: "7px 12px",
         fontSize: 12,
         fontWeight: 800,
-        border: "1px solid rgba(59,130,246,.30)",
-        background: "rgba(37,99,235,.16)",
-        color: "#dbeafe",
+        border: isLight ? "1px solid rgba(37,99,235,.30)" : "1px solid rgba(59,130,246,.30)",
+        background: isLight ? "rgba(37,99,235,.08)" : "rgba(37,99,235,.16)",
+        color: isLight ? "#1d4ed8" : "#dbeafe",
         whiteSpace: "nowrap",
       }}
     >
@@ -142,7 +145,7 @@ function StatusBadge({ children }) {
           width: 7,
           height: 7,
           borderRadius: 999,
-          background: "#60a5fa",
+          background: "#3b82f6",
           boxShadow: "0 0 0 5px rgba(96,165,250,.14)",
         }}
       />
@@ -151,11 +154,11 @@ function StatusBadge({ children }) {
   );
 }
 
-function MetaTile({ label, value, surface }) {
+function MetaTile({ label, value, surface, isLight }) {
   return (
     <div
       style={{
-        border: "1px solid rgba(255,255,255,.08)",
+        border: isLight ? "1px solid rgba(16,24,40,.08)" : "1px solid rgba(255,255,255,.08)",
         borderRadius: 16,
         padding: 14,
         background: surface,
@@ -177,12 +180,14 @@ function MetaTile({ label, value, surface }) {
       >
         {label}
       </div>
-      <div style={{ fontSize: 14, fontWeight: 700, lineHeight: 1.45 }}>{value}</div>
+      <div style={{ fontSize: 14, fontWeight: 700, lineHeight: 1.45, color: isLight ? "#101828" : undefined }}>
+        {value}
+      </div>
     </div>
   );
 }
 
-function GameCard({ mode, availabilityLabel, availableNowLabel }) {
+function GameCard({ mode, availabilityLabel, availableNowLabel, isLight }) {
   return (
     <div
       className="card"
@@ -196,7 +201,9 @@ function GameCard({ mode, availabilityLabel, availableNowLabel }) {
         flexDirection: "column",
         border: `1px solid ${mode.accent.border}`,
         background: `linear-gradient(180deg, ${mode.accent.top}, ${mode.accent.bottom})`,
-        boxShadow: `0 26px 60px rgba(0,0,0,.28), 0 0 0 1px ${mode.accent.glow}`,
+        boxShadow: isLight
+          ? `0 12px 30px rgba(16,24,40,.08), 0 0 0 1px ${mode.accent.glow}`
+          : `0 26px 60px rgba(0,0,0,.28), 0 0 0 1px ${mode.accent.glow}`,
       }}
     >
       <div
@@ -205,7 +212,9 @@ function GameCard({ mode, availabilityLabel, availableNowLabel }) {
           position: "absolute",
           inset: 0,
           pointerEvents: "none",
-          background: `radial-gradient(260px 180px at 12% 0%, ${mode.accent.glow}, transparent 72%), radial-gradient(220px 160px at 88% 12%, rgba(255,255,255,.08), transparent 62%)`,
+          background: isLight
+            ? `radial-gradient(260px 180px at 12% 0%, ${mode.accent.glow}, transparent 72%)`
+            : `radial-gradient(260px 180px at 12% 0%, ${mode.accent.glow}, transparent 72%), radial-gradient(220px 160px at 88% 12%, rgba(255,255,255,.08), transparent 62%)`,
           opacity: 0.95,
         }}
       />
@@ -266,13 +275,14 @@ function GameCard({ mode, availabilityLabel, availableNowLabel }) {
                 fontSize: 31,
                 lineHeight: 1.08,
                 letterSpacing: "-.02em",
+                color: isLight ? "#101828" : undefined,
               }}
             >
               {mode.title}
             </h3>
           </div>
 
-          <StatusBadge>{mode.status}</StatusBadge>
+          <StatusBadge isLight={isLight}>{mode.status}</StatusBadge>
         </div>
 
         <p className="muted" style={{ margin: 0, fontSize: 15, lineHeight: 1.72 }}>
@@ -281,13 +291,13 @@ function GameCard({ mode, availabilityLabel, availableNowLabel }) {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10 }}>
           {mode.meta.map((item) => (
-            <MetaTile key={item.label} label={item.label} value={item.value} surface={mode.accent.surface} />
+            <MetaTile key={item.label} label={item.label} value={item.value} surface={mode.accent.surface} isLight={isLight} />
           ))}
         </div>
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {mode.features.map((feature) => (
-            <FeaturePill key={feature} accentGlow={mode.accent.glow}>
+            <FeaturePill key={feature} accentGlow={mode.accent.glow} isLight={isLight}>
               {feature}
             </FeaturePill>
           ))}
@@ -316,18 +326,20 @@ function GameCard({ mode, availabilityLabel, availableNowLabel }) {
               >
                 {availabilityLabel}
               </div>
-              <div style={{ fontSize: 14, fontWeight: 700 }}>{availableNowLabel}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: isLight ? "#101828" : undefined }}>
+                {availableNowLabel}
+              </div>
             </div>
 
             <div
               style={{
                 padding: "9px 12px",
                 borderRadius: 999,
-                border: "1px solid rgba(255,255,255,.08)",
-                background: "rgba(255,255,255,.04)",
+                border: isLight ? "1px solid rgba(16,24,40,.10)" : "1px solid rgba(255,255,255,.08)",
+                background: isLight ? "rgba(16,24,40,.04)" : "rgba(255,255,255,.04)",
                 fontSize: 12,
                 fontWeight: 700,
-                color: "rgba(255,255,255,.82)",
+                color: isLight ? "rgba(16,24,40,.72)" : "rgba(255,255,255,.82)",
                 whiteSpace: "nowrap",
               }}
             >
@@ -363,7 +375,9 @@ function GameCard({ mode, availabilityLabel, availableNowLabel }) {
 
 export default function Fantasy() {
   const { t } = useLanguage();
-  const gameModes = buildGameModes(t);
+  const { theme } = useTheme();
+  const isLight = theme === "light";
+  const gameModes = buildGameModes(t, isLight);
 
   return (
     <div className="container page">
@@ -382,6 +396,7 @@ export default function Fantasy() {
             mode={mode}
             availabilityLabel={t("fantasy.availability")}
             availableNowLabel={t("fantasy.availableNow")}
+            isLight={isLight}
           />
         ))}
       </div>
