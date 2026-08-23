@@ -127,7 +127,7 @@ export default function Profile() {
           alignItems: "stretch",
         }}
       >
-        <ProfileCard title={t("profile.accountTitle")} subtitle={t("profile.accountSubtitle")}>
+        <ProfileCard title={t("profile.accountTitle")} subtitle={t("profile.accountSubtitle")} tokens={tokens}>
           {!user ? (
             <div className="muted">{t("profile.loading")}</div>
           ) : (
@@ -146,6 +146,7 @@ export default function Profile() {
         <ProfileCard
           title={t("profile.updateEmailTitle")}
           subtitle={t("profile.updateEmailSubtitle")}
+          tokens={tokens}
         >
           <div style={{ display: "grid", gap: 12 }}>
             <input
@@ -172,6 +173,7 @@ export default function Profile() {
         <ProfileCard
           title={t("profile.changePasswordTitle")}
           subtitle={t("profile.changePasswordSubtitle")}
+          tokens={tokens}
         >
           <div style={{ display: "grid", gap: 12 }}>
             <input
@@ -216,6 +218,7 @@ export default function Profile() {
         <ProfileCard
           title={t("profile.appearanceTitle")}
           subtitle={t("profile.appearanceSubtitle")}
+          tokens={tokens}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <span className="muted" style={{ fontWeight: 700 }}>
