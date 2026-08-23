@@ -3,6 +3,7 @@ import { api } from "../api";
 import { Link, useSearchParams } from "react-router-dom";
 import TeamLogo from "../components/TeamLogo";
 import WeekDropdown from "../components/WeekDropdown";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const SEASON = 2026;
 
@@ -69,6 +70,7 @@ function ScoreCard({ title, value, sub }) {
 }
 
 export default function WeeklyPickEm() {
+  const { t } = useLanguage();
   const [sp, setSp] = useSearchParams();
   const requestedWeek = Number(sp.get("week") || 1);
 
@@ -119,7 +121,7 @@ export default function WeeklyPickEm() {
       setErr(
         e?.response?.data?.error ||
           e?.message ||
-          "Nem sikerült betölteni a meccseket."
+          t("pickem.loadGamesError")
       );
     } finally {
       setLoadingGames(false);
@@ -182,8 +184,9 @@ export default function WeeklyPickEm() {
 
   useEffect(() => {
     loadWeeks()
-      .catch(() => setErr("Nem sikerült betölteni a heteket."))
+      .catch(() => setErr(t("pickem.loadWeeksError")))
       .finally(() => setLoadingWeeks(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -195,8 +198,9 @@ export default function WeeklyPickEm() {
     }
 
     refreshPageData(week).catch(() =>
-      setErr("Nem sikerült betölteni a meccseket.")
+      setErr(t("pickem.loadGamesError"))
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [week]);
 
   async function pick(gameId, team) {
@@ -206,7 +210,7 @@ export default function WeeklyPickEm() {
       await api.post("/pickem/pick", { gameId, picked: team });
       await refreshPageData(week);
     } catch (e) {
-      setErr(e?.response?.data?.error || "Hiba történt a mentésnél.");
+      setErr(e?.response?.data?.error || t("pickem.saveError"));
     } finally {
       setSavingId(null);
     }
@@ -236,10 +240,7 @@ export default function WeeklyPickEm() {
 
             <h1 className="h1">Weekly Pick&apos;Em</h1>
 
-            <p className="sub">
-              Tippeld meg a meccsek győztesét kickoff előtt. Kickoff után a
-              választás tiltva.
-            </p>
+            <p className="sub">{t("pickem.subtitle")}</p>
           </div>
 
           <div
@@ -252,17 +253,17 @@ export default function WeeklyPickEm() {
           >
             {myWeeklyScore && (
               <ScoreCard
-                title="Weekly points"
+                title={t("pickem.weeklyPointsLabel")}
                 value={myWeeklyScore.points}
-                sub={`${myWeeklyScore.correct}/${myWeeklyScore.totalGames} correct`}
+                sub={`${myWeeklyScore.correct}/${myWeeklyScore.totalGames} ${t("pickem.correctSuffix")}`}
               />
             )}
 
             {mySeasonScore && (
               <ScoreCard
-                title="Season total"
+                title={t("pickem.seasonTotalLabel")}
                 value={mySeasonScore.points}
-                sub={`${mySeasonScore.correct}/${mySeasonScore.totalGames} correct`}
+                sub={`${mySeasonScore.correct}/${mySeasonScore.totalGames} ${t("pickem.correctSuffix")}`}
               />
             )}
           </div>
@@ -273,7 +274,7 @@ export default function WeeklyPickEm() {
             value={week}
             options={weeks}
             onChange={setWeek}
-            label="WEEK"
+            label={t("pickem.weekLabel")}
             width={170}
           />
 
@@ -281,18 +282,18 @@ export default function WeeklyPickEm() {
 
           <span className="pill">
             <span className="dot" />
-            {pickedCount}/{games.length} picked
+            {pickedCount}/{games.length} {t("pickem.pickedSuffix")}
           </span>
 
           <Link to="/fantasy/weekly-pickem/rules" className="btn">
-            Rules
+            {t("pickem.rules")}
           </Link>
 
           <Link
             to={`/fantasy/weekly-pickem/leaderboard?week=${week}`}
             className="btn primary"
           >
-            Leaderboard
+            {t("pickem.leaderboard")}
           </Link>
         </div>
       </div>
@@ -305,7 +306,7 @@ export default function WeeklyPickEm() {
 
       {loadingGames && !games.length && !err && (
         <p className="muted" style={{ marginTop: 14 }}>
-          Meccsek betöltése…
+          {t("pickem.loadingGames")}
         </p>
       )}
 
@@ -336,7 +337,7 @@ export default function WeeklyPickEm() {
 
           let verdict = null;
           if (final && g.picked) {
-            verdict = g.correct ? "✅ Helyes tipp" : "❌ Hibás tipp";
+            verdict = g.correct ? t("pickem.correctPick") : t("pickem.wrongPick");
           }
 
           return (
@@ -380,8 +381,8 @@ export default function WeeklyPickEm() {
                     onClick={() => pick(g.id, g.awayTeam)}
                     title={
                       !g.canPick
-                        ? "Kickoff után nem módosítható"
-                        : "Válaszd a győztest"
+                        ? t("pickem.lockedTooltip")
+                        : t("pickem.pickTooltip")
                     }
                   >
                     <span
@@ -406,7 +407,7 @@ export default function WeeklyPickEm() {
                         : formatKickoff(g.kickoffAt)}
                     </div>
                     <div style={{ opacity: 0.9 }}>
-                      {g.canPick ? (isSaving ? "Saving..." : "Open") : "Locked"}
+                      {g.canPick ? (isSaving ? t("pickem.savingLabel") : t("pickem.openLabel")) : t("pickem.lockedLabel")}
                     </div>
                   </div>
 
@@ -439,8 +440,8 @@ export default function WeeklyPickEm() {
                     onClick={() => pick(g.id, g.homeTeam)}
                     title={
                       !g.canPick
-                        ? "Kickoff után nem módosítható"
-                        : "Válaszd a győztest"
+                        ? t("pickem.lockedTooltip")
+                        : t("pickem.pickTooltip")
                     }
                   >
                     <span style={{ fontWeight: 900 }}>{rightScore}</span>
@@ -467,7 +468,7 @@ export default function WeeklyPickEm() {
 
         {!loadingGames && !games.length && !err && (
           <div className="card" style={{ padding: 14 }}>
-            <div className="muted">Ehhez a héthez nincs schedule adat.</div>
+            <div className="muted">{t("pickem.noGames")}</div>
           </div>
         )}
       </div>

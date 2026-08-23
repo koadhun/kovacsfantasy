@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import TeamLogo from "../components/TeamLogo";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const SEASON = 2026;
 
@@ -20,6 +21,7 @@ function formatKickoff(iso) {
 }
 
 export default function PickEmUserPicks() {
+  const { t } = useLanguage();
   const { userId } = useParams();
   const [sp] = useSearchParams();
   const navigate = useNavigate();
@@ -47,7 +49,7 @@ export default function PickEmUserPicks() {
     load().catch((e) =>
       setErr(
         e?.response?.data?.error ||
-          "Nem sikerült betölteni a user pickeket."
+          t("pickem.loadPicksError")
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,37 +76,35 @@ export default function PickEmUserPicks() {
     <div className="container page">
       <div className="hero">
         <div className="kicker">
-          <span className="tag">FANTASY</span>
-          <span>User Picks</span>
+          <span className="tag">{t("pickem.userPicksBadge")}</span>
+          <span>{t("pickem.userPicksHeading")}</span>
         </div>
 
-        <h1 className="h1">User Picks · Week {week}</h1>
+        <h1 className="h1">{t("pickem.userPicksTitlePrefix")} · {t("pickem.weekWord")} {week}</h1>
 
-        <p className="sub">
-          Kickoff előtt a választás rejtve marad. Kickoff után látható.
-        </p>
+        <p className="sub">{t("pickem.userPicksSubtitle")}</p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <span className="pill">
             <span className="dot" />
-            Viewing:
+            {t("pickem.viewing")}
             <b style={{ marginLeft: 6 }}>{username}</b>
             <span style={{ marginLeft: 10 }}>
-              {visiblePickCount}/{startedCount} visible picks
+              {visiblePickCount}/{startedCount} {t("pickem.visiblePicksSuffix")}
             </span>
           </span>
 
           <div className="filters-spacer" />
 
           <button className="btn" onClick={goMyPicks}>
-            My picks
+            {t("pickem.myPicks")}
           </button>
 
           <Link
             className="btn primary"
             to={`/fantasy/weekly-pickem/leaderboard?week=${week}`}
           >
-            Back to leaderboard
+            {t("pickem.backToLeaderboard")}
           </Link>
         </div>
       </div>
@@ -117,7 +117,7 @@ export default function PickEmUserPicks() {
 
       {loading && !picks.length && !err && (
         <p className="muted" style={{ marginTop: 14 }}>
-          Betöltés…
+          {t("pickem.loadingLabel")}
         </p>
       )}
 
@@ -145,11 +145,11 @@ export default function PickEmUserPicks() {
 
         let verdict = null;
         if (started && g.picked && final) {
-          verdict = g.correct ? "✅ Helyes tipp" : "❌ Hibás tipp";
+          verdict = g.correct ? t("pickem.correctPick") : t("pickem.wrongPick");
         } else if (started && g.picked && !final) {
-          verdict = "Pick revealed";
+          verdict = t("pickem.pickRevealed");
         } else if (!started) {
-          verdict = "Pick hidden";
+          verdict = t("pickem.pickHidden");
         }
 
         return (
@@ -198,7 +198,7 @@ export default function PickEmUserPicks() {
                   {final ? "FINAL" : formatKickoff(g.kickoffAt)}
                 </div>
                 <div className="muted" style={{ marginTop: 4 }}>
-                  {!started ? "Pick hidden" : g.picked ? `Picked: ${g.picked}` : "No pick"}
+                  {!started ? t("pickem.pickHidden") : g.picked ? `${t("pickem.pickedLabel")} ${g.picked}` : t("pickem.noPick")}
                 </div>
               </div>
 
@@ -237,7 +237,7 @@ export default function PickEmUserPicks() {
 
       {!loading && !picks.length && !err && (
         <p className="muted" style={{ marginTop: 14 }}>
-          Ehhez a héthez nincs adat.
+          {t("pickem.noDataForWeek")}
         </p>
       )}
     </div>

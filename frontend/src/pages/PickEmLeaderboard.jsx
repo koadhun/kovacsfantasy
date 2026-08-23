@@ -2,10 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import { Link, useSearchParams } from "react-router-dom";
 import WeekDropdown from "../components/WeekDropdown";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const SEASON = 2026;
 
 export default function PickEmLeaderboard() {
+  const { t } = useLanguage();
   const [sp, setSp] = useSearchParams();
 
   const initialWeek = Number(sp.get("week") || 1);
@@ -42,13 +44,13 @@ export default function PickEmLeaderboard() {
       setErr(
         e?.response?.data?.error ||
           e?.message ||
-          "Nem sikerült betölteni a leaderboardot."
+          t("pickem.loadPicksError")
       );
     }
   }
 
   useEffect(() => {
-    loadWeeks().catch(() => setErr("Nem sikerült betölteni a heteket."));
+    loadWeeks().catch(() => setErr(t("pickem.loadWeeksError")));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -61,7 +63,7 @@ export default function PickEmLeaderboard() {
     }
 
     loadLeaderboard(week).catch(() =>
-      setErr("Nem sikerült betölteni a leaderboardot.")
+      setErr(t("pickem.loadPicksError"))
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [week]);
@@ -70,38 +72,35 @@ export default function PickEmLeaderboard() {
   const totals = data?.totals || [];
 
   const weekTitle = useMemo(
-    () => `Weekly Pick'Em Leaderboard · Week ${week}`,
-    [week]
+    () => `${t("pickem.leaderboardTitlePrefix")} · ${t("pickem.weekWord")} ${week}`,
+    [week, t]
   );
 
   return (
     <div className="container page">
       <div className="hero">
         <div className="kicker">
-          <span className="tag">FANTASY</span>
-          <span>Leaderboard</span>
+          <span className="tag">{t("pickem.leaderboardBadge")}</span>
+          <span>{t("pickem.leaderboardHeading")}</span>
         </div>
 
         <h1 className="h1">{weekTitle}</h1>
 
-        <p className="sub">
-          Tipp-megjelenítés más felhasználónál csak a már elkezdődött meccsekre
-          engedélyezett (anti-cheat).
-        </p>
+        <p className="sub">{t("pickem.leaderboardSubtitle")}</p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <WeekDropdown
             value={week}
             options={weeks}
             onChange={setWeek}
-            label="WEEK"
+            label={t("pickem.weekLabel")}
             width={170}
           />
 
           <div className="filters-spacer" />
 
           <Link to={`/fantasy/weekly-pickem?week=${week}`} className="btn">
-            Back to picks
+            {t("pickem.backToPicks")}
           </Link>
         </div>
       </div>
@@ -113,15 +112,15 @@ export default function PickEmLeaderboard() {
       )}
 
       <div className="card" style={{ marginTop: 14, padding: 16 }}>
-        <h3 style={{ marginTop: 0, marginBottom: 12 }}>Weekly</h3>
+        <h3 style={{ marginTop: 0, marginBottom: 12 }}>{t("pickem.weeklyTableTitle")}</h3>
 
         <table className="table">
           <thead>
             <tr>
-              <th>#</th>
-              <th>User</th>
-              <th>Points</th>
-              <th>Correct</th>
+              <th>{t("pickem.colRank")}</th>
+              <th>{t("pickem.colUser")}</th>
+              <th>{t("pickem.colPoints")}</th>
+              <th>{t("pickem.colCorrect")}</th>
             </tr>
           </thead>
           <tbody>
@@ -145,21 +144,21 @@ export default function PickEmLeaderboard() {
             {!weekly.length && (
               <tr>
                 <td colSpan="4" className="muted">
-                  Nincs adat.
+                  {t("pickem.noData")}
                 </td>
               </tr>
             )}
           </tbody>
         </table>
 
-        <h3 style={{ marginTop: 24, marginBottom: 12 }}>Season Total</h3>
+        <h3 style={{ marginTop: 24, marginBottom: 12 }}>{t("pickem.seasonTableTitle")}</h3>
 
         <table className="table">
           <thead>
             <tr>
-              <th>#</th>
-              <th>User</th>
-              <th>Total Points</th>
+              <th>{t("pickem.colRank")}</th>
+              <th>{t("pickem.colUser")}</th>
+              <th>{t("pickem.colTotalPoints")}</th>
             </tr>
           </thead>
           <tbody>
@@ -174,7 +173,7 @@ export default function PickEmLeaderboard() {
             {!totals.length && (
               <tr>
                 <td colSpan="3" className="muted">
-                  Nincs adat.
+                  {t("pickem.noData")}
                 </td>
               </tr>
             )}
