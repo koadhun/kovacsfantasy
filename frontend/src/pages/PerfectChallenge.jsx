@@ -21,17 +21,16 @@ const SLOT_TO_POOL_KEY = {
   DEF: "DEF",
 };
 
-function ScoreCard({ title, value, sub }) {
+function ScoreCard({ title, value, sub, tokens }) {
   return (
     <div
       style={{
         minWidth: 180,
         padding: "14px 16px",
         borderRadius: 18,
-        border: "1px solid rgba(59,130,246,.22)",
-        background:
-          "linear-gradient(180deg, rgba(15,30,68,.96), rgba(9,18,42,.96))",
-        boxShadow: "0 12px 28px rgba(0,0,0,.22)",
+        border: `1px solid ${tokens.panelBorder}`,
+        background: tokens.panelBg,
+        boxShadow: tokens.shadow,
         textAlign: "center",
       }}
     >
