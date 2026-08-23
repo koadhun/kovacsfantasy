@@ -93,7 +93,7 @@ const categories = meta?.categories || [
         <h1 className="h1">Stats</h1>
 
         <p className="sub">
-          NFL-szerű player statisztika nézet: tabok, év, keresés, rendezés, rangsor.
+          Stats are refreshed every 15-30 minutes. For live scores visit <a href="http://nfl.com">NFL</a>
         </p>
 
         <div className="filters-bar">

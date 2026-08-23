@@ -15,7 +15,7 @@ export default function AdminStandings() {
   }
 
   useEffect(() => {
-    load().catch(() => setErr("Nem sikerült betölteni a standings JSON-t."));
+    load().catch(() => setErr("Was unable to load standings JSON."));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -25,9 +25,9 @@ export default function AdminStandings() {
     try {
       const payload = JSON.parse(jsonText);
       await api.put("/admin/standings", payload);
-      setMsg("Standings frissítve DB-ben.");
+      setMsg("Standings resfreshed in DB.");
     } catch (e) {
-      setErr(e?.response?.data?.error || e.message || "Hiba történt.");
+      setErr(e?.response?.data?.error || e.message || "An error occured.");
     }
   }
 
@@ -36,7 +36,7 @@ export default function AdminStandings() {
       <div className="admin-header">
         <div>
           <h1>Standings Admin</h1>
-          <p>Standing JSON betöltése és DB-be mentése.</p>
+          <p>Load and save Standings JSON to DB.</p>
         </div>
       </div>
 
@@ -66,10 +66,6 @@ export default function AdminStandings() {
 
             {err && <p className="error">{err}</p>}
             {msg && <p className="success">{msg}</p>}
-
-            <p className="muted" style={{ marginTop: 12, fontSize: 12 }}>
-              Tipp: később ide fogjuk bekötni az “Import from source” gombot is.
-            </p>
           </div>
         </div>
 
@@ -86,7 +82,7 @@ export default function AdminStandings() {
               onChange={(e) => setJsonText(e.target.value)}
             />
             <p className="muted" style={{ marginTop: 10, fontSize: 12 }}>
-              Figyelj a JSON érvényességére. Mentés előtt parse-oljuk.
+              Pay attention to JSON validity. Parsing before saving.
             </p>
           </div>
         </div>

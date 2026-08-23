@@ -61,7 +61,7 @@ export default function ScheduleResultsEditor() {
         </div>
 
         <h1 className="h1">Schedule Results Editor</h1>
-        <p className="sub">Eredmények és státusz szerkesztése (SCHEDULED / IN_PROGRESS / FINAL).</p>
+        <p className="sub">Edit results and schedule (SCHEDULED / IN_PROGRESS / FINAL).</p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <div className="filters-group">
@@ -178,7 +178,7 @@ export default function ScheduleResultsEditor() {
               {!games.length && (
                 <tr>
                   <td colSpan={8} className="muted" style={{ padding: 12 }}>
-                    Nincs meccs ehhez a héthez.
+                    No match available for this week.
                   </td>
                 </tr>
               )}

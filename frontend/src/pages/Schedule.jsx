@@ -236,7 +236,7 @@ useEffect(() => {
         <h1 className="h1">{headerTitle}</h1>
 
         <p className="sub">
-          BY WEEK nézet — lejátszott meccsnél eredmény (FINAL), jövőbeninél kezdési idő.
+          Matches are refreshed every 15-30 minutes. For live scores visit <a href="http://nfl.com">NFL</a>
         </p>
 
         <div className="filters-bar">

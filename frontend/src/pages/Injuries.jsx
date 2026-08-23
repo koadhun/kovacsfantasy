@@ -63,14 +63,14 @@ export default function Injuries() {
     api
       .get("/injuries")
       .then((res) => setInjuries(res.data.injuries || []))
-      .catch(() => setErr("Nem sikerult betolteni a serules-adatokat."))
+      .catch(() => setErr("Was unable to load injury reports."))
       .finally(() => setLoading(false));
   }, []);
 
   const teamOptions = useMemo(() => {
     const codes = [...new Set(injuries.map((i) => i.teamCode))].sort();
     return [
-      { value: "ALL", label: "Minden csapat" },
+      { value: "ALL", label: "All teams" },
       ...codes.map((c) => ({ value: c, label: TEAM_NAMES[c] || c })),
     ];
   }, [injuries]);
@@ -90,8 +90,8 @@ export default function Injuries() {
           <span className="tag">INJURIES</span>
           <span>Injury Report</span>
         </div>
-        <h1 className="h1">Serules-jelentes</h1>
-        <p className="sub">Aktualis NFL serulesek, csapatonkent szurhetoen.</p>
+        <h1 className="h1">Injuries</h1>
+        <p className="sub">Available injury reports</p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <SimpleDropdown
@@ -169,7 +169,7 @@ export default function Injuries() {
 
         {!loading && !filtered.length && !err && (
           <div className="card" style={{ padding: 14 }}>
-            <div className="muted">Nincs talalat.</div>
+            <div className="muted">No results.</div>
           </div>
         )}
       </div>
