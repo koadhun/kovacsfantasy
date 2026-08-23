@@ -8,6 +8,9 @@ import { useLanguage } from "../i18n/LanguageContext";
 
 import { Link } from "react-router-dom";
 
+import { useTheme } from "../theme/ThemeContext";
+import { getThemeTokens } from "../theme/themeTokens";
+
 const TEAM_NAMES = {
   ARI: "Arizona Cardinals",
   ATL: "Atlanta Falcons",
@@ -82,7 +85,7 @@ function winnerSide(game) {
   return game.homeScore > game.awayScore ? "HOME" : "AWAY";
 }
 
-function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
+function TeamScoreRow({ team, score, highlighted = false, winner = false, tokens }) {
   return (
     <div
       className="pickTeamBtn"
@@ -94,17 +97,19 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
         padding: "0 16px",
         minHeight: 58,
         borderColor: winner
-          ? "rgba(255,255,255,.24)"
+          ? tokens.panelBorder
           : highlighted
           ? "rgba(59,130,246,.24)"
-          : "rgba(255,255,255,.10)",
+          : tokens.panelBorderSoft,
         background: winner
-          ? "linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.03))"
+          ? tokens.winnerBg
           : highlighted
-          ? "rgba(20,40,90,.14)"
-          : "rgba(255,255,255,.015)",
+          ? tokens.highlightedBg
+          : tokens.neutralRowBg,
         boxShadow: winner
-          ? "inset 3px 0 0 rgba(255,255,255,.18), inset 0 0 0 1px rgba(255,255,255,.035)"
+          ? tokens.isLight
+            ? "inset 3px 0 0 rgba(16,24,40,.14)"
+            : "inset 3px 0 0 rgba(255,255,255,.18), inset 0 0 0 1px rgba(255,255,255,.035)"
           : undefined,
       }}
     >
@@ -126,7 +131,7 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            color: winner ? "#ffffff" : "rgba(255,255,255,.94)",
+            color: tokens.textPrimary,
           }}
         >
           {teamName(team)}
@@ -140,7 +145,7 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
           minWidth: 26,
           textAlign: "right",
           flexShrink: 0,
-          color: winner ? "#ffffff" : "rgba(255,255,255,.9)",
+          color: tokens.textPrimary,
         }}
       >
         {score}
@@ -151,6 +156,8 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
 
 export default function Schedule() {
   const { t, language } = useLanguage();
+  const { theme } = useTheme();
+  const tokens = getThemeTokens(theme);
   const [sp, setSp] = useSearchParams();
 
   const STAGE_OPTIONS = [
@@ -293,14 +300,13 @@ export default function Schedule() {
           const live = isLive(g);
           const win = winnerSide(g);
 
-          return (
+                    return (
             <div
               key={g.id}
               className="card"
               style={{
                 padding: 14,
-                background:
-                  "linear-gradient(180deg, rgba(8,16,36,.96), rgba(5,11,26,.96))",
+                background: tokens.panelBg,
               }}
             >
               <div
@@ -317,7 +323,7 @@ export default function Schedule() {
                     gap: 10,
                     minWidth: 0,
                     paddingRight: 12,
-                    borderRight: "1px solid rgba(255,255,255,.08)",
+                    borderRight: `1px solid ${tokens.panelBorderSoft}`,
                   }}
                 >
                    <TeamScoreRow
@@ -325,6 +331,7 @@ export default function Schedule() {
                     score={(final || live) ? g.awayScore : "—"}
                     highlighted={!final && !live}
                     winner={final && win === "AWAY"}
+                    tokens={tokens}
                   />
 
                   <TeamScoreRow
@@ -332,6 +339,7 @@ export default function Schedule() {
                     score={(final || live) ? g.homeScore : "—"}
                     highlighted={!final && !live}
                     winner={final && win === "HOME"}
+                    tokens={tokens}
                   />
                 </div>
 
