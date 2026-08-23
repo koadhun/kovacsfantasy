@@ -1,4 +1,6 @@
 import { NavLink, Link, useNavigate } from "react-router-dom";
+import { useLanguage } from "../i18n/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 function readStoredUser() {
   try {
@@ -10,6 +12,7 @@ function readStoredUser() {
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const token = localStorage.getItem("token");
   const user = readStoredUser();
 
@@ -45,28 +48,28 @@ export default function Navbar() {
                 to="/schedule"
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
-                Schedule
+                {t("nav.schedule")}
               </NavLink>
 
               <NavLink
                 to="/standings"
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
-                Standings
+                {t("nav.standings")}
               </NavLink>
 
               <NavLink
                 to="/stats"
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
-                Stats
+                {t("nav.stats")}
               </NavLink>
 
               <NavLink
                 to="/fantasy"
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
-                Fantasy
+                {t("nav.fantasy")}
               </NavLink>
 
               {(isVip || isAdmin) && (
@@ -74,7 +77,7 @@ export default function Navbar() {
                   to="/injuries"
                   className={({ isActive }) => (isActive ? "active" : "")}
                 >
-                  Injuries
+                  {t("nav.injuries")}
                 </NavLink>
               )}
 
@@ -83,7 +86,7 @@ export default function Navbar() {
                   to="/admin"
                   className={({ isActive }) => (isActive ? "active" : "")}
                 >
-                  Admin
+                  {t("nav.admin")}
                 </NavLink>
               )}
             </nav>
@@ -92,6 +95,8 @@ export default function Navbar() {
 
         {isLoggedIn && (
           <div className="navbar-right">
+            <LanguageSwitcher />
+
             {!isAdmin && !isVip && (
               <Link
                 to="/become-vip"
@@ -113,7 +118,7 @@ export default function Navbar() {
                 <span aria-hidden="true" style={{ fontSize: 14 }}>
                   ✦
                 </span>
-                Become VIP
+                {t("nav.becomeVip")}
               </Link>
             )}
 
@@ -121,7 +126,7 @@ export default function Navbar() {
               type="button"
               className="profile-chip"
               onClick={() => navigate("/profile")}
-              title="Profile"
+              title={t("nav.profile")}
             >
               <span
                 className="profile-chip-dot"
@@ -136,7 +141,7 @@ export default function Navbar() {
             </button>
 
             <button type="button" className="btn" onClick={logout}>
-              Logout
+              {t("nav.logout")}
             </button>
           </div>
         )}

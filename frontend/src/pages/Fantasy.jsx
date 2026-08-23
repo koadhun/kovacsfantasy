@@ -1,76 +1,89 @@
 import { Link } from "react-router-dom";
+import { useLanguage } from "../i18n/LanguageContext";
 
-const GAME_MODES = [
-  {
-    title: "Weekly Pick'Em",
-    subtitle: "NFL Regular Season",
-    description:
-      "Tippeld meg minden meccs győztesét, kövesd a heti és összesített pontokat, majd hasonlítsd össze a választásaidat más játékosokkal.",
-    status: "Live",
-    href: "/fantasy/weekly-pickem",
-    cta: "Open",
-    accent: {
-      glow: "rgba(43,108,255,.34)",
-      border: "rgba(59,130,246,.28)",
-      dot: "#66a3ff",
-      top: "rgba(18,38,84,.96)",
-      bottom: "rgba(9,18,42,.96)",
-      surface: "rgba(11, 23, 52, .86)",
+function buildGameModes(t) {
+  return [
+    {
+      title: t("fantasy.weeklyPickem.title"),
+      subtitle: t("fantasy.weeklyPickem.subtitle"),
+      description: t("fantasy.weeklyPickem.description"),
+      status: "Live",
+      href: "/fantasy/weekly-pickem",
+      cta: t("fantasy.open"),
+      accent: {
+        glow: "rgba(43,108,255,.34)",
+        border: "rgba(59,130,246,.28)",
+        dot: "#66a3ff",
+        top: "rgba(18,38,84,.96)",
+        bottom: "rgba(9,18,42,.96)",
+        surface: "rgba(11, 23, 52, .86)",
+      },
+      meta: [
+        { label: t("fantasy.weeklyPickem.metaFlow"), value: t("fantasy.weeklyPickem.metaFlowValue") },
+        { label: t("fantasy.weeklyPickem.metaViews"), value: t("fantasy.weeklyPickem.metaViewsValue") },
+      ],
+      features: [
+        t("fantasy.weeklyPickem.featureWeeklyPicks"),
+        t("fantasy.weeklyPickem.featureLeaderboard"),
+        t("fantasy.weeklyPickem.featureUserPicks"),
+      ],
+      footer: t("fantasy.weeklyPickem.footer"),
     },
-    meta: [
-      { label: "Flow", value: "Weekly picks" },
-      { label: "Views", value: "Leaderboard + user picks" },
-    ],
-    features: ["Weekly picks", "Leaderboard", "User picks"],
-    footer: "Regular season tracker",
-  },
-  {
-    title: "Perfect Challenge",
-    subtitle: "Weekly roster challenge",
-    description:
-      "Állíts össze 8 fős heti rostert fix pozíciókra bontva, majd nézd meg a részletes weekly statokat, fantasy pontokat és a roster leaderboardot.",
-    status: "Live",
-    href: "/fantasy/perfect-challenge",
-    cta: "Open",
-    accent: {
-      glow: "rgba(118,86,255,.28)",
-      border: "rgba(129,140,248,.24)",
-      dot: "#9aa5ff",
-      top: "rgba(20,24,64,.96)",
-      bottom: "rgba(11,15,38,.96)",
-      surface: "rgba(18, 21, 56, .84)",
+    {
+      title: t("fantasy.perfectChallenge.title"),
+      subtitle: t("fantasy.perfectChallenge.subtitle"),
+      description: t("fantasy.perfectChallenge.description"),
+      status: "Live",
+      href: "/fantasy/perfect-challenge",
+      cta: t("fantasy.open"),
+      accent: {
+        glow: "rgba(118,86,255,.28)",
+        border: "rgba(129,140,248,.24)",
+        dot: "#9aa5ff",
+        top: "rgba(20,24,64,.96)",
+        bottom: "rgba(11,15,38,.96)",
+        surface: "rgba(18, 21, 56, .84)",
+      },
+      meta: [
+        { label: t("fantasy.perfectChallenge.metaRoster"), value: t("fantasy.perfectChallenge.metaRosterValue") },
+        { label: t("fantasy.perfectChallenge.metaViews"), value: t("fantasy.perfectChallenge.metaViewsValue") },
+      ],
+      features: [
+        t("fantasy.perfectChallenge.featurePerfectLineup"),
+        t("fantasy.perfectChallenge.featureLeaderboard"),
+        t("fantasy.perfectChallenge.featureCardStats"),
+      ],
+      footer: t("fantasy.perfectChallenge.footer"),
     },
-    meta: [
-      { label: "Roster", value: "QB / RB / WR / TE / K / DEF" },
-      { label: "Views", value: "Cards + selector modal" },
-    ],
-    features: ["Perfect lineup", "Leaderboard", "Card flip stats"],
-    footer: "Weekly roster builder",
-  },
-  {
-    title: "Playoff Challenge",
-    subtitle: "NFL Playoffs",
-    description:
-      "A playoff roster mód, ahol ugyanazt a játékost egymást követő körökben megtartva egyre nagyobb szorzóval számol a rendszer.",
-    status: "Live",
-    href: "/fantasy/playoff-challenge",
-    cta: "Open",
-    accent: {
-      glow: "rgba(88,156,255,.26)",
-      border: "rgba(96,165,250,.24)",
-      dot: "#7dc2ff",
-      top: "rgba(16,28,60,.96)",
-      bottom: "rgba(8,16,36,.96)",
-      surface: "rgba(13, 24, 48, .84)",
+    {
+      title: t("fantasy.playoffChallenge.title"),
+      subtitle: t("fantasy.playoffChallenge.subtitle"),
+      description: t("fantasy.playoffChallenge.description"),
+      status: "Live",
+      href: "/fantasy/playoff-challenge",
+      cta: t("fantasy.open"),
+      accent: {
+        glow: "rgba(88,156,255,.26)",
+        border: "rgba(96,165,250,.24)",
+        dot: "#7dc2ff",
+        top: "rgba(16,28,60,.96)",
+        bottom: "rgba(8,16,36,.96)",
+        surface: "rgba(13, 24, 48, .84)",
+      },
+      meta: [
+        { label: t("fantasy.playoffChallenge.metaRounds"), value: t("fantasy.playoffChallenge.metaRoundsValue") },
+        { label: t("fantasy.playoffChallenge.metaBoost"), value: t("fantasy.playoffChallenge.metaBoostValue") },
+      ],
+      features: [
+        t("fantasy.playoffChallenge.featureWildcard"),
+        t("fantasy.playoffChallenge.featureDivisional"),
+        t("fantasy.playoffChallenge.featureConference"),
+        t("fantasy.playoffChallenge.featureSuperBowlChain"),
+      ],
+      footer: t("fantasy.playoffChallenge.footer"),
     },
-    meta: [
-      { label: "Rounds", value: "Wildcard to Super Bowl" },
-      { label: "Boost", value: "Consecutive pick multipliers" },
-    ],
-    features: ["Wildcard", "Divisional", "Conference", "Super Bowl chain"],
-    footer: "Playoff multiplier mode",
-  },
-];
+  ];
+}
 
 function FeaturePill({ children, accentGlow }) {
   return (
@@ -138,27 +151,6 @@ function StatusBadge({ children }) {
   );
 }
 
-function HeroStat({ value, label }) {
-  return (
-    <div
-      className="card"
-      style={{
-        padding: 18,
-        display: "flex",
-        flexDirection: "column",
-        gap: 6,
-        minHeight: 96,
-        background: "linear-gradient(180deg, rgba(18,30,58,.86), rgba(12,18,38,.78))",
-      }}
-    >
-      <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: ".02em" }}>{value}</div>
-      <div className="muted" style={{ fontSize: 13, lineHeight: 1.5 }}>
-        {label}
-      </div>
-    </div>
-  );
-}
-
 function MetaTile({ label, value, surface }) {
   return (
     <div
@@ -190,7 +182,7 @@ function MetaTile({ label, value, surface }) {
   );
 }
 
-function GameCard({ mode }) {
+function GameCard({ mode, availabilityLabel, availableNowLabel }) {
   return (
     <div
       className="card"
@@ -322,9 +314,9 @@ function GameCard({ mode }) {
                   marginBottom: 6,
                 }}
               >
-                Availability
+                {availabilityLabel}
               </div>
-              <div style={{ fontSize: 14, fontWeight: 700 }}>Elérhető játék</div>
+              <div style={{ fontSize: 14, fontWeight: 700 }}>{availableNowLabel}</div>
             </div>
 
             <div
@@ -370,6 +362,9 @@ function GameCard({ mode }) {
 }
 
 export default function Fantasy() {
+  const { t } = useLanguage();
+  const gameModes = buildGameModes(t);
+
   return (
     <div className="container page">
       <div
@@ -381,8 +376,13 @@ export default function Fantasy() {
           marginTop: 24,
         }}
       >
-        {GAME_MODES.map((mode) => (
-          <GameCard key={mode.title} mode={mode} />
+        {gameModes.map((mode) => (
+          <GameCard
+            key={mode.title}
+            mode={mode}
+            availabilityLabel={t("fantasy.availability")}
+            availableNowLabel={t("fantasy.availableNow")}
+          />
         ))}
       </div>
     </div>

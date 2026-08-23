@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api } from "../api";
 import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "../components/PasswordIcons";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const eyeButtonStyle = {
   position: "absolute",
@@ -23,6 +24,7 @@ const eyeButtonStyle = {
 };
 
 export default function Login() {
+  const { t } = useLanguage();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -35,13 +37,12 @@ export default function Login() {
     try {
       const res = await api.post("/auth/login", { username, password });
 
-      // ✅ token + user mentése
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       navigate("/schedule");
     } catch (err) {
-      setError(err?.response?.data?.error || "Hiba történt.");
+      setError(err?.response?.data?.error || t("login.genericError"));
     }
   }
 
@@ -50,11 +51,11 @@ export default function Login() {
       <div className="form-shell">
         <div className="hero">
           <div className="kicker">
-            <span className="tag">NFL THEME</span>
-            <span>Bejelentkezés a KovacsFantasy oldalra</span>
+            <span className="tag">{t("login.badge")}</span>
+            <span>{t("login.kicker")}</span>
           </div>
-          <h1 className="h1">Welcome back</h1>
-          <p className="sub">Jelentkezz be és nézd a schedule-t, standings-et, statokat, fantasy-t.</p>
+          <h1 className="h1">{t("login.title")}</h1>
+          <p className="sub">{t("login.subtitle")}</p>
         </div>
 
         <div className="card" style={{ marginTop: 14 }}>
@@ -62,7 +63,7 @@ export default function Login() {
             <div className="field">
               <input
                 className="input"
-                placeholder="Felhasználónév"
+                placeholder={t("login.usernamePlaceholder")}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
@@ -71,7 +72,7 @@ export default function Login() {
             <div className="field" style={{ position: "relative" }}>
               <input
                 className="input"
-                placeholder="Jelszó"
+                placeholder={t("login.passwordPlaceholder")}
                 type={showPw ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -81,21 +82,21 @@ export default function Login() {
                 type="button"
                 onClick={() => setShowPw((s) => !s)}
                 style={eyeButtonStyle}
-                aria-label="Jelszó megjelenítése"
+                aria-label={t("login.passwordPlaceholder")}
               >
                 {showPw ? <EyeOffIcon /> : <EyeIcon />}
               </button>
             </div>
 
             <div className="field" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <Link className="muted" to="/forgot-password">Elfelejtett jelszó</Link>
-              <Link className="muted" to="/register">Regisztráció</Link>
+              <Link className="muted" to="/forgot-password">{t("login.forgotPassword")}</Link>
+              <Link className="muted" to="/register">{t("login.registerLink")}</Link>
             </div>
 
             {error && <p className="error">{error}</p>}
 
             <button className="btn primary" style={{ width: "100%" }} type="submit">
-              Bejelentkezés
+              {t("login.submit")}
             </button>
           </form>
         </div>

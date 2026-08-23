@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api } from "../api";
 import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "../components/PasswordIcons";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const eyeButtonStyle = {
   position: "absolute",
@@ -23,6 +24,7 @@ const eyeButtonStyle = {
 };
 
 export default function Register() {
+  const { t } = useLanguage();
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -43,10 +45,10 @@ export default function Register() {
     setError("");
     try {
       await api.post("/auth/register", form);
-      alert("Sikeres regisztráció! Most be tudsz jelentkezni.");
+      alert(t("register.successAlert"));
       navigate("/");
     } catch (err) {
-      setError(err?.response?.data?.error || "Hiba történt.");
+      setError(err?.response?.data?.error || t("register.genericError"));
     }
   }
 
@@ -55,37 +57,37 @@ export default function Register() {
       <div className="form-shell">
         <div className="hero">
           <div className="kicker">
-            <span className="tag">CREATE ACCOUNT</span>
-            <span>Új felhasználó létrehozása</span>
+            <span className="tag">{t("register.badge")}</span>
+            <span>{t("register.kicker")}</span>
           </div>
-          <h1 className="h1">Join the league</h1>
-          <p className="sub">Regisztrálj és kezdd el építeni a fantasy élményt.</p>
+          <h1 className="h1">{t("register.title")}</h1>
+          <p className="sub">{t("register.subtitle")}</p>
         </div>
 
         <div className="card" style={{ marginTop: 14 }}>
           <form onSubmit={handleRegister}>
             <div className="field">
-              <input className="input" placeholder="Felhasználónév" value={form.username}
+              <input className="input" placeholder={t("register.usernamePlaceholder")} value={form.username}
                 onChange={(e) => setField("username", e.target.value)} />
             </div>
 
             <div className="field">
-              <input className="input" placeholder="Email" value={form.email}
+              <input className="input" placeholder={t("register.emailPlaceholder")} value={form.email}
                 onChange={(e) => setField("email", e.target.value)} />
             </div>
 
             <div className="field" style={{ position: "relative" }}>
-              <input className="input" placeholder="Jelszó" type={showPw ? "text" : "password"} value={form.password}
+              <input className="input" placeholder={t("register.passwordPlaceholder")} type={showPw ? "text" : "password"} value={form.password}
                 onChange={(e) => setField("password", e.target.value)} style={{ paddingRight: 54 }} />
-              <button type="button" onClick={() => setShowPw((s) => !s)} style={eyeButtonStyle} aria-label="Jelszó megjelenítése">
+              <button type="button" onClick={() => setShowPw((s) => !s)} style={eyeButtonStyle} aria-label={t("register.passwordPlaceholder")}>
                 {showPw ? <EyeOffIcon /> : <EyeIcon />}
               </button>
             </div>
 
             <div className="field" style={{ position: "relative" }}>
-              <input className="input" placeholder="Jelszó megerősítése" type={showConfirmPw ? "text" : "password"} value={form.confirmPassword}
+              <input className="input" placeholder={t("register.confirmPasswordPlaceholder")} type={showConfirmPw ? "text" : "password"} value={form.confirmPassword}
                 onChange={(e) => setField("confirmPassword", e.target.value)} style={{ paddingRight: 54 }} />
-              <button type="button" onClick={() => setShowConfirmPw((s) => !s)} style={eyeButtonStyle} aria-label="Jelszó megjelenítése">
+              <button type="button" onClick={() => setShowConfirmPw((s) => !s)} style={eyeButtonStyle} aria-label={t("register.confirmPasswordPlaceholder")}>
                 {showConfirmPw ? <EyeOffIcon /> : <EyeIcon />}
               </button>
             </div>
@@ -93,11 +95,11 @@ export default function Register() {
             {error && <p className="error">{error}</p>}
 
             <button className="btn primary" style={{ width: "100%" }} type="submit">
-              Regisztráció
+              {t("register.submit")}
             </button>
 
             <p className="muted" style={{ marginTop: 12 }}>
-              <Link to="/">Vissza a bejelentkezéshez</Link>
+              <Link to="/">{t("register.backToLogin")}</Link>
             </p>
           </form>
         </div>
