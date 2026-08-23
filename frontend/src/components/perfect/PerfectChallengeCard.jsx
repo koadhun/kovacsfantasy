@@ -184,8 +184,9 @@ export default function PerfectChallengeCard({
                   letterSpacing: ".03em",
                 }}
               >
-                {player.gameStatus === "IN_PROGRESS" ? (
+                                {player.gameStatus === "IN_PROGRESS" ? (
                   <>
+                    <span aria-hidden="true">🔒</span>
                     <span
                       style={{
                         width: 8,
@@ -198,9 +199,15 @@ export default function PerfectChallengeCard({
                     LIVE
                   </>
                 ) : player.gameStatus === "FINAL" ? (
-                  "FINAL"
+                  <>
+                    <span aria-hidden="true">🔒</span>
+                    FINAL
+                  </>
                 ) : (
-                  "SCHEDULED"
+                  <>
+                    <span aria-hidden="true">⏰</span>
+                    SCHEDULED
+                  </>
                 )}
               </div>
             ) : null}
