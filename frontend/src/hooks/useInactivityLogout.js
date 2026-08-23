@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-const DEFAULT_TIMEOUT_MS = 30 * 1000; // 30 perc
+const DEFAULT_TIMEOUT_MS = 30 * 60 * 1000; // 30 perc
 
 const ACTIVITY_EVENTS = [
   "mousemove",
