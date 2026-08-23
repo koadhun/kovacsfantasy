@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { useSearchParams, Link } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "../components/PasswordIcons";
+import { useLanguage } from "../i18n/LanguageContext";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 
 const eyeButtonStyle = {
   position: "absolute",
@@ -24,7 +26,8 @@ const eyeButtonStyle = {
 };
 
 export default function ResetPassword() {
-const navigate = useNavigate();
+  const { t } = useLanguage();
+  const navigate = useNavigate();
   const [params] = useSearchParams();
   const token = useMemo(() => params.get("token") || "", [params]);
 
@@ -40,7 +43,7 @@ const navigate = useNavigate();
     setErr(""); setMsg("");
 
     if (pw !== pw2) {
-      setErr("Az új jelszó és a jelszó megerősítése nem egyezik.");
+      setErr(t("resetPassword.mismatchError"));
       return;
     }
 
@@ -50,35 +53,38 @@ const navigate = useNavigate();
         password: pw,
         confirmPassword: pw2
       });
-      setMsg(res.data.message || "Jelszó frissítve.");
+      setMsg(res.data.message || t("resetPassword.successMessage"));
 
-	setTimeout(() => {
-  navigate("/");
-}, 1500);
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
     } catch (e2) {
-      setErr(e2?.response?.data?.error || "Hiba történt.");
+      setErr(e2?.response?.data?.error || t("resetPassword.genericError"));
     }
   }
 
   return (
     <div className="container">
+      <div style={{ display: "flex", justifyContent: "flex-end", padding: "16px 0 0" }}>
+        <LanguageSwitcher />
+      </div>
+
       <div className="form-shell">
         <div className="hero">
           <div className="kicker">
-            <span className="tag">RESET</span>
-            <span>Új jelszó beállítása</span>
+            <span className="tag">{t("resetPassword.badge")}</span>
+            <span>{t("resetPassword.kicker")}</span>
           </div>
-          <h1 className="h1">Jelszó visszaállítás</h1>
-          <p className="sub">A link megnyitásával az alábbi modalban tudsz új jelszót beállítani.</p>
+          <h1 className="h1">{t("resetPassword.title")}</h1>
+          <p className="sub">{t("resetPassword.subtitle")}</p>
         </div>
 
-        {/* Modal */}
         <div className="card" style={{ marginTop: 14 }}>
-          <h3 className="card-title">Új jelszó beállítása</h3>
+          <h3 className="card-title">{t("resetPassword.cardTitle")}</h3>
 
           {!token && (
             <p className="error">
-              Hiányzó token. Nyisd meg a linket az emailből újra.
+              {t("resetPassword.missingToken")}
             </p>
           )}
 
@@ -86,7 +92,7 @@ const navigate = useNavigate();
             <div className="field" style={{ position: "relative" }}>
               <input
                 className="input"
-                placeholder="Új jelszó"
+                placeholder={t("resetPassword.newPasswordPlaceholder")}
                 type={show1 ? "text" : "password"}
                 value={pw}
                 onChange={(e) => setPw(e.target.value)}
@@ -97,7 +103,7 @@ const navigate = useNavigate();
                 type="button"
                 onClick={() => setShow1((s) => !s)}
                 style={eyeButtonStyle}
-                aria-label="Jelszó megjelenítése"
+                aria-label={t("resetPassword.newPasswordPlaceholder")}
               >
                 {show1 ? <EyeOffIcon /> : <EyeIcon />}
               </button>
@@ -106,7 +112,7 @@ const navigate = useNavigate();
             <div className="field" style={{ position: "relative" }}>
               <input
                 className="input"
-                placeholder="Új jelszó megerősítése"
+                placeholder={t("resetPassword.confirmPasswordPlaceholder")}
                 type={show2 ? "text" : "password"}
                 value={pw2}
                 onChange={(e) => setPw2(e.target.value)}
@@ -117,7 +123,7 @@ const navigate = useNavigate();
                 type="button"
                 onClick={() => setShow2((s) => !s)}
                 style={eyeButtonStyle}
-                aria-label="Jelszó megjelenítése"
+                aria-label={t("resetPassword.confirmPasswordPlaceholder")}
               >
                 {show2 ? <EyeOffIcon /> : <EyeIcon />}
               </button>
@@ -126,12 +132,12 @@ const navigate = useNavigate();
             {err && <p className="error">{err}</p>}
             {msg && (
               <p className="success">
-                {msg} <Link to="/">Bejelentkezés</Link>
+                {msg} <Link to="/">{t("resetPassword.loginLink")}</Link>
               </p>
             )}
 
             <button className="btn primary" style={{ width: "100%" }} type="submit" disabled={!token}>
-              Megerősítés
+              {t("resetPassword.submit")}
             </button>
           </form>
         </div>

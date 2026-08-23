@@ -3,6 +3,7 @@ import { api } from "../api";
 import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "../components/PasswordIcons";
 import { useLanguage } from "../i18n/LanguageContext";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 
 const eyeButtonStyle = {
   position: "absolute",
@@ -47,7 +48,11 @@ export default function Login() {
   }
 
   return (
-    <div className="container">
+        <div className="container">
+      <div style={{ display: "flex", justifyContent: "flex-end", padding: "16px 0 0" }}>
+        <LanguageSwitcher />
+      </div>
+
       <div className="form-shell">
         <div className="hero">
           <div className="kicker">
