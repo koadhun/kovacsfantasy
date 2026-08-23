@@ -1,6 +1,9 @@
 import Navbar from "./Navbar";
+import useInactivityLogout from "../hooks/useInactivityLogout";
 
 export default function Layout({ children }) {
+  useInactivityLogout();
+
   return (
     <>
       <Navbar />
