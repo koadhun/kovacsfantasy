@@ -18,12 +18,27 @@ export default function PlayoffChallengeRules() {
   return (
     <div className="container page">
       <div className="hero">
-        <div className="kicker">
-          <span className="tag">{t("playoffChallengeRules.badge")}</span>
-          <span>Playoff Challenge</span>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: 12,
+          }}
+        >
+          <div>
+            <div className="kicker">
+              <span className="tag">{t("playoffChallengeRules.badge")}</span>
+              <span>Playoff Challenge</span>
+            </div>
+            <h1 className="h1">{t("playoffChallengeRules.title")}</h1>
+            <p className="sub">{t("playoffChallengeRules.subtitle")}</p>
+          </div>
+
+          <Link to="/fantasy/playoff-challenge" className="btn">
+            {t("playoffChallengeRules.backLink")}
+          </Link>
         </div>
-        <h1 className="h1">{t("playoffChallengeRules.title")}</h1>
-        <p className="sub">{t("playoffChallengeRules.subtitle")}</p>
       </div>
 
       <div style={{ marginTop: 18 }}>

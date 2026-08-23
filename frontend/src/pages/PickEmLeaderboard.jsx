@@ -7,7 +7,7 @@ import { useLanguage } from "../i18n/LanguageContext";
 const SEASON = 2026;
 
 export default function PickEmLeaderboard() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [sp, setSp] = useSearchParams();
 
   const initialWeek = Number(sp.get("week") || 1);
@@ -71,9 +71,9 @@ export default function PickEmLeaderboard() {
   const weekly = data?.weekly || [];
   const totals = data?.totals || [];
 
-    const weekTitle = useMemo(
-    () => `${t("pickem.leaderboardTitlePrefix")} · ${language === "hu" ? `${week}. hét` : `Week ${week}`}`,
-    [week, t, language]
+  const weekTitle = useMemo(
+    () => `${t("pickem.leaderboardTitlePrefix")} · ${t("pickem.weekWord")} ${week}`,
+    [week, t]
   );
 
   return (
@@ -89,14 +89,12 @@ export default function PickEmLeaderboard() {
         <p className="sub">{t("pickem.leaderboardSubtitle")}</p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
-             <WeekDropdown
+          <WeekDropdown
             value={week}
             options={weeks}
             onChange={setWeek}
             label={t("pickem.weekLabel")}
             width={170}
-            formatWeek={(w) => language === "hu" ? `${w}. hét` : `Week ${w}`}
-            selectPlaceholder={t("pickem.selectWeek")}
           />
 
           <div className="filters-spacer" />
@@ -137,9 +135,7 @@ export default function PickEmLeaderboard() {
                   </Link>
                 </td>
                 <td>{r.points}</td>
-                <td>
-                  {r.correct}/{r.totalGames}
-                </td>
+                <td>{r.correct}</td>
               </tr>
             ))}
 

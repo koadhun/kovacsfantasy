@@ -6,7 +6,7 @@ import PerfectChallengeSelectorModal from "../components/perfect/PerfectChalleng
 import SimpleDropdown from "../components/SimpleDropdown";
 import { useLanguage } from "../i18n/LanguageContext";
 
-const SEASON = 2026;
+const SEASON = 2025;
 
 const SLOT_TO_POOL_KEY = {
   QB: "QB",
@@ -72,7 +72,7 @@ function formatScore(value) {
 }
 
 export default function PlayoffChallenge() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [sp, setSp] = useSearchParams();
 
   const requestedRound = String(sp.get("round") || "WILDCARD");
@@ -237,7 +237,9 @@ export default function PlayoffChallenge() {
 
             <h1 className="h1">
               {isReadOnlyView && viewingUser
-                ? `${viewingUser.username} · Playoff Challenge`
+                ? (language === "hu"
+                    ? `${viewingUser.username} választásai · Playoff Challenge`
+                    : `${viewingUser.username}'s picks · Playoff Challenge`)
                 : "Playoff Challenge"}
             </h1>
 

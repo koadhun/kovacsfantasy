@@ -68,7 +68,9 @@ export default function PerfectChallengeUserRoster() {
         </div>
 
         <h1 className="h1">
-          {t("perfectChallengeUserRoster.titlePrefix")} · {language === "hu" ? `${week}. hét` : `Week ${week}`}
+          {language === "hu"
+            ? `${username} választásai · Perfect Challenge`
+            : `${username}'s picks · Perfect Challenge`}
         </h1>
 
         <p className="sub">{t("perfectChallengeUserRoster.subtitle")}</p>

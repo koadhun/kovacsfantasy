@@ -127,6 +127,11 @@ export default function PerfectChallengeLeaderboard() {
         <h3 style={{ marginTop: 0, marginBottom: 12 }}>{t("perfectChallengeLeaderboard.weeklyTableTitle")}</h3>
 
         <table className="table">
+          <colgroup>
+            <col style={{ width: 60 }} />
+            <col />
+            <col style={{ width: 140 }} />
+          </colgroup>
           <thead>
             <tr>
               <th>{t("perfectChallengeLeaderboard.colRank")}</th>
@@ -164,6 +169,11 @@ export default function PerfectChallengeLeaderboard() {
         <h3 style={{ marginTop: 24, marginBottom: 12 }}>{t("perfectChallengeLeaderboard.seasonTableTitle")}</h3>
 
         <table className="table">
+          <colgroup>
+            <col style={{ width: 60 }} />
+            <col />
+            <col style={{ width: 140 }} />
+          </colgroup>
           <thead>
             <tr>
               <th>{t("perfectChallengeLeaderboard.colRank")}</th>

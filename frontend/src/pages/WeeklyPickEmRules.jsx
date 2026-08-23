@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useLanguage } from "../i18n/LanguageContext";
 
 function Section({ title, children }) {
   return (
@@ -10,74 +11,67 @@ function Section({ title, children }) {
 }
 
 export default function WeeklyPickEmRules() {
+  const { t } = useLanguage();
+  const scoringRows = t("pickemRules.scoringRows");
+
   return (
     <div className="container page">
       <div className="hero">
-        <div className="kicker">
-          <span className="tag">RULES</span>
-          <span>Weekly Pick'Em</span>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: 12,
+          }}
+        >
+          <div>
+            <div className="kicker">
+              <span className="tag">{t("pickemRules.badge")}</span>
+              <span>Weekly Pick'Em</span>
+            </div>
+            <h1 className="h1">{t("pickemRules.title")}</h1>
+            <p className="sub">{t("pickemRules.subtitle")}</p>
+          </div>
+
+          <Link to="/fantasy/weekly-pickem" className="btn">
+            {t("pickemRules.backLink")}
+          </Link>
         </div>
-        <h1 className="h1">Weekly Pick'Em - Szabályok</h1>
-        <p className="sub">
-          Minden héten tippeld meg az összes alapszakasz-mérkőzés győztesét, és gyűjts pontokat.
-        </p>
       </div>
 
       <div style={{ marginTop: 18 }}>
-        <Section title="Hogyan válassz">
-          <p>
-            Minden mérkőzésnél válaszd ki, melyik csapat nyer szerinted. A kiválasztott csapatot
-            arany keret jelzi. A tippedet <strong>korlátlan alkalommal megváltoztathatod</strong>{" "}
-            egészen a mérkőzés kezdetéig (kickoff).
-          </p>
-          <p>
-            Miután egy mérkőzés elkezdődött, a tipped <strong>zárolódik</strong> - onnantól nem
-            módosítható.
-          </p>
+        <Section title={t("pickemRules.howToTitle")}>
+          <p>{t("pickemRules.howToInfo1")}</p>
+          <p>{t("pickemRules.howToInfo2")}</p>
         </Section>
 
-        <Section title="Pontozás">
+        <Section title={t("pickemRules.scoringTitle")}>
           <ul>
-            <li><strong>10 pont</strong> minden helyes tippért</li>
-            <li>
-              <strong>+10 bónusz pont</strong>, ha legalább <strong>5 mérkőzést</strong> eltalálsz
-              az adott héten
-            </li>
-            <li>
-              <strong>+30 bónusz pont</strong>, ha legalább <strong>10 mérkőzést</strong> eltalálsz
-              az adott héten
-            </li>
-            <li>
-              <strong>+50 bónusz pont</strong>, ha a hét <strong>összes</strong> mérkőzését
-              eltalálod (tökéletes hét)
-            </li>
+            {scoringRows.map((row) => (
+              <li key={row}>{row}</li>
+            ))}
           </ul>
         </Section>
 
-        <Section title="Leaderboard és láthatóság">
+        <Section title={t("pickemRules.leaderboardTitle")}>
+          <p>{t("pickemRules.leaderboardInfo1")}</p>
           <p>
-            Amíg egy mérkőzés <strong>Open</strong> (nem kezdődött el) állapotban van, más
-            játékosok tippjei nem láthatók. Miután egy mérkőzés elkezdődött, a leaderboardon
-            keresztül mások tippjei is megtekinthetők <strong>csak azoknál a mérkőzéseknél</strong>,
-            amik már elkezdődtek.
-          </p>
-          <p>
-            Egy mérkőzés lezárása (Final) után a csapatok mellett megjelenik a végeredmény, és a
-            tipped kerete <strong style={{ color: "#4ade80" }}>zöldre</strong> vált, ha helyesen
-            tippeltél, vagy <strong style={{ color: "#f87171" }}>pirosra</strong>, ha nem.
+            {t("pickemRules.leaderboardInfo2Part1")}{" "}
+            <strong style={{ color: "#4ade80" }}>{t("pickemRules.leaderboardGreen")}</strong>{" "}
+            {t("pickemRules.leaderboardInfo2Part2")}{" "}
+            <strong style={{ color: "#f87171" }}>{t("pickemRules.leaderboardRed")}</strong>,{" "}
+            {t("pickemRules.leaderboardInfo2Part3")}
           </p>
         </Section>
 
-        <Section title="Heti és szezon pontszám">
-          <p>
-            A <strong>Weekly Points</strong> az adott hétre elért pontszámodat mutatja, a{" "}
-            <strong>Season Total</strong> pedig az összes eddigi hét pontjainak összegét.
-          </p>
+        <Section title={t("pickemRules.scoresTitle")}>
+          <p>{t("pickemRules.scoresInfo")}</p>
         </Section>
       </div>
 
       <Link to="/fantasy/weekly-pickem" className="btn" style={{ marginTop: 4 }}>
-        ← Vissza a Weekly Pick'Em-hez
+        {t("pickemRules.backLink")}
       </Link>
     </div>
   );

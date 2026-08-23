@@ -36,6 +36,7 @@ function ScoreCard({ title, value, sub }) {
         background:
           "linear-gradient(180deg, rgba(15,30,68,.96), rgba(9,18,42,.96))",
         boxShadow: "0 12px 28px rgba(0,0,0,.22)",
+        textAlign: "center",
       }}
     >
       <div
@@ -46,6 +47,7 @@ function ScoreCard({ title, value, sub }) {
           textTransform: "uppercase",
           letterSpacing: ".06em",
           marginBottom: 8,
+          textAlign: "center",
         }}
       >
         {title}
@@ -56,21 +58,24 @@ function ScoreCard({ title, value, sub }) {
           fontSize: 28,
           fontWeight: 900,
           lineHeight: 1,
-          marginBottom: 8,
+          marginBottom: sub ? 8 : 0,
+          textAlign: "center",
         }}
       >
         {value}
       </div>
 
-      <div className="muted" style={{ fontSize: 13, fontWeight: 700 }}>
-        {sub}
-      </div>
+      {sub ? (
+        <div className="muted" style={{ fontSize: 13, fontWeight: 700, textAlign: "center" }}>
+          {sub}
+        </div>
+      ) : null}
     </div>
   );
 }
 
 export default function WeeklyPickEm() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [sp, setSp] = useSearchParams();
   const requestedWeek = Number(sp.get("week") || 1);
 
@@ -263,7 +268,6 @@ export default function WeeklyPickEm() {
               <ScoreCard
                 title={t("pickem.seasonTotalLabel")}
                 value={mySeasonScore.points}
-                sub={`${mySeasonScore.correct}/${mySeasonScore.totalGames} ${t("pickem.correctSuffix")}`}
               />
             )}
           </div>
@@ -276,8 +280,6 @@ export default function WeeklyPickEm() {
             onChange={setWeek}
             label={t("pickem.weekLabel")}
             width={170}
-            formatWeek={(w) => language === "hu" ? `${w}. hét` : `Week ${w}`}
-            selectPlaceholder={t("pickem.selectWeek")}
           />
 
           <div className="filters-spacer" />

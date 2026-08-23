@@ -21,7 +21,7 @@ function formatKickoff(iso) {
 }
 
 export default function PickEmUserPicks() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { userId } = useParams();
   const [sp] = useSearchParams();
   const navigate = useNavigate();
@@ -80,7 +80,11 @@ export default function PickEmUserPicks() {
           <span>{t("pickem.userPicksHeading")}</span>
         </div>
 
-        <h1 className="h1">{t("pickem.userPicksTitlePrefix")} · {t("pickem.weekWord")} {week}</h1>
+        <h1 className="h1">
+          {language === "hu"
+            ? `${username} tippjei · ${week}. hét`
+            : `${username}'s picks · Week ${week}`}
+        </h1>
 
         <p className="sub">{t("pickem.userPicksSubtitle")}</p>
 

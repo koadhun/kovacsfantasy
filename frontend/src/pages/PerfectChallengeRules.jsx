@@ -35,12 +35,27 @@ export default function PerfectChallengeRules() {
   return (
     <div className="container page">
       <div className="hero">
-        <div className="kicker">
-          <span className="tag">{t("perfectChallengeRules.badge")}</span>
-          <span>Perfect Challenge</span>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: 12,
+          }}
+        >
+          <div>
+            <div className="kicker">
+              <span className="tag">{t("perfectChallengeRules.badge")}</span>
+              <span>Perfect Challenge</span>
+            </div>
+            <h1 className="h1">{t("perfectChallengeRules.title")}</h1>
+            <p className="sub">{t("perfectChallengeRules.subtitle")}</p>
+          </div>
+
+          <Link to="/fantasy/perfect-challenge" className="btn">
+            {t("perfectChallengeRules.backLink")}
+          </Link>
         </div>
-        <h1 className="h1">{t("perfectChallengeRules.title")}</h1>
-        <p className="sub">{t("perfectChallengeRules.subtitle")}</p>
       </div>
 
       <div style={{ marginTop: 18 }}>

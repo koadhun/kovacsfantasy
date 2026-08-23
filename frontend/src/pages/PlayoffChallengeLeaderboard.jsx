@@ -135,6 +135,11 @@ export default function PlayoffChallengeLeaderboard() {
 
           <div className="table-wrap">
             <table className="table">
+              <colgroup>
+                <col style={{ width: 60 }} />
+                <col />
+                <col style={{ width: 140 }} />
+              </colgroup>
               <thead>
                 <tr>
                   <th>{t("playoffChallengeLeaderboard.colRank")}</th>
@@ -178,6 +183,11 @@ export default function PlayoffChallengeLeaderboard() {
 
           <div className="table-wrap">
             <table className="table">
+              <colgroup>
+                <col style={{ width: 60 }} />
+                <col />
+                <col style={{ width: 140 }} />
+              </colgroup>
               <thead>
                 <tr>
                   <th>{t("playoffChallengeLeaderboard.colRank")}</th>

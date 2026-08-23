@@ -228,7 +228,9 @@ export default function PerfectChallenge() {
 
             <h1 className="h1">
               {isReadOnlyView && viewingUser
-                ? `${viewingUser.username} · Perfect Challenge`
+                ? (language === "hu"
+                    ? `${viewingUser.username} választásai · Perfect Challenge`
+                    : `${viewingUser.username}'s picks · Perfect Challenge`)
                 : "Perfect Challenge"}
             </h1>
 
