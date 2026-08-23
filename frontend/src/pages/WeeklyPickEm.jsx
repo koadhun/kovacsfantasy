@@ -70,7 +70,7 @@ function ScoreCard({ title, value, sub }) {
 }
 
 export default function WeeklyPickEm() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [sp, setSp] = useSearchParams();
   const requestedWeek = Number(sp.get("week") || 1);
 
@@ -270,13 +270,14 @@ export default function WeeklyPickEm() {
         </div>
 
         <div className="filters-bar" style={{ marginTop: 16 }}>
-                    <WeekDropdown
+          <WeekDropdown
             value={week}
             options={weeks}
             onChange={setWeek}
             label={t("pickem.weekLabel")}
-            weekWord={t("pickem.weekWord")}
             width={170}
+            formatWeek={(w) => language === "hu" ? `${w}. hét` : `Week ${w}`}
+            selectPlaceholder={t("pickem.selectWeek")}
           />
 
           <div className="filters-spacer" />
