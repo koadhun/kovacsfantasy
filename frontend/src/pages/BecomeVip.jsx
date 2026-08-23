@@ -7,8 +7,8 @@ function BenefitCard({ title, description }) {
       className="card"
       style={{
         padding: 20,
-        background: "linear-gradient(180deg, rgba(38,28,4,.55), rgba(12,10,4,.4))",
-        border: "1px solid rgba(245,179,1,.22)",
+        background: "linear-gradient(180deg, rgba(40,29,4,.95), rgba(18,17,15,.96))",
+        border: "1px solid rgba(245,179,1,.28)",
       }}
     >
       <div
@@ -48,8 +48,8 @@ function PriceCard({ badge, price, period, note, highlighted, comingSoon, coming
           ? "1px solid rgba(245,179,1,.55)"
           : "1px solid rgba(255,255,255,.10)",
         background: highlighted
-          ? "linear-gradient(180deg, rgba(245,179,1,.14), rgba(20,16,6,.5))"
-          : "linear-gradient(180deg, rgba(30,32,45,.85), rgba(12,13,20,.85))",
+          ? "linear-gradient(180deg, rgba(58,44,4,.95), rgba(22,18,8,.97))"
+          : "linear-gradient(180deg, rgba(30,32,45,.96), rgba(12,13,20,.97))",
         boxShadow: highlighted ? "0 0 0 1px rgba(245,179,1,.25)" : undefined,
       }}
     >
@@ -118,8 +118,8 @@ export default function BecomeVip() {
         className="hero"
         style={{
           textAlign: "center",
-          background: "linear-gradient(180deg, rgba(45,32,4,.55), rgba(9,10,20,.9))",
-          border: "1px solid rgba(245,179,1,.2)",
+          background: "linear-gradient(180deg, rgba(48,34,4,.97), rgba(16,17,26,.98))",
+          border: "1px solid rgba(245,179,1,.28)",
         }}
       >
         <div className="kicker" style={{ justifyContent: "center" }}>
