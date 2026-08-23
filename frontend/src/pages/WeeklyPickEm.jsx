@@ -111,8 +111,23 @@ export default function WeeklyPickEm() {
       return;
     }
 
-    const safeWeek = ws.includes(requestedWeek) ? requestedWeek : ws[0];
-    setWeek(safeWeek);
+    const explicitWeek = sp.get("week");
+
+    if (explicitWeek) {
+      const parsed = Number(explicitWeek);
+      setWeek(ws.includes(parsed) ? parsed : ws[0]);
+      return;
+    }
+
+    try {
+      const currentRes = await api.get("/schedule/current-week", {
+        params: { season: SEASON, stage: "REG" },
+      });
+      const current = Number(currentRes.data?.week);
+      setWeek(ws.includes(current) ? current : ws[0]);
+    } catch {
+      setWeek(ws[0]);
+    }
   }
 
   async function loadWeek(w) {

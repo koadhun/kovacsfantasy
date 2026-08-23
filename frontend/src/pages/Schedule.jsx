@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { api } from "../api";
 import TeamLogo from "../components/TeamLogo";
@@ -173,6 +173,8 @@ export default function Schedule() {
   const [week, setWeek] = useState(Number(sp.get("week")) || 1);
   const [games, setGames] = useState([]);
   const [err, setErr] = useState("");
+  const initialWeekParamRef = useRef(sp.get("week"));
+  const autoWeekAppliedRef = useRef(false);
 
   useEffect(() => {
     setSp({ season: String(season), stage, week: String(week) }, { replace: true });
@@ -192,11 +194,31 @@ export default function Schedule() {
     });
     const ws = res.data.weeks || [];
     setWeeks(ws);
-    if (ws.length) {
-      if (!ws.includes(week)) setWeek(ws[0]);
-    } else {
+
+    if (!ws.length) {
       setGames([]);
+      return;
     }
+
+    if (
+      !autoWeekAppliedRef.current &&
+      !initialWeekParamRef.current &&
+      stage === "REG"
+    ) {
+      autoWeekAppliedRef.current = true;
+      try {
+        const currentRes = await api.get("/schedule/current-week", {
+          params: { season, stage: "REG" },
+        });
+        const current = Number(currentRes.data?.week);
+        setWeek(ws.includes(current) ? current : ws[0]);
+        return;
+      } catch {
+        // eshet a normál ágra lent
+      }
+    }
+
+    if (!ws.includes(week)) setWeek(ws[0]);
   }
 
   async function loadWeekGames(w) {

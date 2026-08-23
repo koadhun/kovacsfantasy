@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { prisma } from "../lib/prisma.js";
 import { fetchGameBoxscore } from "../lib/gameBoxscore.js";
+import { getCurrentWeek } from "../lib/currentWeek.js";
 
 const router = Router();
 
@@ -34,6 +35,19 @@ router.get("/weeks", async (req, res) => {
   });
 
   res.json({ season, stage, weeks: weeks.map((w) => w.week) });
+});
+
+router.get("/current-week", async (req, res) => {
+  const season = Number(req.query.season) || new Date().getFullYear();
+  const stage = req.query.stage || "REG";
+
+  try {
+    const week = await getCurrentWeek(season, stage);
+    res.json({ week });
+  } catch (err) {
+    console.error("current-week hiba:", err);
+    res.status(500).json({ error: "Nem sikerült meghatározni az aktuális hetet." });
+  }
 });
 
 // GET /api/schedule/by-week?season=2025&week=1&stage=REG
