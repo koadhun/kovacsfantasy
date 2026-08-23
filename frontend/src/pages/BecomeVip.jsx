@@ -1,27 +1,5 @@
 import { Link } from "react-router-dom";
-
-const BENEFITS = [
-  {
-    title: "Injury Report hozzáférés",
-    description:
-      "Teljes sérülés-jelentés minden NFL játékoshoz - Questionable, Doubtful, Out, I.L. státuszokkal és részletes leírással.",
-  },
-  {
-    title: "Részletes játékos-elemzés",
-    description:
-      "Perfect Challenge és Playoff Challenge választásnál lásd az előző heti teljesítményt, az ellenfél védekezésének/támadásának átlagstatjait, és a sérülés-státuszt is minden játékosnál.",
-  },
-  {
-    title: "Early access",
-    description:
-      "Elsőként próbáld ki az új funkciókat, még mielőtt azok mindenki számára elérhetővé válnának.",
-  },
-  {
-    title: "VIP jelzés",
-    description:
-      "Egyedi, arany profil-jelzés a navigációs sávban, ami megkülönböztet a sima felhasználóktól.",
-  },
-];
+import { useLanguage } from "../i18n/LanguageContext";
 
 function BenefitCard({ title, description }) {
   return (
@@ -48,7 +26,7 @@ function BenefitCard({ title, description }) {
           marginBottom: 12,
         }}
       >
-        ✦
+        {"\u2726"}
       </div>
       <h3 style={{ margin: "0 0 8px 0", fontSize: 17 }}>{title}</h3>
       <p className="muted" style={{ margin: 0, lineHeight: 1.6, fontSize: 14 }}>
@@ -58,7 +36,7 @@ function BenefitCard({ title, description }) {
   );
 }
 
-function PriceCard({ badge, price, period, note, highlighted }) {
+function PriceCard({ badge, price, period, note, highlighted, comingSoon, comingSoonHint, bestValueLabel }) {
   return (
     <div
       className="card"
@@ -91,7 +69,7 @@ function PriceCard({ badge, price, period, note, highlighted }) {
             letterSpacing: ".04em",
           }}
         >
-          BEST VALUE
+          {bestValueLabel}
         </span>
       )}
 
@@ -117,15 +95,24 @@ function PriceCard({ badge, price, period, note, highlighted }) {
         className={highlighted ? "btn primary" : "btn"}
         style={{ width: "100%", marginTop: 18 }}
         disabled
-        title="Hamarosan elérhető"
+        title={comingSoonHint}
       >
-        Coming soon
+        {comingSoon}
       </button>
     </div>
   );
 }
 
 export default function BecomeVip() {
+  const { t } = useLanguage();
+
+  const benefits = [
+    { title: t("becomeVip.benefit1Title"), description: t("becomeVip.benefit1Desc") },
+    { title: t("becomeVip.benefit2Title"), description: t("becomeVip.benefit2Desc") },
+    { title: t("becomeVip.benefit3Title"), description: t("becomeVip.benefit3Desc") },
+    { title: t("becomeVip.benefit4Title"), description: t("becomeVip.benefit4Desc") },
+  ];
+
   return (
     <div className="container page">
       <div
@@ -143,16 +130,15 @@ export default function BecomeVip() {
           >
             VIP
           </span>
-          <span>KovacsFantasy VIP</span>
+          <span>{t("becomeVip.kicker")}</span>
         </div>
 
         <h1 className="h1" style={{ marginTop: 10 }}>
-          Hozd ki a maximumot a szezonból
+          {t("becomeVip.title")}
         </h1>
 
         <p className="sub" style={{ maxWidth: 620, margin: "10px auto 0" }}>
-          A VIP előfizetéssel részletes játékos-elemzést, teljes sérülés-jelentést és korai
-          hozzáférést kapsz minden új funkcióhoz.
+          {t("becomeVip.subtitle")}
         </p>
       </div>
 
@@ -164,15 +150,15 @@ export default function BecomeVip() {
           gap: 14,
         }}
       >
-        {BENEFITS.map((b) => (
+        {benefits.map((b) => (
           <BenefitCard key={b.title} title={b.title} description={b.description} />
         ))}
       </div>
 
       <div style={{ marginTop: 34, marginBottom: 14, textAlign: "center" }}>
-        <h2 style={{ margin: 0, fontSize: 22 }}>Válassz csomagot</h2>
+        <h2 style={{ margin: 0, fontSize: 22 }}>{t("becomeVip.choosePlanTitle")}</h2>
         <p className="muted" style={{ marginTop: 6 }}>
-          Kezdd el most, és élvezd a teljes VIP élményt a szezon végéig.
+          {t("becomeVip.choosePlanSubtitle")}
         </p>
       </div>
 
@@ -186,24 +172,30 @@ export default function BecomeVip() {
         }}
       >
         <PriceCard
-          badge="Havi előfizetés"
+          badge={t("becomeVip.monthlyBadge")}
           price="$1.99"
-          period="hó"
-          note="Rugalmas, bármikor lemondható"
+          period={t("becomeVip.monthlyPeriod")}
+          note={t("becomeVip.monthlyNote")}
+          comingSoon={t("becomeVip.comingSoon")}
+          comingSoonHint={t("becomeVip.comingSoonHint")}
+          bestValueLabel={t("becomeVip.bestValue")}
         />
 
         <PriceCard
-          badge="Szezonbérlet"
+          badge={t("becomeVip.seasonBadge")}
           price="$9.99"
-          period="szezon"
-          note="A legjobb ár-érték arány - kevesebb, mint egy havi ár fél szezonra"
+          period={t("becomeVip.seasonPeriod")}
+          note={t("becomeVip.seasonNote")}
           highlighted
+          comingSoon={t("becomeVip.comingSoon")}
+          comingSoonHint={t("becomeVip.comingSoonHint")}
+          bestValueLabel={t("becomeVip.bestValue")}
         />
       </div>
 
       <div style={{ textAlign: "center", marginTop: 26 }}>
         <Link to="/fantasy" className="btn">
-          ← Vissza a Fantasy oldalra
+          {t("becomeVip.backLink")}
         </Link>
       </div>
     </div>

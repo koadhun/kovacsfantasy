@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import TeamLogo from "../components/TeamLogo";
 import SimpleDropdown from "../components/SimpleDropdown";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const TEAM_NAMES = {
   ARI: "Arizona Cardinals", ATL: "Atlanta Falcons", BAL: "Baltimore Ravens",
@@ -51,6 +52,7 @@ function StatusBadge({ status }) {
 }
 
 export default function Injuries() {
+  const { t } = useLanguage();
   const [injuries, setInjuries] = useState([]);
   const [team, setTeam] = useState("ALL");
   const [q, setQ] = useState("");
@@ -63,17 +65,18 @@ export default function Injuries() {
     api
       .get("/injuries")
       .then((res) => setInjuries(res.data.injuries || []))
-      .catch(() => setErr("Was unable to load injury reports."))
+      .catch(() => setErr(t("injuries.loadError")))
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const teamOptions = useMemo(() => {
     const codes = [...new Set(injuries.map((i) => i.teamCode))].sort();
     return [
-      { value: "ALL", label: "All teams" },
+      { value: "ALL", label: t("injuries.allTeams") },
       ...codes.map((c) => ({ value: c, label: TEAM_NAMES[c] || c })),
     ];
-  }, [injuries]);
+  }, [injuries, t]);
 
   const filtered = useMemo(() => {
     return injuries.filter((i) => {
@@ -87,26 +90,26 @@ export default function Injuries() {
     <div className="container page">
       <div className="hero">
         <div className="kicker">
-          <span className="tag">INJURIES</span>
-          <span>Injury Report</span>
+          <span className="tag">{t("injuries.badge")}</span>
+          <span>{t("injuries.kicker")}</span>
         </div>
-        <h1 className="h1">Injuries</h1>
-        <p className="sub">Available injury reports</p>
+        <h1 className="h1">{t("injuries.title")}</h1>
+        <p className="sub">{t("injuries.subtitle")}</p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <SimpleDropdown
             value={team}
             options={teamOptions}
             onChange={setTeam}
-            label="TEAM"
+            label={t("injuries.teamLabel")}
             width={220}
           />
 
           <div className="filters-group" style={{ minWidth: 280 }}>
-            <span className="filters-label">SEARCH</span>
+            <span className="filters-label">{t("injuries.searchLabel")}</span>
             <input
               className="input-dark"
-              placeholder="Player name..."
+              placeholder={t("injuries.searchPlaceholder")}
               value={q}
               onChange={(e) => setQ(e.target.value)}
               style={{ height: 42 }}
@@ -117,12 +120,12 @@ export default function Injuries() {
 
           <span className="pill">
             <span className="dot" />
-            {filtered.length} results
+            {filtered.length} {t("injuries.resultsSuffix")}
           </span>
         </div>
       </div>
 
-      {loading && <p className="muted" style={{ marginTop: 14 }}>Betoltes...</p>}
+      {loading && <p className="muted" style={{ marginTop: 14 }}>{t("injuries.loading")}</p>}
       {err && <p className="error" style={{ marginTop: 14 }}>{err}</p>}
 
       <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
@@ -169,7 +172,7 @@ export default function Injuries() {
 
         {!loading && !filtered.length && !err && (
           <div className="card" style={{ padding: 14 }}>
-            <div className="muted">No results.</div>
+            <div className="muted">{t("injuries.noResults")}</div>
           </div>
         )}
       </div>

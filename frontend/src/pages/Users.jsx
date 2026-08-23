@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export default function Users() {
+  const { t } = useLanguage();
   const [users, setUsers] = useState([]);
   const [err, setErr] = useState("");
   const [msg, setMsg] = useState("");
@@ -15,8 +17,9 @@ export default function Users() {
 
   useEffect(() => {
     load().catch((e) => {
-      setErr(e?.response?.data?.error || "Nem sikerült betölteni a felhasználókat. (Admin kell)");
+      setErr(e?.response?.data?.error || t("admin.loadUsersError"));
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function setRole(userId, role) {
@@ -24,25 +27,25 @@ export default function Users() {
     setMsg("");
     try {
       await api.patch(`/admin/users/${userId}/role`, { role });
-      setMsg("Szerepkör frissítve.");
+      setMsg(t("admin.roleUpdated"));
       await load();
     } catch (e) {
-      setErr(e?.response?.data?.error || "Nem sikerült módosítani a role-t.");
+      setErr(e?.response?.data?.error || t("admin.roleUpdateError"));
     }
   }
 
   async function removeUser(userId, username) {
     setErr("");
     setMsg("");
-    const ok = window.confirm(`Biztosan törlöd a felhasználót? (${username})`);
+    const ok = window.confirm(`${t("admin.confirmDelete")} (${username})`);
     if (!ok) return;
 
     try {
       await api.delete(`/admin/users/${userId}`);
-      setMsg("Felhasználó törölve.");
+      setMsg(t("admin.userDeleted"));
       await load();
     } catch (e) {
-      setErr(e?.response?.data?.error || "Nem sikerült törölni a felhasználót.");
+      setErr(e?.response?.data?.error || t("admin.userDeleteError"));
     }
   }
 
@@ -50,8 +53,8 @@ export default function Users() {
     <>
       <div className="admin-header">
         <div>
-          <h1>Users</h1>
-          <p>Felhasználók kezelése (role váltás, törlés).</p>
+          <h1>{t("admin.title")}</h1>
+          <p>{t("admin.subtitle")}</p>
         </div>
       </div>
 
@@ -62,10 +65,10 @@ export default function Users() {
         <table className="table">
           <thead>
             <tr>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Műveletek</th>
+              <th>{t("admin.colUsername")}</th>
+              <th>{t("admin.colEmail")}</th>
+              <th>{t("admin.colRole")}</th>
+              <th>{t("admin.colActions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -83,7 +86,7 @@ export default function Users() {
                   <div className="actions">
                     {u.role !== "ADMIN" && (
                       <button className="btn primary" onClick={() => setRole(u.id, "ADMIN")}>
-                        Make ADMIN
+                        {t("admin.makeAdmin")}
                       </button>
                     )}
 
@@ -98,18 +101,18 @@ export default function Users() {
                           border: "none",
                         }}
                       >
-                        Make VIP
+                        {t("admin.makeVip")}
                       </button>
                     )}
 
                     {u.role !== "USER" && (
                       <button className="btn" onClick={() => setRole(u.id, "USER")}>
-                        Make USER
+                        {t("admin.makeUser")}
                       </button>
                     )}
 
                     <button className="btn danger" onClick={() => removeUser(u.id, u.username)}>
-                      Delete
+                      {t("admin.delete")}
                     </button>
                   </div>
                 </td>
@@ -119,7 +122,7 @@ export default function Users() {
             {users.length === 0 && (
               <tr>
                 <td colSpan="4" className="muted">
-                  Nincs megjeleníthető user.
+                  {t("admin.noUsers")}
                 </td>
               </tr>
             )}
@@ -127,7 +130,7 @@ export default function Users() {
         </table>
 
         <p className="muted" style={{ marginTop: 12 }}>
-          Tipp: saját magad törlése/role módosítása backendben tiltva van.
+          {t("admin.selfActionHint")}
         </p>
       </div>
     </>

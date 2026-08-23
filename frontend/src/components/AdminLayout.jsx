@@ -1,4 +1,6 @@
 import { NavLink, Outlet, Navigate, useLocation } from "react-router-dom";
+import { useLanguage } from "../i18n/LanguageContext";
+
 
 function readStoredUser() {
   try {
@@ -9,6 +11,7 @@ function readStoredUser() {
 }
 
 export default function AdminLayout() {
+  const { t } = useLanguage();
   const location = useLocation();
   const token = localStorage.getItem("token");
   const user = readStoredUser();
@@ -21,8 +24,8 @@ export default function AdminLayout() {
   return (
     <div className="admin-shell">
       <aside className="admin-sidebar">
-        <div className="admin-side-title">ADMIN</div>
-        <p className="admin-side-sub">Kezelő felületek</p>
+        <div className="admin-side-title">{t("admin.sidebarTitle")}</div>
+        <p className="admin-side-sub">{t("admin.sidebarSubtitle")}</p>
 
         <nav className="admin-nav">
           <NavLink
@@ -30,23 +33,23 @@ export default function AdminLayout() {
             className={({ isActive }) => (isActive ? "active" : "")}
           >
             <span className="admin-icon">👥</span>
-            Users
+            {t("admin.navUsers")}
           </NavLink>
 
           <NavLink
             to="/admin/standings"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
-            <span className="admin-icon">🏈</span>
-            Standings Admin
+                        <span className="admin-icon">🏈</span>
+            {t("admin.navStandings")}
           </NavLink>
 
           <NavLink
             to="/admin/schedule-results"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
-            <span className="admin-icon">📝</span>
-            Schedule Results
+                        <span className="admin-icon">📝</span>
+            {t("admin.navScheduleResults")}
           </NavLink>
         </nav>
       </aside>

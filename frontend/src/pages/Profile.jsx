@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
+import { useLanguage } from "../i18n/LanguageContext";
 
 function ProfileCard({ title, subtitle, children }) {
   return (
@@ -43,6 +44,7 @@ function InfoRow({ label, value }) {
 }
 
 export default function Profile() {
+  const { t } = useLanguage();
   const [user, setUser] = useState(null);
 
   const [email, setEmail] = useState("");
@@ -63,7 +65,8 @@ export default function Profile() {
   }
 
   useEffect(() => {
-    load().catch(() => setEmailErr("Nem sikerült betölteni a profilt."));
+    load().catch(() => setEmailErr(t("profile.loadError")));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function saveEmail() {
@@ -73,9 +76,9 @@ export default function Profile() {
     try {
       const res = await api.put("/users/me", { email });
       setUser(res.data.user);
-      setEmailMsg("Email cím sikeresen frissítve.");
+      setEmailMsg(t("profile.emailUpdated"));
     } catch (e) {
-      setEmailErr(e?.response?.data?.error || "Hiba történt.");
+      setEmailErr(e?.response?.data?.error || t("profile.genericError"));
     }
   }
 
@@ -90,12 +93,12 @@ export default function Profile() {
         confirmPassword,
       });
 
-      setPasswordMsg(res.data.message || "Jelszó sikeresen módosítva.");
+      setPasswordMsg(res.data.message || t("profile.passwordUpdated"));
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (e) {
-      setPasswordErr(e?.response?.data?.error || "Hiba történt.");
+      setPasswordErr(e?.response?.data?.error || t("profile.genericError"));
     }
   }
 
@@ -104,14 +107,12 @@ export default function Profile() {
       <div className="hero">
         <div className="kicker">
           <span className="tag">PROFILE</span>
-          <span>Saját adatok kezelése</span>
+          <span>{t("profile.kicker")}</span>
         </div>
 
-        <h1 className="h1">Profile</h1>
+        <h1 className="h1">{t("profile.title")}</h1>
 
-        <p className="sub">
-          Itt módosíthatod az email címedet és a jelszavadat.
-        </p>
+        <p className="sub">{t("profile.subtitle")}</p>
       </div>
 
       <div
@@ -123,16 +124,16 @@ export default function Profile() {
           alignItems: "stretch",
         }}
       >
-        <ProfileCard title="Account" subtitle="Felhasználói adatok">
+        <ProfileCard title={t("profile.accountTitle")} subtitle={t("profile.accountSubtitle")}>
           {!user ? (
-            <div className="muted">Betöltés…</div>
+            <div className="muted">{t("profile.loading")}</div>
           ) : (
             <>
-              <InfoRow label="Username" value={user.username} />
-              <InfoRow label="Role" value={user.role} />
-              <InfoRow label="Email" value={user.email} />
+              <InfoRow label={t("profile.usernameLabel")} value={user.username} />
+              <InfoRow label={t("profile.roleLabel")} value={user.role} />
+              <InfoRow label={t("profile.emailLabel")} value={user.email} />
               <InfoRow
-                label="Created"
+                label={t("profile.createdLabel")}
                 value={new Date(user.createdAt).toLocaleString()}
               />
             </>
@@ -140,8 +141,8 @@ export default function Profile() {
         </ProfileCard>
 
         <ProfileCard
-          title="Update Email"
-          subtitle="Adj meg egy új email címet és mentsd."
+          title={t("profile.updateEmailTitle")}
+          subtitle={t("profile.updateEmailSubtitle")}
         >
           <div style={{ display: "grid", gap: 12 }}>
             <input
@@ -149,11 +150,11 @@ export default function Profile() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Új email cím"
+              placeholder={t("profile.newEmailPlaceholder")}
             />
 
             <button className="btn primary" onClick={saveEmail}>
-              Mentés
+              {t("profile.save")}
             </button>
 
             {emailErr && <div className="error">{emailErr}</div>}
@@ -166,8 +167,8 @@ export default function Profile() {
         </ProfileCard>
 
         <ProfileCard
-          title="Change Password"
-          subtitle="Itt biztonságosan módosíthatod a jelszavadat."
+          title={t("profile.changePasswordTitle")}
+          subtitle={t("profile.changePasswordSubtitle")}
         >
           <div style={{ display: "grid", gap: 12 }}>
             <input
@@ -175,7 +176,7 @@ export default function Profile() {
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Jelenlegi jelszó"
+              placeholder={t("profile.currentPasswordPlaceholder")}
             />
 
             <input
@@ -183,7 +184,7 @@ export default function Profile() {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Új jelszó"
+              placeholder={t("profile.newPasswordPlaceholder")}
             />
 
             <input
@@ -191,11 +192,11 @@ export default function Profile() {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Új jelszó megerősítése"
+              placeholder={t("profile.confirmPasswordPlaceholder")}
             />
 
             <button className="btn primary" onClick={changePassword}>
-              Jelszó módosítása
+              {t("profile.changePasswordButton")}
             </button>
 
             {passwordErr && <div className="error">{passwordErr}</div>}
