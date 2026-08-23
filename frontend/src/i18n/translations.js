@@ -579,6 +579,11 @@ export const translations = {
       confirmPasswordPlaceholder: "Confirm new password",
       changePasswordButton: "Change Password",
       passwordUpdated: "Password updated successfully.",
+      appearanceTitle: "Appearance",
+      appearanceSubtitle: "Switch between dark and light mode.",
+      darkMode: "Dark",
+      lightMode: "Light",
+      toggleTheme: "Toggle dark/light mode",
     },
     admin: {
       loadUsersError: "Failed to load users. (Admin required)",
@@ -1226,6 +1231,11 @@ export const translations = {
       confirmPasswordPlaceholder: "Új jelszó megerősítése",
       changePasswordButton: "Jelszó módosítása",
       passwordUpdated: "Jelszó sikeresen módosítva.",
+      appearanceTitle: "Megjelenés",
+      appearanceSubtitle: "Válts sötét és világos mód között.",
+      darkMode: "Sötét",
+      lightMode: "Világos",
+      toggleTheme: "Sötét/világos mód váltása",
     },
     admin: {
       loadUsersError: "Nem sikerült betölteni a felhasználókat. (Admin kell)",

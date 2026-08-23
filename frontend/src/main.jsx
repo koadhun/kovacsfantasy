@@ -4,20 +4,22 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import SiteGate from "./components/SiteGate.jsx";
 import { LanguageProvider } from "./i18n/LanguageContext.jsx";
+import { ThemeProvider } from "./theme/ThemeContext.jsx";
 import "./styles.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <LanguageProvider>
-      <SiteGate>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </SiteGate>
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <SiteGate>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </SiteGate>
+      </LanguageProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
-
 
 
 

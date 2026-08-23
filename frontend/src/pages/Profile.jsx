@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useTheme } from "../theme/ThemeContext";
 
 function ProfileCard({ title, subtitle, children }) {
   return (
@@ -45,6 +46,7 @@ function InfoRow({ label, value }) {
 
 export default function Profile() {
   const { t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const [user, setUser] = useState(null);
 
   const [email, setEmail] = useState("");
@@ -205,6 +207,56 @@ export default function Profile() {
                 {passwordMsg}
               </div>
             )}
+          </div>
+        </ProfileCard>
+      </div>
+
+      <div style={{ marginTop: 16 }}>
+        <ProfileCard
+          title={t("profile.appearanceTitle")}
+          subtitle={t("profile.appearanceSubtitle")}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <span className="muted" style={{ fontWeight: 700 }}>
+              {t("profile.darkMode")}
+            </span>
+
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={t("profile.toggleTheme")}
+              style={{
+                position: "relative",
+                width: 52,
+                height: 28,
+                borderRadius: 999,
+                border: "1px solid rgba(255,255,255,.14)",
+                background:
+                  theme === "light"
+                    ? "rgba(245,179,1,.35)"
+                    : "rgba(59,130,246,.35)",
+                cursor: "pointer",
+                flexShrink: 0,
+              }}
+            >
+              <span
+                style={{
+                  position: "absolute",
+                  top: 2,
+                  left: theme === "light" ? 26 : 2,
+                  width: 22,
+                  height: 22,
+                  borderRadius: "50%",
+                  background: "#fff",
+                  transition: "left .18s ease",
+                  boxShadow: "0 2px 6px rgba(0,0,0,.3)",
+                }}
+              />
+            </button>
+
+            <span className="muted" style={{ fontWeight: 700 }}>
+              {t("profile.lightMode")}
+            </span>
           </div>
         </ProfileCard>
       </div>
