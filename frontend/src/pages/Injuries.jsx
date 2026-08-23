@@ -3,6 +3,7 @@ import { api } from "../api";
 import TeamLogo from "../components/TeamLogo";
 import SimpleDropdown from "../components/SimpleDropdown";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useTheme } from "../theme/ThemeContext";
 
 const TEAM_NAMES = {
   ARI: "Arizona Cardinals", ATL: "Atlanta Falcons", BAL: "Baltimore Ravens",
@@ -19,17 +20,38 @@ const TEAM_NAMES = {
 };
 
 const STATUS_COLORS = {
-  Out: { bg: "rgba(239,68,68,.16)", border: "rgba(239,68,68,.35)", text: "#fca5a5" },
-  Doubtful: { bg: "rgba(249,115,22,.16)", border: "rgba(249,115,22,.35)", text: "#fdba74" },
-  Questionable: { bg: "rgba(234,179,8,.16)", border: "rgba(234,179,8,.35)", text: "#fde047" },
-  "I.L.": { bg: "rgba(148,163,184,.16)", border: "rgba(148,163,184,.35)", text: "#cbd5e1" },
+  Out: {
+    bg: "rgba(239,68,68,.16)",
+    border: "rgba(239,68,68,.35)",
+    text: "#fca5a5",
+    textLight: "#b91c1c",
+  },
+  Doubtful: {
+    bg: "rgba(249,115,22,.16)",
+    border: "rgba(249,115,22,.35)",
+    text: "#fdba74",
+    textLight: "#b45309",
+  },
+  Questionable: {
+    bg: "rgba(234,179,8,.16)",
+    border: "rgba(234,179,8,.35)",
+    text: "#fde047",
+    textLight: "#a16207",
+  },
+  "I.L.": {
+    bg: "rgba(148,163,184,.16)",
+    border: "rgba(148,163,184,.35)",
+    text: "#cbd5e1",
+    textLight: "#475569",
+  },
 };
 
-function StatusBadge({ status }) {
+function StatusBadge({ status, isLight }) {
   const c = STATUS_COLORS[status] || {
     bg: "rgba(148,163,184,.16)",
     border: "rgba(148,163,184,.35)",
     text: "#cbd5e1",
+    textLight: "#475569",
   };
 
   return (
@@ -42,7 +64,7 @@ function StatusBadge({ status }) {
         fontWeight: 800,
         background: c.bg,
         border: `1px solid ${c.border}`,
-        color: c.text,
+        color: isLight ? c.textLight : c.text,
         whiteSpace: "nowrap",
       }}
     >
@@ -51,8 +73,29 @@ function StatusBadge({ status }) {
   );
 }
 
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        padding: "5px 11px",
+        borderRadius: 999,
+        fontSize: 12,
+        fontWeight: 800,
+        background: c.bg,
+        border: `1px solid ${c.border}`,
+        color: isLight ? c.textLight : c.text,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {status}
+    </span>
+  );
+
+
 export default function Injuries() {
   const { t } = useLanguage();
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const [injuries, setInjuries] = useState([]);
   const [team, setTeam] = useState("ALL");
   const [q, setQ] = useState("");
@@ -166,7 +209,7 @@ export default function Injuries() {
               </div>
             </div>
 
-            <StatusBadge status={inj.status} />
+            <StatusBadge status={inj.status} isLight={isLight} />
           </div>
         ))}
 
