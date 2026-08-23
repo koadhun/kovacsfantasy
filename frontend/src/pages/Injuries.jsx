@@ -79,6 +79,7 @@ export default function Injuries() {
   const isLight = theme === "light";
   const [injuries, setInjuries] = useState([]);
   const [team, setTeam] = useState("ALL");
+  const [status, setStatus] = useState("ALL");
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -102,13 +103,23 @@ export default function Injuries() {
     ];
   }, [injuries, t]);
 
+  
+  const statusOptions = useMemo(() => {
+    const statuses = [...new Set(injuries.map((i) => i.status))].sort();
+    return [
+      { value: "ALL", label: t("injuries.allStatuses") },
+      ...statuses.map((s) => ({ value: s, label: s })),
+    ];
+  }, [injuries, t]);
+
   const filtered = useMemo(() => {
     return injuries.filter((i) => {
       if (team !== "ALL" && i.teamCode !== team) return false;
+      if (status !== "ALL" && i.status !== status) return false;
       if (q && !i.playerName.toLowerCase().includes(q.toLowerCase())) return false;
       return true;
     });
-  }, [injuries, team, q]);
+  }, [injuries, team, status, q]);
 
   return (
     <div className="container page">
@@ -127,6 +138,15 @@ export default function Injuries() {
             onChange={setTeam}
             label={t("injuries.teamLabel")}
             width={220}
+          />
+
+          
+          <SimpleDropdown
+            value={status}
+            options={statusOptions}
+            onChange={setStatus}
+            label={t("injuries.statusLabel")}
+            width={200}
           />
 
           <div className="filters-group" style={{ minWidth: 280 }}>
