@@ -73,25 +73,6 @@ function StatusBadge({ status, isLight }) {
   );
 }
 
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        padding: "5px 11px",
-        borderRadius: 999,
-        fontSize: 12,
-        fontWeight: 800,
-        background: c.bg,
-        border: `1px solid ${c.border}`,
-        color: isLight ? c.textLight : c.text,
-        whiteSpace: "nowrap",
-      }}
-    >
-      {status}
-    </span>
-  );
-
-
 export default function Injuries() {
   const { t } = useLanguage();
   const { theme } = useTheme();
