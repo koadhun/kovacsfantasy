@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import PerfectChallengeCard from "../components/perfect/PerfectChallengeCard";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const SEASON = 2026;
 
@@ -10,6 +11,7 @@ function formatScore(value) {
 }
 
 export default function PerfectChallengeUserRoster() {
+  const { t, language } = useLanguage();
   const { userId } = useParams();
   const [sp] = useSearchParams();
   const navigate = useNavigate();
@@ -39,7 +41,7 @@ export default function PerfectChallengeUserRoster() {
     load().catch((e) =>
       setErr(
         e?.response?.data?.error ||
-          "Nem sikerült betölteni a felhasználó Perfect Challenge rosterét."
+          t("perfectChallengeUserRoster.loadError")
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,41 +64,43 @@ export default function PerfectChallengeUserRoster() {
       <div className="hero">
         <div className="kicker">
           <span className="tag">FANTASY</span>
-          <span>User Roster</span>
+          <span>{t("perfectChallengeUserRoster.badge")}</span>
         </div>
 
-        <h1 className="h1">Perfect Challenge · Week {week}</h1>
+        <h1 className="h1">
+          {t("perfectChallengeUserRoster.titlePrefix")} · {language === "hu" ? `${week}. hét` : `Week ${week}`}
+        </h1>
 
-        <p className="sub">A kiválasztott felhasználó heti Perfect Challenge rosterének megtekintése.</p>
+        <p className="sub">{t("perfectChallengeUserRoster.subtitle")}</p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <span className="pill">
             <span className="dot" />
-            Viewing:
+            {t("perfectChallengeUserRoster.viewing")}
             <b style={{ marginLeft: 6 }}>{username}</b>
           </span>
 
           <span className="pill">
             <span className="dot" />
-            Week points: {formatScore(data?.summary?.weeklyPoints)}
+            {t("perfectChallengeUserRoster.weekPoints")} {formatScore(data?.summary?.weeklyPoints)}
           </span>
 
           <span className="pill">
             <span className="dot" />
-            Selected: {selectedCount}/8
+            {t("perfectChallengeUserRoster.selected")} {selectedCount}/8
           </span>
 
           <div className="filters-spacer" />
 
           <button className="btn" onClick={goMyChallenge}>
-            My Perfect Challenge
+            {t("perfectChallengeUserRoster.myPerfectChallenge")}
           </button>
 
           <Link
             to={`/fantasy/perfect-challenge/leaderboard?week=${week}`}
             className="btn primary"
           >
-            Back to leaderboard
+            {t("perfectChallengeUserRoster.backToLeaderboard")}
           </Link>
         </div>
       </div>
@@ -109,7 +113,7 @@ export default function PerfectChallengeUserRoster() {
 
       {loading && !slots.length && !err && (
         <p className="muted" style={{ marginTop: 14 }}>
-          Betöltés…
+          {t("perfectChallengeUserRoster.loading")}
         </p>
       )}
 

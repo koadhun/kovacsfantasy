@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import { Link, useSearchParams } from "react-router-dom";
 import WeekDropdown from "../components/WeekDropdown";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const SEASON = 2026;
 
@@ -16,6 +17,7 @@ const userLinkStyle = {
 };
 
 export default function PerfectChallengeLeaderboard() {
+  const { t, language } = useLanguage();
   const [sp, setSp] = useSearchParams();
   const initialWeek = Number(sp.get("week") || 1);
 
@@ -50,13 +52,13 @@ export default function PerfectChallengeLeaderboard() {
       setErr(
         e?.response?.data?.error ||
           e?.message ||
-          "Nem sikerült betölteni a Perfect Challenge leaderboardot."
+          t("perfectChallengeLeaderboard.loadError")
       );
     }
   }
 
   useEffect(() => {
-    loadWeeks().catch(() => setErr("Nem sikerült betölteni a heteket."));
+    loadWeeks().catch(() => setErr(t("perfectChallengeLeaderboard.loadWeeksError")));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -69,7 +71,7 @@ export default function PerfectChallengeLeaderboard() {
     }
 
     loadLeaderboard(week).catch(() =>
-      setErr("Nem sikerült betölteni a Perfect Challenge leaderboardot.")
+      setErr(t("perfectChallengeLeaderboard.loadError"))
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [week]);
@@ -78,8 +80,11 @@ export default function PerfectChallengeLeaderboard() {
   const totals = data?.totals || [];
 
   const weekTitle = useMemo(
-    () => `Perfect Challenge Leaderboard · Week ${week}`,
-    [week]
+    () =>
+      `${t("perfectChallengeLeaderboard.titlePrefix")} · ${
+        language === "hu" ? `${week}. hét` : `Week ${week}`
+      }`,
+    [week, t, language]
   );
 
   return (
@@ -92,25 +97,22 @@ export default function PerfectChallengeLeaderboard() {
 
         <h1 className="h1">{weekTitle}</h1>
 
-        <p className="sub">
-          A heti rangsor az adott hét kiválasztott 8 slotjának összpontja, a
-          szezon összesítés pedig az eddigi összes hét Perfect Challenge
-          pontjainak összege.
-        </p>
+        <p className="sub">{t("perfectChallengeLeaderboard.subtitle")}</p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
           <WeekDropdown
             value={week}
             options={weeks}
             onChange={setWeek}
-            label="WEEK"
+            label={t("perfectChallengeLeaderboard.weekLabel")}
             width={170}
+            formatWeek={(w) => (language === "hu" ? `${w}. hét` : `Week ${w}`)}
           />
 
           <div className="filters-spacer" />
 
           <Link to={`/fantasy/perfect-challenge?week=${week}`} className="btn">
-            Back to Perfect Challenge
+            {t("perfectChallengeLeaderboard.backToPerfectChallenge")}
           </Link>
         </div>
       </div>
@@ -122,14 +124,14 @@ export default function PerfectChallengeLeaderboard() {
       )}
 
       <div className="card" style={{ marginTop: 14, padding: 16 }}>
-        <h3 style={{ marginTop: 0, marginBottom: 12 }}>Weekly</h3>
+        <h3 style={{ marginTop: 0, marginBottom: 12 }}>{t("perfectChallengeLeaderboard.weeklyTableTitle")}</h3>
 
         <table className="table">
           <thead>
             <tr>
-              <th>#</th>
-              <th>User</th>
-              <th>Points</th>
+              <th>{t("perfectChallengeLeaderboard.colRank")}</th>
+              <th>{t("perfectChallengeLeaderboard.colUser")}</th>
+              <th>{t("perfectChallengeLeaderboard.colPoints")}</th>
             </tr>
           </thead>
 
@@ -152,21 +154,21 @@ export default function PerfectChallengeLeaderboard() {
             {!weekly.length && (
               <tr>
                 <td colSpan="3" className="muted">
-                  Nincs adat.
+                  {t("perfectChallengeLeaderboard.noData")}
                 </td>
               </tr>
             )}
           </tbody>
         </table>
 
-        <h3 style={{ marginTop: 24, marginBottom: 12 }}>Season Total</h3>
+        <h3 style={{ marginTop: 24, marginBottom: 12 }}>{t("perfectChallengeLeaderboard.seasonTableTitle")}</h3>
 
         <table className="table">
           <thead>
             <tr>
-              <th>#</th>
-              <th>User</th>
-              <th>Total Points</th>
+              <th>{t("perfectChallengeLeaderboard.colRank")}</th>
+              <th>{t("perfectChallengeLeaderboard.colUser")}</th>
+              <th>{t("perfectChallengeLeaderboard.colTotalPoints")}</th>
             </tr>
           </thead>
 
@@ -189,7 +191,7 @@ export default function PerfectChallengeLeaderboard() {
             {!totals.length && (
               <tr>
                 <td colSpan="3" className="muted">
-                  Nincs adat.
+                  {t("perfectChallengeLeaderboard.noData")}
                 </td>
               </tr>
             )}
