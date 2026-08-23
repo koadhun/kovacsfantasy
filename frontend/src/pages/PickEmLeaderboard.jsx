@@ -116,10 +116,10 @@ export default function PickEmLeaderboard() {
 
         <table className="table">
           <colgroup>
-            <col style={{ width: 60 }} />
-            <col />
-            <col style={{ width: 140 }} />
-            <col style={{ width: 140 }} />
+            <col style={{ width: "6%" }} />
+            <col style={{ width: "50%" }} />
+            <col style={{ width: "22%" }} />
+            <col style={{ width: "22%" }} />
           </colgroup>
           <thead>
             <tr>
@@ -159,9 +159,9 @@ export default function PickEmLeaderboard() {
 
         <table className="table">
           <colgroup>
-            <col style={{ width: 60 }} />
-            <col />
-            <col style={{ width: 140 }} />
+            <col style={{ width: "6%" }} />
+            <col style={{ width: "50%" }} />
+            <col style={{ width: "44%" }} />
           </colgroup>
           <thead>
             <tr>
