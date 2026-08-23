@@ -38,7 +38,6 @@ export default function Navbar() {
       <div className="navbar-inner">
         <div className="navbar-left">
           <Link to="/" className="brand">
-            <span className="brand-mark" />
             <span className="brand-text">KOVACS FANTASY</span>
           </Link>
 
