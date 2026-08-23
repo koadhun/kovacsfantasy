@@ -14,7 +14,7 @@ export const translations = {
     login: {
       badge: "NFL FANTASY",
       kicker: "Sign in to KovacsFantasy",
-      title: "Welcome back",
+      title: "Welcome",
       subtitle: "Sign in to check the schedule, standings, stats, and manage your fantasy lineups.",
       usernamePlaceholder: "Username",
       passwordPlaceholder: "Password",
@@ -661,7 +661,7 @@ export const translations = {
     login: {
       badge: "NFL FANTASY",
       kicker: "Jelentkezz be a KovacsFantasy oldalra",
-      title: "Üdvözlünk újra",
+      title: "Üdvözlünk",
       subtitle: "Jelentkezz be, hogy megnézd a menetrendet, a tabellát, a statisztikákat, és kezeld a fantasy csapataidat.",
       usernamePlaceholder: "Felhasználónév",
       passwordPlaceholder: "Jelszó",
