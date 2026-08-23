@@ -1,14 +1,19 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useTheme } from "../theme/ThemeContext";
 
-function BenefitCard({ title, description }) {
+const GOLD = "#f5b301";
+const GOLD_DARK = "#a97400";
+
+function BenefitCard({ title, description, isLight }) {
   return (
     <div
       className="card"
       style={{
         padding: 20,
-        background: "linear-gradient(180deg, rgba(40,29,4,.95), rgba(18,17,15,.96))",
-        border: "1px solid rgba(245,179,1,.28)",
+        background: isLight ? "#ffffff" : "linear-gradient(180deg, rgba(16,26,51,.85), rgba(10,16,34,.85))",
+        border: isLight ? "1px solid rgba(16,24,40,.10)" : "1px solid rgba(245,179,1,.22)",
+        boxShadow: isLight ? "0 8px 20px rgba(16,24,40,.06)" : undefined,
       }}
     >
       <div
@@ -19,8 +24,8 @@ function BenefitCard({ title, description }) {
           width: 34,
           height: 34,
           borderRadius: 10,
-          background: "rgba(245,179,1,.16)",
-          color: "#f5b301",
+          background: isLight ? "rgba(245,179,1,.14)" : "rgba(245,179,1,.16)",
+          color: isLight ? GOLD_DARK : GOLD,
           fontSize: 16,
           fontWeight: 900,
           marginBottom: 12,
@@ -28,15 +33,22 @@ function BenefitCard({ title, description }) {
       >
         {"\u2726"}
       </div>
-      <h3 style={{ margin: "0 0 8px 0", fontSize: 17, color: "#f5f7fb" }}>{title}</h3>
-      <p style={{ margin: 0, lineHeight: 1.6, fontSize: 14, color: "rgba(245,247,251,.72)" }}>
+      <h3 style={{ margin: "0 0 8px 0", fontSize: 17, color: isLight ? "#101828" : "#f5f7fb" }}>
+        {title}
+      </h3>
+      <p style={{ margin: 0, lineHeight: 1.6, fontSize: 14, color: isLight ? "#5b6478" : "rgba(245,247,251,.72)" }}>
         {description}
       </p>
     </div>
   );
 }
 
-function PriceCard({ badge, price, period, note, highlighted, comingSoon, comingSoonHint, bestValueLabel }) {
+function PriceCard({ badge, price, period, note, highlighted, comingSoon, comingSoonHint, bestValueLabel, isLight }) {
+  const baseBg = isLight ? "#ffffff" : "linear-gradient(180deg, rgba(16,26,51,.85), rgba(10,16,34,.85))";
+  const highlightedBg = isLight
+    ? "linear-gradient(180deg, rgba(255,247,224,.95), #ffffff)"
+    : "linear-gradient(180deg, rgba(245,179,1,.10), rgba(16,26,51,.85))";
+
   return (
     <div
       className="card"
@@ -46,11 +58,17 @@ function PriceCard({ badge, price, period, note, highlighted, comingSoon, coming
         position: "relative",
         border: highlighted
           ? "1px solid rgba(245,179,1,.55)"
+          : isLight
+          ? "1px solid rgba(16,24,40,.10)"
           : "1px solid rgba(255,255,255,.10)",
-        background: highlighted
-          ? "linear-gradient(180deg, rgba(58,44,4,.95), rgba(22,18,8,.97))"
-          : "linear-gradient(180deg, rgba(30,32,45,.96), rgba(12,13,20,.97))",
-        boxShadow: highlighted ? "0 0 0 1px rgba(245,179,1,.25)" : undefined,
+        background: highlighted ? highlightedBg : baseBg,
+        boxShadow: highlighted
+          ? isLight
+            ? "0 10px 26px rgba(245,179,1,.16)"
+            : "0 0 0 1px rgba(245,179,1,.25)"
+          : isLight
+          ? "0 8px 20px rgba(16,24,40,.06)"
+          : undefined,
       }}
     >
       {highlighted && (
@@ -60,7 +78,7 @@ function PriceCard({ badge, price, period, note, highlighted, comingSoon, coming
             top: -12,
             left: "50%",
             transform: "translateX(-50%)",
-            background: "#f5b301",
+            background: GOLD,
             color: "#1a1206",
             fontSize: 11,
             fontWeight: 900,
@@ -74,19 +92,25 @@ function PriceCard({ badge, price, period, note, highlighted, comingSoon, coming
       )}
 
       <div
-        style={{ fontSize: 12, fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase", color: "rgba(245,247,251,.72)" }}
+        style={{
+          fontSize: 12,
+          fontWeight: 800,
+          letterSpacing: ".08em",
+          textTransform: "uppercase",
+          color: isLight ? "#5b6478" : "rgba(245,247,251,.72)",
+        }}
       >
         {badge}
       </div>
 
-      <div style={{ fontSize: 40, fontWeight: 900, margin: "10px 0 0", color: "#f5f7fb" }}>
+      <div style={{ fontSize: 40, fontWeight: 900, margin: "10px 0 0", color: isLight ? "#101828" : "#f5f7fb" }}>
         {price}
-        <span style={{ fontSize: 15, fontWeight: 700, color: "rgba(245,247,251,.6)" }}>
+        <span style={{ fontSize: 15, fontWeight: 700, color: isLight ? "#5b6478" : "rgba(245,247,251,.6)" }}>
           {" "}/ {period}
         </span>
       </div>
 
-      <p style={{ marginTop: 8, fontSize: 13, color: "rgba(245,247,251,.72)" }}>
+      <p style={{ marginTop: 8, fontSize: 13, color: isLight ? "#5b6478" : "rgba(245,247,251,.72)" }}>
         {note}
       </p>
 
@@ -104,6 +128,8 @@ function PriceCard({ badge, price, period, note, highlighted, comingSoon, coming
 
 export default function BecomeVip() {
   const { t } = useLanguage();
+  const { theme } = useTheme();
+  const isLight = theme === "light";
 
   const benefits = [
     { title: t("becomeVip.benefit1Title"), description: t("becomeVip.benefit1Desc") },
@@ -118,21 +144,27 @@ export default function BecomeVip() {
         className="hero"
         style={{
           textAlign: "center",
-          background: "linear-gradient(180deg, rgba(48,34,4,.97), rgba(16,17,26,.98))",
-          border: "1px solid rgba(245,179,1,.28)",
+          background: isLight
+            ? "linear-gradient(180deg, #ffffff, #f8f4ea)"
+            : "linear-gradient(180deg, rgba(16,26,51,.9), rgba(15,23,48,.75))",
+          border: isLight ? "1px solid rgba(245,179,1,.30)" : "1px solid rgba(245,179,1,.22)",
+          boxShadow: isLight ? "0 10px 26px rgba(16,24,40,.08)" : undefined,
         }}
       >
         <div className="kicker" style={{ justifyContent: "center" }}>
           <span
             className="tag"
-            style={{ background: "rgba(245,179,1,.16)", color: "#f5b301" }}
+            style={{
+              background: isLight ? "rgba(245,179,1,.14)" : "rgba(245,179,1,.16)",
+              color: isLight ? GOLD_DARK : GOLD,
+            }}
           >
             VIP
           </span>
           <span>{t("becomeVip.kicker")}</span>
         </div>
 
-        <h1 className="h1" style={{ marginTop: 10 }}>
+        <h1 className="h1" style={{ marginTop: 10, color: isLight ? "#101828" : undefined }}>
           {t("becomeVip.title")}
         </h1>
 
@@ -150,12 +182,14 @@ export default function BecomeVip() {
         }}
       >
         {benefits.map((b) => (
-          <BenefitCard key={b.title} title={b.title} description={b.description} />
+          <BenefitCard key={b.title} title={b.title} description={b.description} isLight={isLight} />
         ))}
       </div>
 
       <div style={{ marginTop: 34, marginBottom: 14, textAlign: "center" }}>
-        <h2 style={{ margin: 0, fontSize: 22 }}>{t("becomeVip.choosePlanTitle")}</h2>
+        <h2 style={{ margin: 0, fontSize: 22, color: isLight ? "#101828" : undefined }}>
+          {t("becomeVip.choosePlanTitle")}
+        </h2>
         <p className="muted" style={{ marginTop: 6 }}>
           {t("becomeVip.choosePlanSubtitle")}
         </p>
@@ -178,6 +212,7 @@ export default function BecomeVip() {
           comingSoon={t("becomeVip.comingSoon")}
           comingSoonHint={t("becomeVip.comingSoonHint")}
           bestValueLabel={t("becomeVip.bestValue")}
+          isLight={isLight}
         />
 
         <PriceCard
@@ -189,6 +224,7 @@ export default function BecomeVip() {
           comingSoon={t("becomeVip.comingSoon")}
           comingSoonHint={t("becomeVip.comingSoonHint")}
           bestValueLabel={t("becomeVip.bestValue")}
+          isLight={isLight}
         />
       </div>
 
