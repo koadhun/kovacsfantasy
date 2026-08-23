@@ -4,8 +4,9 @@ import { api } from "../api";
 import PerfectChallengeCard from "../components/perfect/PerfectChallengeCard";
 import PerfectChallengeSelectorModal from "../components/perfect/PerfectChallengeSelectorModal";
 import SimpleDropdown from "../components/SimpleDropdown";
+import { useLanguage } from "../i18n/LanguageContext";
 
-const SEASON = 2025;
+const SEASON = 2026;
 
 const SLOT_TO_POOL_KEY = {
   QB: "QB",
@@ -70,54 +71,8 @@ function formatScore(value) {
   return Number(value || 0).toFixed(1);
 }
 
-function RoundDropdown({ value, options, onChange }) {
-  return (
-    <label
-      style={{
-        display: "inline-flex",
-        flexDirection: "column",
-        gap: 8,
-      }}
-    >
-      <span
-        className="muted"
-        style={{
-          fontSize: 12,
-          fontWeight: 800,
-          letterSpacing: ".08em",
-          textTransform: "uppercase",
-        }}
-      >
-        Round
-      </span>
-
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        style={{
-          minWidth: 240,
-          height: 44,
-          borderRadius: 14,
-          border: "1px solid rgba(255,255,255,.12)",
-          background: "rgba(9,18,42,.94)",
-          color: "#fff",
-          padding: "0 14px",
-          fontSize: 14,
-          fontWeight: 700,
-          outline: "none",
-        }}
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </label>
-  );
-}
-
 export default function PlayoffChallenge() {
+  const { t } = useLanguage();
   const [sp, setSp] = useSearchParams();
 
   const requestedRound = String(sp.get("round") || "WILDCARD");
@@ -198,7 +153,7 @@ export default function PlayoffChallenge() {
 
   useEffect(() => {
     loadRounds().catch(() =>
-      setErr("Nem sikerült betölteni a playoff köröket.")
+      setErr(t("playoffChallenge.loadRoundsError"))
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -226,7 +181,7 @@ export default function PlayoffChallenge() {
     loader.catch((e) =>
       setErr(
         e?.response?.data?.error ||
-          "Nem sikerült betölteni a Playoff Challenge adatokat."
+          t("playoffChallenge.loadDataError")
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -247,7 +202,7 @@ export default function PlayoffChallenge() {
       await loadMyRoundData(round);
     } catch (e) {
       setErr(
-        e?.response?.data?.error || "Nem sikerült frissíteni a playoff slotot."
+        e?.response?.data?.error || t("playoffChallenge.updateSlotError")
       );
     }
   }
@@ -276,7 +231,7 @@ export default function PlayoffChallenge() {
             <div className="kicker">
               <span className="tag">FANTASY</span>
               <span>
-                {isReadOnlyView ? "Playoff Challenge Viewer" : "Playoff Challenge"}
+                {isReadOnlyView ? t("playoffChallenge.viewerBadge") : t("playoffChallenge.badge")}
               </span>
             </div>
 
@@ -288,8 +243,8 @@ export default function PlayoffChallenge() {
 
             <p className="sub" style={{ maxWidth: 900 }}>
               {isReadOnlyView
-                ? "Itt az adott felhasználó playoff rosterét látod a kiválasztott körre. A még el nem kezdett meccsekhez tartozó pickek rejtve maradnak, és a playoff total is csak a már látható pontokat számolja bele."
-                : "Válassz 8 játékost playoff körönként. Az alap pontszámítás megegyezik a Perfect Challenge-ével, viszont ugyanazt a játékost egymást követő körökben megtartva növekvő szorzót kapsz."}
+                ? t("playoffChallenge.viewerSubtitle")
+                : t("playoffChallenge.ownSubtitle")}
             </p>
 
             <div
@@ -300,8 +255,7 @@ export default function PlayoffChallenge() {
                 lineHeight: 1.5,
               }}
             >
-              Wildcard: x1 • Divisional: ugyanazt megtartva x2 • Conference:
-              ugyanazt végig megtartva x3 • Super Bowl: végig megtartva x4
+              {t("playoffChallenge.multiplierLegend")}
             </div>
           </div>
 
@@ -314,32 +268,32 @@ export default function PlayoffChallenge() {
             }}
           >
             <ScoreCard
-              title="Round points"
+              title={t("playoffChallenge.roundPoints")}
               value={formatScore(summary.roundPoints)}
               sub={roundLabel}
             />
 
             <ScoreCard
-              title="Playoff total"
+              title={t("playoffChallenge.playoffTotal")}
               value={formatScore(summary.playoffTotal)}
-              sub={`${summary.selectedCount}/8 visible`}
+              sub={`${summary.selectedCount}/8 ${t("playoffChallenge.visibleSuffix")}`}
             />
           </div>
         </div>
 
         <div className="filters-bar" style={{ marginTop: 16 }}>
           <SimpleDropdown
-  value={round}
-  options={rounds}
-  onChange={setRound}
-  label="ROUND"
-  width={200}
-/>
+            value={round}
+            options={rounds}
+            onChange={setRound}
+            label={t("playoffChallenge.roundLabel")}
+            width={200}
+          />
 
           <div className="filters-spacer" />
 
           <Link to="/fantasy/playoff-challenge/rules" className="btn">
-            Rules
+            {t("playoffChallenge.rules")}
           </Link>
 
           {isReadOnlyView ? (
@@ -348,14 +302,14 @@ export default function PlayoffChallenge() {
                 to={`/fantasy/playoff-challenge/leaderboard?round=${round}`}
                 className="btn"
               >
-                Back to Leaderboard
+                {t("playoffChallenge.backToLeaderboard")}
               </Link>
 
               <Link
                 to={`/fantasy/playoff-challenge?round=${round}`}
                 className="btn primary"
               >
-                My Playoff Challenge
+                {t("playoffChallenge.myPlayoffChallenge")}
               </Link>
             </>
           ) : (
@@ -363,13 +317,13 @@ export default function PlayoffChallenge() {
               to={`/fantasy/playoff-challenge/leaderboard?round=${round}`}
               className="btn"
             >
-              Leaderboard
+              {t("playoffChallenge.leaderboard")}
             </Link>
           )}
 
           <span className="pill">
             <span className="dot" />
-            {visibleCount}/8 visible
+            {visibleCount}/8 {t("playoffChallenge.visibleSuffix")}
           </span>
         </div>
       </div>
@@ -390,7 +344,7 @@ export default function PlayoffChallenge() {
               color: "#f8fbff",
             }}
           >
-            Current multipliers
+            {t("playoffChallenge.currentMultipliers")}
           </div>
 
           <div
@@ -430,7 +384,7 @@ export default function PlayoffChallenge() {
       {!isReadOnlyView && (
         <PerfectChallengeSelectorModal
           open={!!modalSlot}
-          title={modalSlot ? `Select player for ${modalSlot.slot}` : ""}
+          title={modalSlot ? `${t("playoffChallenge.selectPlayerFor")} ${modalSlot.slot}` : ""}
           players={modalPlayers}
           onClose={() => setModalSlot(null)}
           onPick={pickPlayer}

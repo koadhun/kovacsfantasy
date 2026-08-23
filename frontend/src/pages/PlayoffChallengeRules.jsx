@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useLanguage } from "../i18n/LanguageContext";
 
 function Section({ title, children }) {
   return (
@@ -10,72 +11,63 @@ function Section({ title, children }) {
 }
 
 export default function PlayoffChallengeRules() {
+  const { t } = useLanguage();
+  const rounds = t("playoffChallengeRules.rounds");
+  const multiplierRows = t("playoffChallengeRules.multiplierRows");
+
   return (
     <div className="container page">
       <div className="hero">
         <div className="kicker">
-          <span className="tag">RULES</span>
+          <span className="tag">{t("playoffChallengeRules.badge")}</span>
           <span>Playoff Challenge</span>
         </div>
-        <h1 className="h1">Playoff Challenge - Szabályok</h1>
-        <p className="sub">
-          A rájátszás négy körén át tartsd meg ugyanazt a játékost - minél tovább, annál nagyobb
-          szorzóval számolnak a pontjai.
-        </p>
+        <h1 className="h1">{t("playoffChallengeRules.title")}</h1>
+        <p className="sub">{t("playoffChallengeRules.subtitle")}</p>
       </div>
 
       <div style={{ marginTop: 18 }}>
-        <Section title="A körök">
-          <p>A Playoff Challenge négy egymást követő körből áll:</p>
+        <Section title={t("playoffChallengeRules.roundsTitle")}>
+          <p>{t("playoffChallengeRules.roundsIntro")}</p>
           <ul>
-            <li><strong>Wildcard</strong></li>
-            <li><strong>Divisional</strong></li>
-            <li><strong>Conference</strong></li>
-            <li><strong>Super Bowl</strong></li>
+            {rounds.map((r) => (
+              <li key={r}>
+                <strong>{r}</strong>
+              </li>
+            ))}
+          </ul>
+          <p>{t("playoffChallengeRules.roundsOutro")}</p>
+        </Section>
+
+        <Section title={t("playoffChallengeRules.multiplierTitle")}>
+          <p>{t("playoffChallengeRules.multiplierIntro")}</p>
+          <ul>
+            {multiplierRows.map((row) => (
+              <li key={row.label}>
+                {row.label}: <strong>{row.value}</strong>
+              </li>
+            ))}
           </ul>
           <p>
-            Minden körben ugyanazt a 8 pozíciós rostert (QB, RB1, RB2, WR1, WR2, TE, K, DEF) kell
-            összeállítanod, mint a Perfect Challenge-ben.
+            {t("playoffChallengeRules.multiplierBreakPart1")}{" "}
+            <strong>{t("playoffChallengeRules.multiplierBreakBold1")}</strong>{" "}
+            {t("playoffChallengeRules.multiplierBreakPart2")}{" "}
+            <strong>{t("playoffChallengeRules.multiplierBreakBold2")}</strong>{" "}
+            - {t("playoffChallengeRules.multiplierBreakPart3")}
           </p>
         </Section>
 
-        <Section title="A lánc-szorzó (multiplier)">
-          <p>
-            Ha egy adott slotra (pl. QB) <strong>ugyanazt a játékost</strong> választod ki
-            egymást követő körökben is, a pontszáma egyre nagyobb szorzót kap:
-          </p>
-          <ul>
-            <li>1. kör, amikor kiválasztod: <strong>x1</strong> szorzó</li>
-            <li>2. egymást követő kör ugyanazzal a játékossal: <strong>x2</strong> szorzó</li>
-            <li>3. egymást követő kör ugyanazzal a játékossal: <strong>x3</strong> szorzó</li>
-            <li>4. egymást követő kör ugyanazzal a játékossal: <strong>x4</strong> szorzó</li>
-          </ul>
-          <p>
-            Ha egy körben <strong>másik</strong> játékost választasz ugyanarra a pozícióra, a
-            lánc megszakad, és a szorzó <strong>visszaáll x1-re</strong> - onnantól újra kell
-            építeni a sorozatot.
-          </p>
+        <Section title={t("playoffChallengeRules.scoringTitle")}>
+          <p>{t("playoffChallengeRules.scoringInfo")}</p>
         </Section>
 
-        <Section title="Pontozás">
-          <p>
-            Az alap pontszámítás megegyezik a Perfect Challenge-ben használt képletekkel
-            (yardagenkénti, TD-nkénti pontok pozíciónként, K távolság-sávos field goal pontok, DEF
-            takeaway és kapott pont alapú pontozás). A végleges pontszám ez, megszorozva az adott
-            slot aktuális lánc-szorzójával.
-          </p>
-        </Section>
-
-        <Section title="Zárolás">
-          <p>
-            Egy játékos csak addig választható/cserélhető, amíg a csapatának adott köri mérkőzése
-            el nem kezdődött. Utána a pozíció zárolódik az adott körre.
-          </p>
+        <Section title={t("playoffChallengeRules.lockingTitle")}>
+          <p>{t("playoffChallengeRules.lockingInfo")}</p>
         </Section>
       </div>
 
       <Link to="/fantasy/playoff-challenge" className="btn" style={{ marginTop: 4 }}>
-        ← Vissza a Playoff Challenge-hez
+        {t("playoffChallengeRules.backLink")}
       </Link>
     </div>
   );
