@@ -4,6 +4,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import WeekDropdown from "../components/WeekDropdown";
 import PerfectChallengeCard from "../components/perfect/PerfectChallengeCard";
 import PerfectChallengeSelectorModal from "../components/perfect/PerfectChallengeSelectorModal";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const SEASON = 2026;
 
@@ -71,6 +72,7 @@ function formatScore(value) {
 }
 
 export default function PerfectChallenge() {
+  const { t, language } = useLanguage();
   const [sp, setSp] = useSearchParams();
 
   const requestedWeek = Number(sp.get("week") || 1);
@@ -142,7 +144,7 @@ export default function PerfectChallenge() {
   }
 
   useEffect(() => {
-    loadWeeks().catch(() => setErr("Nem sikerült betölteni a heteket."));
+    loadWeeks().catch(() => setErr(t("perfectChallenge.loadWeeksError")));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -172,7 +174,7 @@ export default function PerfectChallenge() {
     loader.catch((e) =>
       setErr(
         e?.response?.data?.error ||
-          "Nem sikerült betölteni a Perfect Challenge adatokat."
+          t("perfectChallenge.loadDataError")
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -192,7 +194,7 @@ export default function PerfectChallenge() {
       setModalSlot(null);
       await loadMyWeekData(week);
     } catch (e) {
-      setErr(e?.response?.data?.error || "Nem sikerült frissíteni a slotot.");
+      setErr(e?.response?.data?.error || t("perfectChallenge.updateSlotError"));
     }
   }
 
@@ -220,7 +222,7 @@ export default function PerfectChallenge() {
             <div className="kicker">
               <span className="tag">FANTASY</span>
               <span>
-                {isReadOnlyView ? "Perfect Challenge Viewer" : "Perfect Challenge"}
+                {isReadOnlyView ? t("perfectChallenge.viewerBadge") : t("perfectChallenge.badge")}
               </span>
             </div>
 
@@ -232,8 +234,8 @@ export default function PerfectChallenge() {
 
             <p className="sub" style={{ maxWidth: 840 }}>
               {isReadOnlyView
-                ? "Itt az adott felhasználó kiválasztott játékosait látod az adott hétre. A még el nem kezdett meccsekhez tartozó pickek rejtve maradnak."
-                : "Válassz 8 játékost fix pozíciókra bontva. A front oldalon a játékos pontszáma látszik, a hátoldalon a heti statok és a fantasy pontok breakdown nézet is megtekinthető."}
+                ? t("perfectChallenge.viewerSubtitle")
+                : t("perfectChallenge.ownSubtitle")}
             </p>
           </div>
 
@@ -246,12 +248,12 @@ export default function PerfectChallenge() {
             }}
           >
             <ScoreCard
-              title="Weekly points"
+              title={t("perfectChallenge.weeklyPoints")}
               value={formatScore(summary.weeklyPoints)}
             />
 
             <ScoreCard
-              title="Season total"
+              title={t("perfectChallenge.seasonTotal")}
               value={formatScore(summary.seasonPoints)}
             />
           </div>
@@ -262,14 +264,15 @@ export default function PerfectChallenge() {
             value={week}
             options={weeks}
             onChange={setWeek}
-            label="WEEK"
+            label={t("perfectChallenge.weekLabel")}
             width={170}
+            formatWeek={(w) => (language === "hu" ? `${w}. hét` : `Week ${w}`)}
           />
 
          <div className="filters-spacer" />
 
           <Link to="/fantasy/perfect-challenge/rules" className="btn">
-            Rules
+            {t("perfectChallenge.rules")}
           </Link>
 
           {isReadOnlyView ? (
@@ -278,14 +281,14 @@ export default function PerfectChallenge() {
                 to={`/fantasy/perfect-challenge/leaderboard?week=${week}`}
                 className="btn"
               >
-                Back to Leaderboard
+                {t("perfectChallenge.backToLeaderboard")}
               </Link>
 
               <Link
                 to={`/fantasy/perfect-challenge?week=${week}`}
                 className="btn primary"
               >
-                My Perfect Challenge
+                {t("perfectChallenge.myPerfectChallenge")}
               </Link>
             </>
           ) : (
@@ -293,13 +296,13 @@ export default function PerfectChallenge() {
               to={`/fantasy/perfect-challenge/leaderboard?week=${week}`}
               className="btn"
             >
-              Leaderboard
+              {t("perfectChallenge.leaderboard")}
             </Link>
           )}
 
           <span className="pill">
             <span className="dot" />
-            {filledCount}/8 visible
+            {filledCount}/8 {t("perfectChallenge.visibleSuffix")}
           </span>
         </div>
       </div>
@@ -326,7 +329,7 @@ export default function PerfectChallenge() {
       {!isReadOnlyView && (
         <PerfectChallengeSelectorModal
           open={!!modalSlot}
-          title={modalSlot ? `Select player for ${modalSlot.slot}` : ""}
+          title={modalSlot ? `${t("perfectChallenge.selectPlayerFor")} ${modalSlot.slot}` : ""}
           players={modalPlayers}
           onClose={() => setModalSlot(null)}
           onPick={pickPlayer}
