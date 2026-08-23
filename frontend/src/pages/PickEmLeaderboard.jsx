@@ -115,6 +115,12 @@ export default function PickEmLeaderboard() {
         <h3 style={{ marginTop: 0, marginBottom: 12 }}>{t("pickem.weeklyTableTitle")}</h3>
 
         <table className="table">
+          <colgroup>
+            <col style={{ width: 60 }} />
+            <col />
+            <col style={{ width: 140 }} />
+            <col style={{ width: 140 }} />
+          </colgroup>
           <thead>
             <tr>
               <th>{t("pickem.colRank")}</th>
@@ -152,6 +158,11 @@ export default function PickEmLeaderboard() {
         <h3 style={{ marginTop: 24, marginBottom: 12 }}>{t("pickem.seasonTableTitle")}</h3>
 
         <table className="table">
+          <colgroup>
+            <col style={{ width: 60 }} />
+            <col />
+            <col style={{ width: 140 }} />
+          </colgroup>
           <thead>
             <tr>
               <th>{t("pickem.colRank")}</th>
