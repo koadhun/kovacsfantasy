@@ -2,10 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import TeamLogo from "../components/TeamLogo";
 import SeasonDropdown from "../components/SeasonDropdown";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const YEARS = [2026, 2025];
 
 export default function Stats() {
+  const { t } = useLanguage();
   const [season, setSeason] = useState(2026);
   const [category, setCategory] = useState("passing");
   const [q, setQ] = useState("");
@@ -29,7 +31,7 @@ const categories = meta?.categories || [
     { key: "punting", label: "Punting" },
   ];
 
-  const columns = meta?.columns || [{ key: "player", label: "Player" }];
+  const columns = meta?.columns || [{ key: "player", label: t("stats.playerCol") }];
   const searchMode = !!meta?.searchMode;
 
   const displayColumns = useMemo(() => {
@@ -46,17 +48,17 @@ const categories = meta?.categories || [
   }
 
   useEffect(() => {
-    load().catch(() => setErr("Nem sikerült betölteni a statisztikákat."));
+    load().catch(() => setErr(t("stats.loadError")));
     // eslint-disable-next-line
   }, [season, category, page, sortKey, sortDir]);
 
   useEffect(() => {
-    const t = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       setPage(1);
-      load().catch(() => setErr("Nem sikerült betölteni a statisztikákat."));
+      load().catch(() => setErr(t("stats.loadError")));
     }, 350);
 
-    return () => clearTimeout(t);
+    return () => clearTimeout(timeoutId);
     // eslint-disable-next-line
   }, [q]);
 
@@ -87,13 +89,13 @@ const categories = meta?.categories || [
       <div className="hero">
         <div className="kicker">
           <span className="tag">STATS</span>
-          <span>Player Stats</span>
+          <span>{t("stats.playerCol")} Stats</span>
         </div>
 
         <h1 className="h1">Stats</h1>
 
         <p className="sub">
-          Stats are refreshed every 15-30 minutes. For live scores visit <a href="http://nfl.com">NFL</a>
+          {t("stats.refreshNotice")} <a href="http://nfl.com">NFL</a>
         </p>
 
         <div className="filters-bar">
@@ -104,12 +106,12 @@ const categories = meta?.categories || [
               setSeason(Number(year));
               setPage(1);
             }}
-            label="SEASON"
+            label={t("stats.seasonLabel")}
             width={170}
           />
 
           <div className="filters-group">
-            <span className="filters-label">CATEGORY</span>
+            <span className="filters-label">{t("stats.categoryLabel")}</span>
             {categories.map((c) => (
               <button
                 key={c.key}
@@ -125,10 +127,10 @@ const categories = meta?.categories || [
           </div>
 
           <div className="filters-group" style={{ minWidth: 310 }}>
-            <span className="filters-label">SEARCH</span>
+            <span className="filters-label">{t("stats.searchLabel")}</span>
             <input
               className="input-dark"
-              placeholder="Player name..."
+              placeholder={t("stats.searchPlaceholder")}
               value={q}
               onChange={(e) => setQ(e.target.value)}
               style={{ height: 42 }}
@@ -165,10 +167,10 @@ const categories = meta?.categories || [
           <h3 style={{ margin: 0 }}>
             {meta?.season || season} ·{" "}
             {searchMode
-              ? `Search results for "${q}"`
+              ? `${t("stats.searchResultsFor")} "${q}"`
               : categories.find((c) => c.key === category)?.label || category}
           </h3>
-          <div className="muted">{meta ? `${meta.total} results` : ""}</div>
+          <div className="muted">{meta ? `${meta.total} ${t("stats.resultsSuffix")}` : ""}</div>
         </div>
 
         <div style={{ overflowX: "auto" }}>
@@ -182,10 +184,10 @@ const categories = meta?.categories || [
                   className={`${sortKey === "player" ? "col-active" : ""} ${
                     hoverKey === "player" ? "col-hover" : ""
                   }`}
-                  title="Click to sort"
+                  title={t("stats.clickToSort")}
                   style={{ cursor: "pointer" }}
                 >
-                  Player {sortKey === "player" ? (sortDir === "asc" ? " ▲" : " ▼") : ""}
+                  {t("stats.playerCol")} {sortKey === "player" ? (sortDir === "asc" ? " ▲" : " ▼") : ""}
                 </th>
 
                 {displayColumns.map((c) => (
@@ -197,7 +199,7 @@ const categories = meta?.categories || [
                     className={`${sortKey === c.key ? "col-active" : ""} ${
                       hoverKey === c.key ? "col-hover" : ""
                     }`}
-                    title="Click to sort"
+                    title={t("stats.clickToSort")}
                     style={{ cursor: "pointer" }}
                   >
                     {c.label} {sortKey === c.key ? (sortDir === "asc" ? " ▲" : " ▼") : ""}
@@ -266,7 +268,7 @@ const categories = meta?.categories || [
               {!rows.length && (
                 <tr>
                   <td colSpan={displayColumns.length + 1} className="muted">
-                    Nincs találat.
+                    {t("stats.noResults")}
                   </td>
                 </tr>
               )}
@@ -280,7 +282,7 @@ const categories = meta?.categories || [
         style={{ marginTop: 14, justifyContent: "space-between" }}
       >
         <div className="muted">
-          Page {currentPage} / {totalPages}
+          {t("stats.pagePrefix")} {currentPage} / {totalPages}
         </div>
 
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -289,28 +291,28 @@ const categories = meta?.categories || [
             onClick={() => setPage(1)}
             disabled={currentPage <= 1}
           >
-            First
+            {t("stats.first")}
           </button>
           <button
             className="btn"
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={currentPage <= 1}
           >
-            Prev
+            {t("stats.prev")}
           </button>
           <button
             className="btn"
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage >= totalPages}
           >
-            Next
+            {t("stats.next")}
           </button>
           <button
             className="btn"
             onClick={() => setPage(totalPages)}
             disabled={currentPage >= totalPages}
           >
-            Last
+            {t("stats.last")}
           </button>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import TeamLogo from "../components/TeamLogo";
 import SeasonDropdown from "../components/SeasonDropdown";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const DEFAULT_SEASON = 2026;
 const SEASONS = [2026, 2025];
@@ -54,7 +55,7 @@ function Pill({ text }) {
   );
 }
 
-function DivisionTable({ title, rows }) {
+function DivisionTable({ title, rows, t }) {
   return (
     <div className="card" style={{ padding: 14 }}>
       <h3 className="card-title" style={{ marginBottom: 12 }}>
@@ -64,7 +65,7 @@ function DivisionTable({ title, rows }) {
       <table className="table standings-table" style={{ width: "100%" }}>
         <thead>
           <tr>
-            <th style={{ width: 360 }}>Team</th>
+            <th style={{ width: 360 }}>{t("standings.colTeam")}</th>
             <th>W</th>
             <th>L</th>
             <th>T</th>
@@ -72,7 +73,7 @@ function DivisionTable({ title, rows }) {
             <th>PF</th>
             <th>PA</th>
             <th>NET</th>
-            <th>Clinched</th>
+            <th>{t("standings.colClinched")}</th>
           </tr>
         </thead>
 
@@ -114,6 +115,7 @@ function DivisionTable({ title, rows }) {
 }
 
 export default function Standings() {
+  const { t } = useLanguage();
   const [data, setData] = useState(null);
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
@@ -136,8 +138,9 @@ export default function Standings() {
     }
 
     load().catch(() =>
-      setErr("Nem sikerült betölteni a standings adatokat.")
+      setErr(t("standings.loadError"))
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [season]);
 
   useEffect(() => {
@@ -169,7 +172,7 @@ export default function Standings() {
   }, [allDivisionData]);
 
   const modeLabel =
-    division === "ALL" ? "Conference View" : "Division View";
+    division === "ALL" ? t("standings.modeConference") : t("standings.modeDivision");
 
   return (
     <div className="container page">
@@ -179,13 +182,13 @@ export default function Standings() {
           <span>{modeLabel}</span>
         </div>
 
-        <h1 className="h1">Standings</h1>
+        <h1 className="h1">{t("standings.title")}</h1>
 
         <p className="sub" style={{ marginBottom: 0 }}>
           {division === "ALL"
-            ? `Alapértelmezett: teljes ${conf}.`
-            : `Szűrve: ${division}.`}{" "}
-          {data?.season ? <Pill text={`Season ${data.season}`} /> : null}
+            ? `${t("standings.defaultNote")} ${conf}.`
+            : `${t("standings.filteredNote")} ${division}.`}{" "}
+          {data?.season ? <Pill text={`${t("standings.seasonPill")} ${data.season}`} /> : null}
         </p>
 
         <div className="filters-bar">
@@ -193,12 +196,12 @@ export default function Standings() {
             value={season}
             options={SEASONS}
             onChange={setSeason}
-            label="SEASON"
+            label={t("standings.seasonLabel")}
             width={170}
           />
 
           <div className="filters-group">
-            <span className="filters-label">CONFERENCE</span>
+            <span className="filters-label">{t("standings.conferenceLabel")}</span>
             <button
               className={`btn ${conf === "AFC" ? "primary" : ""}`}
               onClick={() => setConf("AFC")}
@@ -214,14 +217,14 @@ export default function Standings() {
           </div>
 
           <div className="filters-group" style={{ minWidth: 320 }}>
-            <span className="filters-label">DIVISION</span>
+            <span className="filters-label">{t("standings.divisionLabel")}</span>
             <select
               className="select-dark"
               value={division}
               onChange={(e) => setDivision(e.target.value)}
               disabled={!divisions.length}
             >
-              <option value="ALL">{conf} — ALL DIVISIONS</option>
+              <option value="ALL">{conf} — {t("standings.allDivisions")}</option>
               {divisions.map((d) => (
                 <option key={d} value={d}>
                   {d}
@@ -233,7 +236,7 @@ export default function Standings() {
           <div className="filters-spacer" />
 
           <div className="muted" style={{ fontSize: 12 }}>
-            Legend: x playoff, y wild card, z division, * homefield
+            {t("standings.legend")}
           </div>
         </div>
       </div>
@@ -246,14 +249,14 @@ export default function Standings() {
 
       {loading && !err && (
         <p className="muted" style={{ marginTop: 14 }}>
-          Betöltés…
+          {t("standings.loading")}
         </p>
       )}
 
       {!loading && !err && data && !hasAnyRows && (
         <div className="card" style={{ marginTop: 14, padding: 14 }}>
           <div className="muted">
-            Nincs standings adat a(z) {season} szezonhoz.
+            {t("standings.noDataPrefix")} {season} {t("standings.noDataSuffix")}
           </div>
         </div>
       )}
@@ -267,20 +270,20 @@ export default function Standings() {
           }}
         >
           {allDivisionData.map((d) => (
-            <DivisionTable key={d.name} title={d.name} rows={d.rows} />
+            <DivisionTable key={d.name} title={d.name} rows={d.rows} t={t} />
           ))}
         </div>
       )}
 
       {data && hasAnyRows && division !== "ALL" && (
         <div className="standings-full">
-          <DivisionTable title={division} rows={singleRows} />
+          <DivisionTable title={division} rows={singleRows} t={t} />
         </div>
       )}
 
       {data?.updatedAt && (
         <p className="muted" style={{ marginTop: 12, fontSize: 12 }}>
-          Updated at: {new Date(data.updatedAt).toLocaleString()}
+          {t("standings.updatedAt")} {new Date(data.updatedAt).toLocaleString()}
         </p>
       )}
     </div>

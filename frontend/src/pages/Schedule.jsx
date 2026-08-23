@@ -4,14 +4,9 @@ import { api } from "../api";
 import TeamLogo from "../components/TeamLogo";
 import WeekDropdown from "../components/WeekDropdown";
 import SimpleDropdown from "../components/SimpleDropdown";
+import { useLanguage } from "../i18n/LanguageContext";
 
 import { Link } from "react-router-dom";
-
-const STAGE_OPTIONS = [
-  { value: "PRE", label: "Pre-Season" },
-  { value: "REG", label: "Regular Season" },
-  { value: "POST", label: "Post Season" },
-];
 
 const TEAM_NAMES = {
   ARI: "Arizona Cardinals",
@@ -155,7 +150,14 @@ function TeamScoreRow({ team, score, highlighted = false, winner = false }) {
 }
 
 export default function Schedule() {
+  const { t, language } = useLanguage();
   const [sp, setSp] = useSearchParams();
+
+  const STAGE_OPTIONS = [
+    { value: "PRE", label: t("schedule.stagePre") },
+    { value: "REG", label: t("schedule.stageReg") },
+    { value: "POST", label: t("schedule.stagePost") },
+  ];
 
   const [seasons, setSeasons] = useState([]);
   const [season, setSeason] = useState(Number(sp.get("season")) || new Date().getFullYear());
@@ -199,30 +201,33 @@ export default function Schedule() {
   }
 
   useEffect(() => {
-    loadSeasons().catch(() => setErr("Nem sikerült betölteni a szezonokat."));
+    loadSeasons().catch(() => setErr(t("schedule.loadSeasonsError")));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    loadWeeks().catch(() => setErr("Nem sikerült betölteni a heteket."));
+    loadWeeks().catch(() => setErr(t("schedule.loadWeeksError")));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [season, stage]);
 
-useEffect(() => {
+  useEffect(() => {
     if (weeks.length) {
-      loadWeekGames(week).catch(() => setErr("Nem sikerült betölteni a meccseket."));
+      loadWeekGames(week).catch(() => setErr(t("schedule.loadGamesError")));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [week, season, stage, weeks]);
 
   const stageLabel = useMemo(
     () => STAGE_OPTIONS.find((s) => s.value === stage)?.label || stage,
-    [stage]
+    [stage, language]
   );
 
   const headerTitle = useMemo(
-    () => `Schedule · ${season} · ${stageLabel}${weeks.length ? ` · Week ${week}` : ""}`,
-    [season, stageLabel, week, weeks.length]
+    () =>
+      `${t("schedule.titlePrefix")} · ${season} · ${stageLabel}${
+        weeks.length ? ` · ${language === "hu" ? `${week}. hét` : `Week ${week}`}` : ""
+      }`,
+    [season, stageLabel, week, weeks.length, t, language]
   );
 
   return (
@@ -230,13 +235,13 @@ useEffect(() => {
       <div className="hero">
         <div className="kicker">
           <span className="tag">SCHEDULE</span>
-          <span>By Week</span>
+          <span>{t("schedule.byWeek")}</span>
         </div>
 
         <h1 className="h1">{headerTitle}</h1>
 
         <p className="sub">
-          Matches are refreshed every 15-30 minutes. For live scores visit <a href="http://nfl.com">NFL</a>
+          {t("schedule.refreshNotice")} <a href="http://nfl.com">NFL</a>
         </p>
 
         <div className="filters-bar">
@@ -244,7 +249,7 @@ useEffect(() => {
             value={season}
             options={seasons.map((s) => ({ value: s, label: String(s) }))}
             onChange={setSeason}
-            label="SEASON"
+            label={t("schedule.seasonLabel")}
             width={110}
           />
 
@@ -252,7 +257,7 @@ useEffect(() => {
             value={stage}
             options={STAGE_OPTIONS}
             onChange={setStage}
-            label="STAGE"
+            label={t("schedule.stageLabel")}
             width={180}
           />
 
@@ -261,8 +266,9 @@ useEffect(() => {
               value={week}
               options={weeks}
               onChange={setWeek}
-              label="WEEK"
+              label={t("schedule.weekLabel")}
               width={170}
+              formatWeek={(w) => (language === "hu" ? `${w}. hét` : `Week ${w}`)}
             />
           )}
 
@@ -270,7 +276,7 @@ useEffect(() => {
 
           <span className="pill">
             <span className="dot" />
-            {games.length} games
+            {games.length} {t("schedule.gamesSuffix")}
           </span>
         </div>
       </div>
@@ -349,7 +355,7 @@ useEffect(() => {
                     {formatDay(g.kickoffAt)}
                   </div>
 
-                  <Link className="btn" to={`/schedule/game/${g.id}`}>Details</Link>
+                  <Link className="btn" to={`/schedule/game/${g.id}`}>{t("schedule.details")}</Link>
                 </div>
               </div>
             </div>
@@ -358,7 +364,7 @@ useEffect(() => {
 
         {!games.length && !err && (
           <div className="card" style={{ padding: 14 }}>
-            <div className="muted">Ehhez a szűréshez nincs adat.</div>
+            <div className="muted">{t("schedule.noData")}</div>
           </div>
         )}
       </div>
