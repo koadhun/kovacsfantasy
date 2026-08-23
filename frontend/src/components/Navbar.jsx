@@ -72,6 +72,13 @@ export default function Navbar() {
                 {t("nav.fantasy")}
               </NavLink>
 
+                            <NavLink
+                to="/hall-of-fame"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                Hall of Fame
+              </NavLink>
+
               {(isVip || isAdmin) && (
                 <NavLink
                   to="/injuries"

@@ -44,6 +44,14 @@ export default function AdminLayout() {
             {t("admin.navStandings")}
           </NavLink>
 
+                    <NavLink
+            to="/admin/hall-of-fame"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <span className="admin-icon">🏆</span>
+            Hall of Fame
+          </NavLink>
+
           <NavLink
             to="/admin/schedule-results"
             className={({ isActive }) => (isActive ? "active" : "")}

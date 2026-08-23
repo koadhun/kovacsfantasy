@@ -40,6 +40,9 @@ import Injuries from "./pages/Injuries";
 
 import BecomeVip from "./pages/BecomeVip";
 
+import HallOfFame from "./pages/HallOfFame";
+import AdminHallOfFame from "./pages/AdminHallOfFame";
+
 function hasToken() {
   return !!localStorage.getItem("token");
 }
@@ -241,6 +244,17 @@ export default function App() {
         }
       />
 
+      <Route
+        path="/hall-of-fame"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <HallOfFame />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
             <Route
         path="/become-vip"
         element={
@@ -276,6 +290,7 @@ export default function App() {
         <Route path="users" element={<Users />} />
         <Route path="standings" element={<AdminStandings />} />
         <Route path="schedule-results" element={<ScheduleResultsEditor />} />
+        <Route path="hall-of-fame" element={<AdminHallOfFame />} />
         <Route index element={<Navigate to="users" replace />} />
       </Route>
 
