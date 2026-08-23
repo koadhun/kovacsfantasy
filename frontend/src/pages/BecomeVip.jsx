@@ -28,8 +28,8 @@ function BenefitCard({ title, description }) {
       >
         {"\u2726"}
       </div>
-      <h3 style={{ margin: "0 0 8px 0", fontSize: 17 }}>{title}</h3>
-      <p className="muted" style={{ margin: 0, lineHeight: 1.6, fontSize: 14 }}>
+      <h3 style={{ margin: "0 0 8px 0", fontSize: 17, color: "#f5f7fb" }}>{title}</h3>
+      <p style={{ margin: 0, lineHeight: 1.6, fontSize: 14, color: "rgba(245,247,251,.72)" }}>
         {description}
       </p>
     </div>
@@ -46,10 +46,10 @@ function PriceCard({ badge, price, period, note, highlighted, comingSoon, coming
         position: "relative",
         border: highlighted
           ? "1px solid rgba(245,179,1,.55)"
-          : "1px solid rgba(255,255,255,.08)",
+          : "1px solid rgba(255,255,255,.10)",
         background: highlighted
           ? "linear-gradient(180deg, rgba(245,179,1,.14), rgba(20,16,6,.5))"
-          : undefined,
+          : "linear-gradient(180deg, rgba(30,32,45,.85), rgba(12,13,20,.85))",
         boxShadow: highlighted ? "0 0 0 1px rgba(245,179,1,.25)" : undefined,
       }}
     >
@@ -74,20 +74,19 @@ function PriceCard({ badge, price, period, note, highlighted, comingSoon, coming
       )}
 
       <div
-        className="muted"
-        style={{ fontSize: 12, fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase" }}
+        style={{ fontSize: 12, fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase", color: "rgba(245,247,251,.72)" }}
       >
         {badge}
       </div>
 
-      <div style={{ fontSize: 40, fontWeight: 900, margin: "10px 0 0" }}>
+      <div style={{ fontSize: 40, fontWeight: 900, margin: "10px 0 0", color: "#f5f7fb" }}>
         {price}
-        <span style={{ fontSize: 15, fontWeight: 700, color: "rgba(255,255,255,.6)" }}>
+        <span style={{ fontSize: 15, fontWeight: 700, color: "rgba(245,247,251,.6)" }}>
           {" "}/ {period}
         </span>
       </div>
 
-      <p className="muted" style={{ marginTop: 8, fontSize: 13 }}>
+      <p style={{ marginTop: 8, fontSize: 13, color: "rgba(245,247,251,.72)" }}>
         {note}
       </p>
 

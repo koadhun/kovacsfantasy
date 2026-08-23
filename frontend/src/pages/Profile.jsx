@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { api } from "../api";
 import { useLanguage } from "../i18n/LanguageContext";
 import { useTheme } from "../theme/ThemeContext";
+import { getThemeTokens } from "../theme/themeTokens";
 
-function ProfileCard({ title, subtitle, children }) {
+function ProfileCard({ title, subtitle, children, tokens }) {
   return (
     <div
       className="card"
       style={{
         padding: 18,
         minHeight: 220,
-        background:
-          "linear-gradient(180deg, rgba(12,24,54,.96), rgba(7,14,32,.96))",
+        background: tokens.panelBg,
       }}
     >
       <h3 style={{ marginTop: 0, marginBottom: 8 }}>{title}</h3>
@@ -47,6 +47,7 @@ function InfoRow({ label, value }) {
 export default function Profile() {
   const { t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
+  const tokens = getThemeTokens(theme);
   const [user, setUser] = useState(null);
 
   const [email, setEmail] = useState("");
