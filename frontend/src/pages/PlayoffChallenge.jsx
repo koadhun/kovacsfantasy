@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../api";
 import PerfectChallengeCard from "../components/perfect/PerfectChallengeCard";
 import PerfectChallengeSelectorModal from "../components/perfect/PerfectChallengeSelectorModal";
+import SimpleDropdown from "../components/SimpleDropdown";
 
 const SEASON = 2025;
 
@@ -327,7 +328,13 @@ export default function PlayoffChallenge() {
         </div>
 
         <div className="filters-bar" style={{ marginTop: 16 }}>
-          <RoundDropdown value={round} options={rounds} onChange={setRound} />
+          <SimpleDropdown
+  value={round}
+  options={rounds}
+  onChange={setRound}
+  label="ROUND"
+  width={200}
+/>
 
           <div className="filters-spacer" />
 
