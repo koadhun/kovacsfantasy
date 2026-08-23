@@ -2970,3 +2970,155 @@ input[type="password"]::-ms-clear {
   background: rgba(16,24,40,.05);
   border-color: rgba(16,24,40,.10);
 }
+
+/* --- Perfect/Playoff Challenge player cards --- */
+[data-theme="light"] .pc-card-face {
+  background: #ffffff;
+  border-color: rgba(16,24,40,.10);
+  box-shadow: 0 8px 20px rgba(16,24,40,.08);
+}
+
+[data-theme="light"] .pc-slot-badge {
+  background: rgba(43,108,255,.08);
+  border-color: rgba(43,108,255,.25);
+  color: #1d4ed8;
+}
+
+/* --- Selector modal --- */
+[data-theme="light"] .pc-modal {
+  background: #ffffff;
+  border-color: rgba(16,24,40,.10);
+  box-shadow: 0 20px 50px rgba(16,24,40,.16);
+}
+
+[data-theme="light"] .pc-modal-kicker {
+  color: #5b6478;
+}
+
+[data-theme="light"] .pc-player-option {
+  background: rgba(16,24,40,.02);
+  border-color: rgba(16,24,40,.08);
+  color: #101828;
+}
+
+[data-theme="light"] .pc-player-option:hover,
+[data-theme="light"] .pc-player-option.active {
+  background: rgba(43,108,255,.06);
+  border-color: rgba(43,108,255,.28);
+}
+
+[data-theme="light"] .pc-player-option-image {
+  background: rgba(16,24,40,.04);
+}
+
+[data-theme="light"] .pc-player-option-meta {
+  color: #5b6478;
+}
+
+[data-theme="light"] .pc-side-card {
+  background: #ffffff;
+  border-color: rgba(16,24,40,.10);
+  box-shadow: 0 8px 20px rgba(16,24,40,.06);
+}
+
+[data-theme="light"] .pc-preview-image {
+  background: rgba(16,24,40,.04);
+}
+
+[data-theme="light"] .pc-side-player-meta {
+  color: #5b6478;
+}
+
+[data-theme="light"] .pc-side-section-title {
+  color: #5b6478;
+}
+
+[data-theme="light"] .pc-side-stat-row {
+  border-bottom-color: rgba(16,24,40,.08);
+}
+
+[data-theme="light"] .pc-side-stat-row span {
+  color: #5b6478;
+}
+
+[data-theme="light"] .pc-side-stat-row strong {
+  color: #101828;
+}
+ENDOFCSS
+cat /tmp/light_theme_part3.css
+Output
+
+
+/* --- Perfect/Playoff Challenge player cards --- */
+[data-theme="light"] .pc-card-face {
+  background: #ffffff;
+  border-color: rgba(16,24,40,.10);
+  box-shadow: 0 8px 20px rgba(16,24,40,.08);
+}
+
+[data-theme="light"] .pc-slot-badge {
+  background: rgba(43,108,255,.08);
+  border-color: rgba(43,108,255,.25);
+  color: #1d4ed8;
+}
+
+/* --- Selector modal --- */
+[data-theme="light"] .pc-modal {
+  background: #ffffff;
+  border-color: rgba(16,24,40,.10);
+  box-shadow: 0 20px 50px rgba(16,24,40,.16);
+}
+
+[data-theme="light"] .pc-modal-kicker {
+  color: #5b6478;
+}
+
+[data-theme="light"] .pc-player-option {
+  background: rgba(16,24,40,.02);
+  border-color: rgba(16,24,40,.08);
+  color: #101828;
+}
+
+[data-theme="light"] .pc-player-option:hover,
+[data-theme="light"] .pc-player-option.active {
+  background: rgba(43,108,255,.06);
+  border-color: rgba(43,108,255,.28);
+}
+
+[data-theme="light"] .pc-player-option-image {
+  background: rgba(16,24,40,.04);
+}
+
+[data-theme="light"] .pc-player-option-meta {
+  color: #5b6478;
+}
+
+[data-theme="light"] .pc-side-card {
+  background: #ffffff;
+  border-color: rgba(16,24,40,.10);
+  box-shadow: 0 8px 20px rgba(16,24,40,.06);
+}
+
+[data-theme="light"] .pc-preview-image {
+  background: rgba(16,24,40,.04);
+}
+
+[data-theme="light"] .pc-side-player-meta {
+  color: #5b6478;
+}
+
+[data-theme="light"] .pc-side-section-title {
+  color: #5b6478;
+}
+
+[data-theme="light"] .pc-side-stat-row {
+  border-bottom-color: rgba(16,24,40,.08);
+}
+
+[data-theme="light"] .pc-side-stat-row span {
+  color: #5b6478;
+}
+
+[data-theme="light"] .pc-side-stat-row strong {
+  color: #101828;
+}

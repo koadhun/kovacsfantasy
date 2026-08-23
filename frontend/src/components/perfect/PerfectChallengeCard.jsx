@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import TeamLogo from "../TeamLogo";
 import { useLanguage } from "../../i18n/LanguageContext";
+import { useTheme } from "../../theme/ThemeContext";
 
 const DECIMAL_KEYS = new Set(["passingYards", "rushingYards", "receivedYards"]);
 
@@ -67,6 +68,8 @@ export default function PerfectChallengeCard({
   hidden = false,
 }) {
   const { t } = useLanguage();
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const [flipped, setFlipped] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
   const [backView, setBackView] = useState("stats");
@@ -159,7 +162,7 @@ export default function PerfectChallengeCard({
                   fontSize: 13,
                   lineHeight: 1,
                   fontWeight: 800,
-                  color: "#fff",
+                  color: isLight ? "#101828" : "#fff",
                   letterSpacing: ".03em",
                 }}
               >
@@ -210,8 +213,8 @@ export default function PerfectChallengeCard({
                     borderRadius: "50%",
                     display: "grid",
                     placeItems: "center",
-                    background: "rgba(255,255,255,.05)",
-                    border: "1px solid rgba(255,255,255,.08)",
+                    background: isLight ? "rgba(16,24,40,.05)" : "rgba(255,255,255,.05)",
+                    border: isLight ? "1px solid rgba(16,24,40,.10)" : "1px solid rgba(255,255,255,.08)",
                     fontSize: 28,
                     marginBottom: 16,
                   }}
@@ -223,7 +226,7 @@ export default function PerfectChallengeCard({
                   style={{
                     fontSize: 20,
                     fontWeight: 900,
-                    color: "#f2f5ff",
+                    color: isLight ? "#101828" : "#f2f5ff",
                     marginBottom: 10,
                   }}
                 >
@@ -233,7 +236,7 @@ export default function PerfectChallengeCard({
                 <div
                   style={{
                     fontSize: 14,
-                    color: "rgba(255,255,255,.72)",
+                    color: isLight ? "#5b6478" : "rgba(255,255,255,.72)",
                     maxWidth: 220,
                     lineHeight: 1.4,
                   }}
@@ -264,9 +267,10 @@ export default function PerfectChallengeCard({
                       height: 132,
                       borderRadius: 22,
                       overflow: "hidden",
-                      background:
-                        "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
-                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
+                      background: isLight
+                        ? "linear-gradient(180deg, rgba(16,24,40,0.05), rgba(16,24,40,0.02))"
+                        : "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
+                      boxShadow: isLight ? "inset 0 1px 0 rgba(16,24,40,0.04)" : "inset 0 1px 0 rgba(255,255,255,0.05)",
                       marginBottom: 12,
                       flexShrink: 0,
                     }}
@@ -325,8 +329,8 @@ export default function PerfectChallengeCard({
                             pointerEvents: hovered ? "auto" : "none",
                             transition: "all 0.18s ease",
                             border: "1px solid rgba(59,130,246,.55)",
-                            background: "rgba(8,18,44,.95)",
-                            color: "#fff",
+                            background: isLight ? "rgba(255,255,255,.97)" : "rgba(8,18,44,.95)",
+                            color: isLight ? "#1d4ed8" : "#fff",
                             borderRadius: 10,
                             padding: "8px 12px",
                             fontSize: 12,
@@ -349,7 +353,7 @@ export default function PerfectChallengeCard({
                       marginBottom: 10,
                       fontSize: 13,
                       fontWeight: 700,
-                      color: "rgba(255,255,255,.78)",
+                      color: isLight ? "#5b6478" : "rgba(255,255,255,.78)",
                       flexShrink: 0,
                     }}
                   >
@@ -362,7 +366,7 @@ export default function PerfectChallengeCard({
                       style={{
                         fontSize: 17,
                         fontWeight: 800,
-                        color: "rgba(255,255,255,.92)",
+                        color: isLight ? "#101828" : "rgba(255,255,255,.92)",
                       }}
                     >
                       {player.firstName}
@@ -371,7 +375,7 @@ export default function PerfectChallengeCard({
                       style={{
                         fontSize: 31,
                         fontWeight: 900,
-                        color: "#f8fbff",
+                        color: isLight ? "#101828" : "#f8fbff",
                         letterSpacing: "-0.02em",
                       }}
                     >
@@ -389,7 +393,7 @@ export default function PerfectChallengeCard({
                     fontSize: 34,
                     fontWeight: 900,
                     lineHeight: 1,
-                    color: "#f8fbff",
+                    color: isLight ? "#101828" : "#f8fbff",
                     zIndex: 3,
                     pointerEvents: "none",
                   }}
@@ -408,9 +412,9 @@ export default function PerfectChallengeCard({
                     width: 30,
                     height: 30,
                     borderRadius: "50%",
-                    border: "1px solid rgba(255,255,255,.14)",
-                    background: "rgba(255,255,255,.06)",
-                    color: "#fff",
+                    border: isLight ? "1px solid rgba(16,24,40,.14)" : "1px solid rgba(255,255,255,.14)",
+                    background: isLight ? "rgba(16,24,40,.05)" : "rgba(255,255,255,.06)",
+                    color: isLight ? "#101828" : "#fff",
                     fontSize: 15,
                     fontWeight: 800,
                     display: "grid",
@@ -438,7 +442,7 @@ export default function PerfectChallengeCard({
                   style={{
                     fontSize: 19,
                     fontWeight: 900,
-                    color: "#f2f5ff",
+                    color: isLight ? "#101828" : "#f2f5ff",
                     marginBottom: 10,
                   }}
                 >
@@ -448,7 +452,7 @@ export default function PerfectChallengeCard({
                 <div
                   style={{
                     fontSize: 15,
-                    color: "rgba(255,255,255,.72)",
+                    color: isLight ? "#5b6478" : "rgba(255,255,255,.72)",
                     marginBottom: 18,
                     maxWidth: 220,
                   }}
@@ -488,7 +492,7 @@ export default function PerfectChallengeCard({
                   alignItems: "center",
                   justifyContent: "center",
                   textAlign: "center",
-                  color: "rgba(255,255,255,.74)",
+                  color: isLight ? "#5b6478" : "rgba(255,255,255,.74)",
                   padding: 20,
                   lineHeight: 1.45,
                 }}
@@ -525,9 +529,9 @@ export default function PerfectChallengeCard({
                       width: 30,
                       height: 30,
                       borderRadius: 10,
-                      border: "1px solid rgba(255,255,255,.14)",
-                      background: "rgba(255,255,255,.06)",
-                      color: "#fff",
+                      border: isLight ? "1px solid rgba(16,24,40,.14)" : "1px solid rgba(255,255,255,.14)",
+                      background: isLight ? "rgba(16,24,40,.05)" : "rgba(255,255,255,.06)",
+                      color: isLight ? "#101828" : "#fff",
                       fontSize: 15,
                       fontWeight: 800,
                       cursor: "pointer",
@@ -544,7 +548,7 @@ export default function PerfectChallengeCard({
                       style={{
                         fontSize: 14,
                         fontWeight: 800,
-                        color: "#f3f6ff",
+                        color: isLight ? "#101828" : "#f3f6ff",
                         marginBottom: 6,
                         lineHeight: 1.1,
                       }}
@@ -563,12 +567,12 @@ export default function PerfectChallengeCard({
                         type="button"
                         onClick={() => setBackView("stats")}
                         style={{
-                          border: "1px solid rgba(255,255,255,.12)",
+                          border: isLight ? "1px solid rgba(16,24,40,.12)" : "1px solid rgba(255,255,255,.12)",
                           background:
                             backView === "stats"
-                              ? "rgba(59,130,246,.22)"
-                              : "rgba(255,255,255,.06)",
-                          color: "#fff",
+                              ? "rgba(59,130,246,.18)"
+                              : isLight ? "rgba(16,24,40,.04)" : "rgba(255,255,255,.06)",
+                          color: isLight ? "#101828" : "#fff",
                           borderRadius: 8,
                           padding: "6px 12px",
                           fontSize: 13,
@@ -583,12 +587,12 @@ export default function PerfectChallengeCard({
                         type="button"
                         onClick={() => setBackView("points")}
                         style={{
-                          border: "1px solid rgba(255,255,255,.12)",
+                          border: isLight ? "1px solid rgba(16,24,40,.12)" : "1px solid rgba(255,255,255,.12)",
                           background:
                             backView === "points"
-                              ? "rgba(59,130,246,.22)"
-                              : "rgba(255,255,255,.06)",
-                          color: "#fff",
+                              ? "rgba(59,130,246,.18)"
+                              : isLight ? "rgba(16,24,40,.04)" : "rgba(255,255,255,.06)",
+                          color: isLight ? "#101828" : "#fff",
                           borderRadius: 8,
                           padding: "6px 12px",
                           fontSize: 13,
@@ -617,15 +621,15 @@ export default function PerfectChallengeCard({
                             alignItems: "center",
                             gap: 10,
                             padding: "4px 0",
-                            borderBottom: "1px solid rgba(255,255,255,.08)",
+                            borderBottom: isLight ? "1px solid rgba(16,24,40,.08)" : "1px solid rgba(255,255,255,.08)",
                             fontSize: 12,
                             lineHeight: 1.05,
                           }}
                         >
-                          <span style={{ color: "rgba(255,255,255,.84)" }}>
+                          <span style={{ color: isLight ? "#5b6478" : "rgba(255,255,255,.84)" }}>
                             {row.label}
                           </span>
-                          <strong style={{ color: "#fff", fontSize: 12 }}>
+                          <strong style={{ color: isLight ? "#101828" : "#fff", fontSize: 12 }}>
                             {row.value}
                           </strong>
                         </div>
@@ -645,8 +649,8 @@ export default function PerfectChallengeCard({
                             lineHeight: 1.05,
                           }}
                         >
-                          <span style={{ color: "#fff" }}>{t("perfectChallengeCard.total")}</span>
-                          <strong style={{ color: "#fff" }}>{breakdownTotal}</strong>
+                          <span style={{ color: isLight ? "#101828" : "#fff" }}>{t("perfectChallengeCard.total")}</span>
+                          <strong style={{ color: isLight ? "#101828" : "#fff" }}>{breakdownTotal}</strong>
                         </div>
                       ) : null}
                     </div>
@@ -658,7 +662,7 @@ export default function PerfectChallengeCard({
                       flex: 1,
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "rgba(255,255,255,.72)",
+                      color: isLight ? "#5b6478" : "rgba(255,255,255,.72)",
                       textAlign: "center",
                     }}
                   >

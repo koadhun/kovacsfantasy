@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import TeamLogo from "../TeamLogo";
 import { useLanguage } from "../../i18n/LanguageContext";
+import { useTheme } from "../../theme/ThemeContext";
 
 const INJURY_COLORS = {
   Out: { bg: "rgba(239,68,68,.18)", text: "#fca5a5" },
@@ -188,6 +189,8 @@ export default function PerfectChallengeSelectorModal({
   periodType = "week",
 }) {
   const { t } = useLanguage();
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -502,7 +505,7 @@ export default function PerfectChallengeSelectorModal({
                             marginBottom: 12,
                             fontSize: 14,
                             fontWeight: 800,
-                            color: "rgba(255,255,255,.86)",
+                            color: isLight ? "#101828" : "rgba(255,255,255,.86)",
                             lineHeight: 1.2,
                           }}
                         >
@@ -531,7 +534,7 @@ export default function PerfectChallengeSelectorModal({
                           marginBottom: 12,
                           fontSize: 14,
                           fontWeight: 800,
-                          color: "rgba(255,255,255,.86)",
+                          color: isLight ? "#101828" : "rgba(255,255,255,.86)",
                           lineHeight: 1.2,
                         }}
                       >
