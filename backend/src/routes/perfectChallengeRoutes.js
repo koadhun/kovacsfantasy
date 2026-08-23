@@ -10,8 +10,8 @@ import { ACTIVE_GAME_TYPE } from "../lib/activeGameType.js";
 
 const router = Router();
 
-const DEFAULT_SEASON = 2025;
-const DEFAULT_WEEKS = [1, 2, 3];
+const DEFAULT_SEASON = 2026;
+const DEFAULT_WEEKS = Array.from({ length: 18 }, (_, i) => i + 1);
 
 const SLOT_TO_POSITION = {
   QB: "QB",
