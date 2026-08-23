@@ -2882,3 +2882,91 @@ input[type="password"]::-ms-clear {
 [data-theme="light"] .profile-chip:hover {
   background: rgba(16,24,40,.07);
 }
+
+/* --- Weekly Pick'Em game rows --- */
+[data-theme="light"] .scheduleRow {
+  border-color: rgba(16,24,40,.10);
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(16,24,40,.06);
+}
+
+[data-theme="light"] .scheduleTeam {
+  background: rgba(16,24,40,.03);
+  border-color: rgba(16,24,40,.08);
+}
+
+[data-theme="light"] .scheduleTeam.winner {
+  background: rgba(43,108,255,.06);
+  border-color: rgba(43,108,255,.22);
+}
+
+[data-theme="light"] .teamCode {
+  background: rgba(16,24,40,.04);
+  border-color: rgba(16,24,40,.12);
+  color: #101828;
+}
+
+[data-theme="light"] .scheduleRight {
+  border-left-color: rgba(16,24,40,.08);
+}
+
+[data-theme="light"] .statusPill {
+  border-color: rgba(16,24,40,.14);
+  background: rgba(16,24,40,.04);
+  color: #101828;
+}
+
+[data-theme="light"] .statusPill.final {
+  border-color: rgba(43,108,255,.35);
+  background: rgba(43,108,255,.08);
+}
+
+[data-theme="light"] .pickTeamBtn {
+  border-color: rgba(16,24,40,.14);
+  background: rgba(16,24,40,.03);
+  color: #101828;
+}
+
+[data-theme="light"] .pickTeamBtn:hover {
+  background: rgba(43,108,255,.06);
+  border-color: rgba(43,108,255,.28);
+}
+
+[data-theme="light"] .pickTeamBtn.selected {
+  background: rgba(43,108,255,.10);
+  border-color: rgba(43,108,255,.45);
+  box-shadow: inset 0 -2px 0 rgba(43,108,255,.5);
+}
+
+[data-theme="light"] .pickMeta {
+  color: #101828;
+}
+
+/* --- Admin table --- */
+[data-theme="light"] .adminTable th,
+[data-theme="light"] .adminTable td {
+  border-bottom-color: rgba(16,24,40,.10);
+}
+
+[data-theme="light"] .adminTable input,
+[data-theme="light"] .adminTable select {
+  background: #ffffff;
+  color: #101828;
+  border-color: rgba(16,24,40,.16);
+}
+
+/* --- User menu dropdown --- */
+[data-theme="light"] .userMenu {
+  border-color: rgba(16,24,40,.12);
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(16,24,40,.16);
+}
+
+[data-theme="light"] .userMenuItem {
+  color: #101828;
+}
+
+[data-theme="light"] .userMenuItem:hover {
+  background: rgba(16,24,40,.05);
+  border-color: rgba(16,24,40,.10);
+}
