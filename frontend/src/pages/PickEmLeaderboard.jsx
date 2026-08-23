@@ -89,11 +89,12 @@ export default function PickEmLeaderboard() {
         <p className="sub">{t("pickem.leaderboardSubtitle")}</p>
 
         <div className="filters-bar" style={{ marginTop: 14 }}>
-          <WeekDropdown
+                    <WeekDropdown
             value={week}
             options={weeks}
             onChange={setWeek}
             label={t("pickem.weekLabel")}
+            weekWord={t("pickem.weekWord")}
             width={170}
           />
 

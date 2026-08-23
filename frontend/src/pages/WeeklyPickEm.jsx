@@ -270,11 +270,12 @@ export default function WeeklyPickEm() {
         </div>
 
         <div className="filters-bar" style={{ marginTop: 16 }}>
-          <WeekDropdown
+                    <WeekDropdown
             value={week}
             options={weeks}
             onChange={setWeek}
             label={t("pickem.weekLabel")}
+            weekWord={t("pickem.weekWord")}
             width={170}
           />
 

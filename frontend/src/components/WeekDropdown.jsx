@@ -6,6 +6,7 @@ export default function WeekDropdown({
   onChange,
   label = "WEEK",
   width = 160,
+  weekWord = "Week",
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
@@ -30,7 +31,7 @@ export default function WeekDropdown({
     };
   }, []);
 
-  const currentLabel = value ? `Week ${value}` : "Select week";
+  const currentLabel = value ? `${weekWord} ${value}` : "Select week";
 
   return (
     <div
@@ -82,7 +83,7 @@ export default function WeekDropdown({
                 role="option"
                 aria-selected={selected}
               >
-                <span>Week {w}</span>
+                <span>{weekWord} {w}</span>
                 {selected ? <span style={{ opacity: 0.85 }}>✓</span> : null}
               </button>
             );
