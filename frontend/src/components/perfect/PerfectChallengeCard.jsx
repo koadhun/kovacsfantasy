@@ -1,28 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import TeamLogo from "../TeamLogo";
-
-const LABELS = {
-  passingYards: "Passing yards",
-  passingTDs: "Passing TDs",
-  interceptions: "Interceptions",
-  rushingYards: "Rushing yards",
-  rushingTDs: "Rushing TDs",
-  fumble: "Fumble",
-  receivedYards: "Received yards",
-  receivedTDs: "Received TDs",
-  fumbles: "Fumbles",
-  fg0to49Yards: "0-49 yards",
-  fg50plusYards: "50+ yards",
-  xp: "XP",
-  interception: "Interception",
-  forcedFumble: "Forced fumble",
-  sack: "Sack",
-  safety: "Safety",
-  returnTD: "Return TD",
-  allowedPoints: "Allowed points",
-  base: "Base",
-  allowedPointsPenalty: "Allowed points penalty",
-};
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const DECIMAL_KEYS = new Set(["passingYards", "rushingYards", "receivedYards"]);
 
@@ -55,24 +33,24 @@ function formatBreakdownValue(value) {
   return Number(value).toFixed(2);
 }
 
-function orderedStatRows(position, stats) {
+function orderedStatRows(position, stats, t) {
   if (!stats || !position) return [];
   const order = STAT_ORDER_BY_POSITION[position] || [];
 
   return order.map((key) => ({
     key,
-    label: LABELS[key] || key,
+    label: t(`perfectChallengeCard.statLabels.${key}`) || key,
     value: formatStatValue(key, stats[key]),
   }));
 }
 
-function orderedBreakdownRows(position, breakdown) {
+function orderedBreakdownRows(position, breakdown, t) {
   if (!breakdown || !position) return [];
   const order = BREAKDOWN_ORDER_BY_POSITION[position] || [];
 
   return order.map((key) => ({
     key,
-    label: LABELS[key] || key,
+    label: t(`perfectChallengeCard.statLabels.${key}`) || key,
     value: formatBreakdownValue(breakdown[key]),
   }));
 }
@@ -88,6 +66,7 @@ export default function PerfectChallengeCard({
   readOnly = false,
   hidden = false,
 }) {
+  const { t } = useLanguage();
   const [flipped, setFlipped] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
   const [backView, setBackView] = useState("stats");
@@ -101,13 +80,13 @@ export default function PerfectChallengeCard({
   }, [player?.id, slot, hidden]);
 
   const weeklyRows = useMemo(
-    () => orderedStatRows(player?.position, player?.weeklyStats),
-    [player]
+    () => orderedStatRows(player?.position, player?.weeklyStats, t),
+    [player, t]
   );
 
   const breakdownRows = useMemo(
-    () => orderedBreakdownRows(player?.position, player?.weeklyScoreBreakdown?.breakdown),
-    [player]
+    () => orderedBreakdownRows(player?.position, player?.weeklyScoreBreakdown?.breakdown, t),
+    [player, t]
   );
 
   const breakdownTotal = useMemo(() => {
@@ -184,7 +163,7 @@ export default function PerfectChallengeCard({
                   letterSpacing: ".03em",
                 }}
               >
-                                {player.gameStatus === "IN_PROGRESS" ? (
+                {player.gameStatus === "IN_PROGRESS" ? (
                   <>
                     <span aria-hidden="true">🔒</span>
                     <span
@@ -196,17 +175,17 @@ export default function PerfectChallengeCard({
                         display: "inline-block",
                       }}
                     />
-                    LIVE
+                    {t("perfectChallengeCard.live")}
                   </>
                 ) : player.gameStatus === "FINAL" ? (
                   <>
                     <span aria-hidden="true">🔒</span>
-                    FINAL
+                    {t("perfectChallengeCard.final")}
                   </>
                 ) : (
                   <>
                     <span aria-hidden="true">⏰</span>
-                    SCHEDULED
+                    {t("perfectChallengeCard.scheduled")}
                   </>
                 )}
               </div>
@@ -248,7 +227,7 @@ export default function PerfectChallengeCard({
                     marginBottom: 10,
                   }}
                 >
-                  Pick hidden
+                  {t("perfectChallengeCard.pickHiddenTitle")}
                 </div>
 
                 <div
@@ -259,7 +238,7 @@ export default function PerfectChallengeCard({
                     lineHeight: 1.4,
                   }}
                 >
-                  This player's game has not started yet. The pick becomes visible after kickoff.
+                  {t("perfectChallengeCard.pickHiddenBody")}
                 </div>
               </div>
             ) : player ? (
@@ -356,7 +335,7 @@ export default function PerfectChallengeCard({
                             cursor: "pointer",
                           }}
                         >
-                          Change player
+                          {t("perfectChallengeCard.changePlayer")}
                         </button>
                       </>
                     ) : null}
@@ -421,7 +400,7 @@ export default function PerfectChallengeCard({
                 <button
                   type="button"
                   onClick={() => setFlipped(true)}
-                  title="Weekly details"
+                  title={t("perfectChallengeCard.weeklyDetailsTitle")}
                   style={{
                     position: "absolute",
                     right: 14,
@@ -463,7 +442,7 @@ export default function PerfectChallengeCard({
                     marginBottom: 10,
                   }}
                 >
-                  No player selected
+                  {t("perfectChallengeCard.noPlayerSelected")}
                 </div>
 
                 <div
@@ -475,13 +454,13 @@ export default function PerfectChallengeCard({
                   }}
                 >
                   {readOnly
-                    ? `No ${slot} player visible for this slot.`
-                    : `Choose a ${slot} player for this slot.`}
+                    ? t("perfectChallengeCard.noPlayerVisible").replace("{slot}", slot)
+                    : t("perfectChallengeCard.choosePlayer").replace("{slot}", slot)}
                 </div>
 
                 {!readOnly ? (
                   <button className="btn primary" onClick={onSelect}>
-                    Select player
+                    {t("perfectChallengeCard.selectPlayer")}
                   </button>
                 ) : null}
               </div>
@@ -514,7 +493,7 @@ export default function PerfectChallengeCard({
                   lineHeight: 1.45,
                 }}
               >
-                Pick hidden until kickoff.
+                {t("perfectChallengeCard.pickHiddenUntilKickoff")}
               </div>
             ) : (
               <>
@@ -535,13 +514,13 @@ export default function PerfectChallengeCard({
                       fontSize: 12,
                     }}
                   >
-                    {slot} · {backView === "stats" ? "WEEKLY STATS" : "FANTASY POINTS"}
+                    {slot} · {backView === "stats" ? t("perfectChallengeCard.weeklyStatsLabel") : t("perfectChallengeCard.fantasyPointsLabel")}
                   </div>
 
                   <button
                     type="button"
                     onClick={() => setFlipped(false)}
-                    title="Back"
+                    title={t("perfectChallengeCard.backTitle")}
                     style={{
                       width: 30,
                       height: 30,
@@ -597,7 +576,7 @@ export default function PerfectChallengeCard({
                           cursor: "pointer",
                         }}
                       >
-                        Stats
+                        {t("perfectChallengeCard.statsTab")}
                       </button>
 
                       <button
@@ -617,7 +596,7 @@ export default function PerfectChallengeCard({
                           cursor: "pointer",
                         }}
                       >
-                        Points
+                        {t("perfectChallengeCard.pointsTab")}
                       </button>
                     </div>
 
@@ -666,7 +645,7 @@ export default function PerfectChallengeCard({
                             lineHeight: 1.05,
                           }}
                         >
-                          <span style={{ color: "#fff" }}>Total</span>
+                          <span style={{ color: "#fff" }}>{t("perfectChallengeCard.total")}</span>
                           <strong style={{ color: "#fff" }}>{breakdownTotal}</strong>
                         </div>
                       ) : null}
@@ -683,7 +662,7 @@ export default function PerfectChallengeCard({
                       textAlign: "center",
                     }}
                   >
-                    Select a player first.
+                    {t("perfectChallengeCard.selectPlayerFirst")}
                   </div>
                 )}
               </>

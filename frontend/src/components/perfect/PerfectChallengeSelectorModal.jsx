@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import TeamLogo from "../TeamLogo";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const INJURY_COLORS = {
   Out: { bg: "rgba(239,68,68,.18)", text: "#fca5a5" },
@@ -36,48 +37,6 @@ function InjuryBadge({ injury }) {
     </span>
   );
 }
-
-const PLAYER_WEEKLY_LABELS = {
-  passingYards: "Passing yards",
-  passingTDs: "Passing TDs",
-  interceptions: "Interceptions",
-  rushingYards: "Rushing yards",
-  rushingTDs: "Rushing TDs",
-  fumble: "Fumble",
-  receivedYards: "Received yards",
-  receivedTDs: "Received TDs",
-  fumbles: "Fumbles",
-  fg0to49Yards: "0-49 yards",
-  fg50plusYards: "50+ yards",
-  xp: "XP",
-  interception: "Interception",
-  forcedFumble: "Forced fumble",
-  sack: "Sack",
-  safety: "Safety",
-  returnTD: "Return TD",
-  allowedPoints: "Allowed points",
-};
-
-const DEFENSE_LABELS = {
-  allowedPassingYards: "Allowed passing yards",
-  allowedRushingYards: "Allowed rushing yards",
-  interceptions: "Interceptions",
-  fumbles: "Fumbles",
-  sacks: "Sacks",
-  returnTDs: "Return TDs",
-  safety: "Safety",
-  allowedPoints: "Allowed points",
-};
-
-const OFFENSE_LABELS = {
-  passingYards: "Passing yards",
-  passingTDs: "Passing TDs",
-  interceptions: "Interceptions",
-  rushingYards: "Rushing yards",
-  rushingTDs: "Rushing TDs",
-  fumbles: "Fumbles",
-  avgPoints: "Average points",
-};
 
 const PLAYER_STAT_ORDER_BY_POSITION = {
   QB: ["passingYards", "passingTDs", "interceptions", "rushingYards", "rushingTDs", "fumble"],
@@ -132,31 +91,31 @@ function getDisplayName(player) {
   return player?.displayName || `${player?.firstName || ""} ${player?.lastName || ""}`.trim();
 }
 
-function buildPlayerWeeklyRows(player) {
+function buildPlayerWeeklyRows(player, t) {
   if (!player) return [];
   const order = PLAYER_STAT_ORDER_BY_POSITION[player.position] || [];
 
   return order.map((key) => ({
     key,
-    label: PLAYER_WEEKLY_LABELS[key] || key,
+    label: t(`perfectChallengeCard.statLabels.${key}`) || key,
     value: formatValue(key, player.weeklyStats?.[key]),
   }));
 }
 
-function buildDefenseRows(defenseStats) {
+function buildDefenseRows(defenseStats, t) {
   if (!defenseStats) return [];
   return DEFENSE_STAT_ORDER.map((key) => ({
     key,
-    label: DEFENSE_LABELS[key] || key,
+    label: t(`perfectChallengeSelectorModal.defenseLabels.${key}`) || key,
     value: formatValue(key, defenseStats[key]),
   }));
 }
 
-function buildOffenseRows(offenseStats) {
+function buildOffenseRows(offenseStats, t) {
   if (!offenseStats) return [];
   return OFFENSE_STAT_ORDER.map((key) => ({
     key,
-    label: OFFENSE_LABELS[key] || key,
+    label: t(`perfectChallengeSelectorModal.offenseLabels.${key}`) || key,
     value: formatValue(key, offenseStats[key]),
   }));
 }
@@ -228,6 +187,7 @@ export default function PerfectChallengeSelectorModal({
   modeLabel = "Perfect Challenge",
   periodType = "week",
 }) {
+  const { t } = useLanguage();
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -282,41 +242,41 @@ export default function PerfectChallengeSelectorModal({
 
   const weeklyRows = useMemo(() => {
     if (!selectedPlayer) return [];
-    return buildPlayerWeeklyRows(selectedPlayer);
-  }, [selectedPlayer]);
+    return buildPlayerWeeklyRows(selectedPlayer, t);
+  }, [selectedPlayer, t]);
 
   const defenseRows = useMemo(() => {
     if (!selectedPlayer || initialPeriod || selectedPlayer.position === "DEF") return [];
-    return buildDefenseRows(selectedPlayer.currentWeekOpponentDefenseStats);
-  }, [selectedPlayer, initialPeriod]);
+    return buildDefenseRows(selectedPlayer.currentWeekOpponentDefenseStats, t);
+  }, [selectedPlayer, initialPeriod, t]);
 
   const offenseRows = useMemo(() => {
     if (!selectedPlayer || initialPeriod || selectedPlayer.position !== "DEF") return [];
-    return buildOffenseRows(selectedPlayer.currentWeekOpponentOffenseStats);
-  }, [selectedPlayer, initialPeriod]);
+    return buildOffenseRows(selectedPlayer.currentWeekOpponentOffenseStats, t);
+  }, [selectedPlayer, initialPeriod, t]);
 
   const previousStatsTitle =
     periodType === "round"
       ? initialPeriod
-        ? "Previous round stats"
-        : `Previous round vs ${selectedPlayer?.lastWeekOpponentTeam || "-"}`
+        ? t("perfectChallengeSelectorModal.previousRoundStats")
+        : `${t("perfectChallengeSelectorModal.previousRoundVs")} ${selectedPlayer?.lastWeekOpponentTeam || "-"}`
       : initialPeriod
-        ? "Last week stats"
-        : `Last week vs ${selectedPlayer?.lastWeekOpponentTeam || "-"}`;
+        ? t("perfectChallengeSelectorModal.lastWeekStats")
+        : `${t("perfectChallengeSelectorModal.lastWeekVs")} ${selectedPlayer?.lastWeekOpponentTeam || "-"}`;
 
   const noPreviousPlayerText =
     periodType === "round"
-      ? "No previous-round stats available for Wildcard Weekend."
-      : "No previous-week stats available for Week 1.";
+      ? t("perfectChallengeSelectorModal.noPreviousRoundStats")
+      : t("perfectChallengeSelectorModal.noPreviousWeekStats");
 
   const noPreviousDefenseText =
     periodType === "round"
       ? selectedPlayer?.position === "DEF"
-        ? "No opponent offense stats available for Wildcard Weekend."
-        : "No opponent defense stats available for Wildcard Weekend."
+        ? t("perfectChallengeSelectorModal.noPreviousRoundOffense")
+        : t("perfectChallengeSelectorModal.noPreviousRoundDefense")
       : selectedPlayer?.position === "DEF"
-        ? "No opponent offense stats available for Week 1."
-        : "No opponent defense stats available for Week 1.";
+        ? t("perfectChallengeSelectorModal.noPreviousWeekOffense")
+        : t("perfectChallengeSelectorModal.noPreviousWeekDefense");
 
   if (!open) return null;
 
@@ -333,7 +293,7 @@ export default function PerfectChallengeSelectorModal({
           </div>
 
           <button className="btn" onClick={onClose}>
-            Close
+            {t("perfectChallengeSelectorModal.close")}
           </button>
         </div>
 
@@ -349,7 +309,7 @@ export default function PerfectChallengeSelectorModal({
               <input
                 type="text"
                 className="input"
-                placeholder="Search player by name..."
+                placeholder={t("perfectChallengeSelectorModal.searchPlaceholder")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -398,7 +358,7 @@ export default function PerfectChallengeSelectorModal({
                           className="muted"
                           style={{ fontSize: 13, marginTop: 4, fontWeight: 600 }}
                         >
-                          vs {player.currentWeekOpponentTeam || "-"}
+                          {t("perfectChallengeSelectorModal.vs")} {player.currentWeekOpponentTeam || "-"}
                         </div>
                       </div>
                     </div>
@@ -408,7 +368,7 @@ export default function PerfectChallengeSelectorModal({
                         {Number(player.avgScore || 0).toFixed(1)}
                       </div>
                       <div className="muted" style={{ fontSize: 11 }}>
-                        pts
+                        {t("perfectChallengeSelectorModal.points")}
                       </div>
 
                       {!hasFullAccess && (
@@ -421,7 +381,7 @@ export default function PerfectChallengeSelectorModal({
                             onPick(player.id);
                           }}
                         >
-                          Select player
+                          {t("perfectChallengeSelectorModal.selectPlayer")}
                         </button>
                       )}
                     </div>
@@ -430,11 +390,11 @@ export default function PerfectChallengeSelectorModal({
               })}
 
               {!filteredPlayers.length && players.length > 0 && (
-                <div className="muted">No players found for "{searchTerm}".</div>
+                <div className="muted">{t("perfectChallengeSelectorModal.noPlayersFound")} "{searchTerm}".</div>
               )}
 
               {!players.length && (
-                <div className="muted">No players available for this slot.</div>
+                <div className="muted">{t("perfectChallengeSelectorModal.noPlayersAvailable")}</div>
               )}
             </div>
           </div>
@@ -470,7 +430,7 @@ export default function PerfectChallengeSelectorModal({
                       className="btn primary"
                       onClick={() => onPick(selectedPlayer.id)}
                     >
-                      Select player
+                      {t("perfectChallengeSelectorModal.selectPlayer")}
                     </button>
                   </div>
                 </div>
@@ -478,12 +438,12 @@ export default function PerfectChallengeSelectorModal({
                 {selectedPlayer.injury && (
                   <div className="pc-side-card pc-side-card-tight">
                     <div className="pc-side-section-title" style={{ marginBottom: 10 }}>
-                      Injury report
+                      {t("perfectChallengeSelectorModal.injuryReportTitle")}
                     </div>
 
                     <div className="pc-side-stats pc-side-stats-tight">
                       <div className="pc-side-stat-row pc-side-stat-row-tight">
-                        <span>Status</span>
+                        <span>{t("perfectChallengeSelectorModal.statusLabel")}</span>
                         <strong
                           style={{
                             color:
@@ -528,8 +488,8 @@ export default function PerfectChallengeSelectorModal({
                 <div className="pc-side-card pc-side-card-tight">
                   <div className="pc-side-section-title" style={{ marginBottom: 10 }}>
                     {selectedPlayer.position === "DEF"
-                      ? "Opponent's offense stats"
-                      : "Opponent's defense stats"}
+                      ? t("perfectChallengeSelectorModal.opponentOffenseStats")
+                      : t("perfectChallengeSelectorModal.opponentDefenseStats")}
                   </div>
 
                   {initialPeriod ? (
@@ -562,7 +522,7 @@ export default function PerfectChallengeSelectorModal({
                         </div>
                       </>
                     ) : (
-                      <div className="muted">No offense stats available.</div>
+                      <div className="muted">{t("perfectChallengeSelectorModal.noOffenseStats")}</div>
                     )
                   ) : selectedPlayer.currentWeekOpponentDefenseStats ? (
                     <>
@@ -591,13 +551,13 @@ export default function PerfectChallengeSelectorModal({
                       </div>
                     </>
                   ) : (
-                    <div className="muted">No defense stats available.</div>
+                    <div className="muted">{t("perfectChallengeSelectorModal.noDefenseStats")}</div>
                   )}
                 </div>
               </>
             ) : (
               <div className="pc-side-card pc-side-card-tight">
-                <div className="muted">Select a player from the left side.</div>
+                <div className="muted">{t("perfectChallengeSelectorModal.selectFromLeft")}</div>
               </div>
             )}
           </div>
