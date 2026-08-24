@@ -2,6 +2,7 @@ import { Router } from "express";
 import bcrypt from "bcrypt";
 import { prisma } from "../lib/prisma.js";
 import { requireAuth } from "../middleware/requireAuth.js";
+import { sendEmailChangedNotice, sendPasswordChangedNotice } from "../services/mailer.js";
 
 const router = Router();
 
@@ -45,6 +46,11 @@ router.put("/me", requireAuth, async (req, res) => {
       });
     }
 
+    const before = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: { email: true, username: true },
+    });
+
     const updated = await prisma.user.update({
       where: { id: req.user.id },
       data: { email: normalizedEmail },
@@ -56,6 +62,16 @@ router.put("/me", requireAuth, async (req, res) => {
         createdAt: true,
       },
     });
+
+    if (before && before.email !== normalizedEmail) {
+      sendEmailChangedNotice({
+        username: before.username,
+        oldEmail: before.email,
+        newEmail: normalizedEmail,
+      }).catch((err) =>
+        console.error("Nem sikerült az email-változás értesítőt elküldeni:", err.message)
+      );
+    }
 
     return res.json({
       message: "Profil frissítve.",
@@ -108,10 +124,24 @@ router.put("/me/password", requireAuth, async (req, res) => {
 
     const newPasswordHash = await bcrypt.hash(newPassword, 10);
 
+    const fullUser = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: { email: true, username: true },
+    });
+
     await prisma.user.update({
       where: { id: req.user.id },
       data: { passwordHash: newPasswordHash },
     });
+
+    if (fullUser) {
+      sendPasswordChangedNotice({
+        to: fullUser.email,
+        username: fullUser.username,
+      }).catch((err) =>
+        console.error("Nem sikerült a jelszó-változás értesítőt elküldeni:", err.message)
+      );
+    }
 
     return res.json({ message: "Jelszó sikeresen módosítva." });
   } catch (error) {

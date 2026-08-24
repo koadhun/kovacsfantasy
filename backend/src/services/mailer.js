@@ -55,3 +55,139 @@ The KovacsFantasy team`;
 
   await sendMail({ to, subject, text, html });
 }
+
+export async function sendEmailChangedNotice({ to, username, oldEmail, newEmail }) {
+  const subject = "Email cím megváltoztatva / Email Address Changed - KovacsFantasy";
+
+  const text = `Szia ${username}!
+
+Az email címed sikeresen megváltozott a KovacsFantasy fiókodban.
+
+Korábbi email cím: ${oldEmail}
+Új email cím: ${newEmail}
+
+Ha nem te kezdeményezted ezt a módosítást, kérjük azonnal vedd fel velünk a kapcsolatot.
+
+A KovacsFantasy csapata
+
+---
+
+Hi ${username}!
+
+Your email address has been successfully changed on your KovacsFantasy account.
+
+Previous email: ${oldEmail}
+New email: ${newEmail}
+
+If you didn't make this change, please contact us immediately.
+
+The KovacsFantasy team`;
+
+  const html = buildEmailHtml({
+    preheader: "Az email címed megváltozott. / Your email address has changed.",
+    heading: "Email cím megváltoztatva",
+    bodyHtml: `
+      <p style="margin:0 0 14px 0;">Szia ${username}!</p>
+      <p style="margin:0 0 14px 0;">Az email címed sikeresen megváltozott a KovacsFantasy fiókodban.</p>
+      <p style="margin:0 0 4px 0;"><strong>Korábbi email cím:</strong> ${oldEmail}</p>
+      <p style="margin:0 0 22px 0;"><strong>Új email cím:</strong> ${newEmail}</p>
+      <p style="margin:0 0 22px 0; color:rgba(245,247,251,.6); font-size:13px;">Ha nem te kezdeményezted ezt a módosítást, kérjük azonnal vedd fel velünk a kapcsolatot.</p>
+
+      <hr style="border:none; border-top:1px solid rgba(255,255,255,.10); margin:0 0 22px 0;" />
+
+      <h2 style="margin:0 0 12px 0; font-size:17px; color:#f5f7fb; font-weight:800;">Email Address Changed</h2>
+      <p style="margin:0 0 14px 0;">Hi ${username}!</p>
+      <p style="margin:0 0 14px 0;">Your email address has been successfully changed on your KovacsFantasy account.</p>
+      <p style="margin:0 0 4px 0;"><strong>Previous email:</strong> ${oldEmail}</p>
+      <p style="margin:0 0 14px 0;"><strong>New email:</strong> ${newEmail}</p>
+      <p style="margin:0; color:rgba(245,247,251,.6); font-size:13px;">If you didn't make this change, please contact us immediately.</p>
+    `,
+  });
+
+  await Promise.all([
+    sendMail({ to: oldEmail, subject, text, html }),
+    sendMail({ to: newEmail, subject, text, html }),
+  ]);
+}
+
+export async function sendPasswordChangedNotice({ to, username }) {
+  const subject = "Jelszó megváltoztatva / Password Changed - KovacsFantasy";
+
+  const text = `Szia ${username}!
+
+A jelszavad sikeresen megváltozott a KovacsFantasy fiókodban.
+
+Ha nem te kezdeményezted ezt a módosítást, kérjük azonnal vedd fel velünk a kapcsolatot.
+
+A KovacsFantasy csapata
+
+---
+
+Hi ${username}!
+
+Your password has been successfully changed on your KovacsFantasy account.
+
+If you didn't make this change, please contact us immediately.
+
+The KovacsFantasy team`;
+
+  const html = buildEmailHtml({
+    preheader: "A jelszavad megváltozott. / Your password has changed.",
+    heading: "Jelszó megváltoztatva",
+    bodyHtml: `
+      <p style="margin:0 0 14px 0;">Szia ${username}!</p>
+      <p style="margin:0 0 22px 0;">A jelszavad sikeresen megváltozott a KovacsFantasy fiókodban.</p>
+      <p style="margin:0 0 22px 0; color:rgba(245,247,251,.6); font-size:13px;">Ha nem te kezdeményezted ezt a módosítást, kérjük azonnal vedd fel velünk a kapcsolatot.</p>
+
+      <hr style="border:none; border-top:1px solid rgba(255,255,255,.10); margin:0 0 22px 0;" />
+
+      <h2 style="margin:0 0 12px 0; font-size:17px; color:#f5f7fb; font-weight:800;">Password Changed</h2>
+      <p style="margin:0 0 14px 0;">Hi ${username}!</p>
+      <p style="margin:0 0 14px 0;">Your password has been successfully changed on your KovacsFantasy account.</p>
+      <p style="margin:0; color:rgba(245,247,251,.6); font-size:13px;">If you didn't make this change, please contact us immediately.</p>
+    `,
+  });
+
+  await sendMail({ to, subject, text, html });
+}
+
+export async function sendPasswordResetConfirmedNotice({ to, username }) {
+  const subject = "Jelszó sikeresen visszaállítva / Password Successfully Reset - KovacsFantasy";
+
+  const text = `Szia ${username}!
+
+Sikeresen beállítottad az új jelszavadat a KovacsFantasy fiókodhoz a jelszó-visszaállító linken keresztül.
+
+Ha nem te kezdeményezted ezt a módosítást, kérjük azonnal vedd fel velünk a kapcsolatot.
+
+A KovacsFantasy csapata
+
+---
+
+Hi ${username}!
+
+You have successfully set a new password for your KovacsFantasy account via the password reset link.
+
+If you didn't make this change, please contact us immediately.
+
+The KovacsFantasy team`;
+
+  const html = buildEmailHtml({
+    preheader: "Az új jelszavad be van állítva. / Your new password is set.",
+    heading: "Jelszó sikeresen visszaállítva",
+    bodyHtml: `
+      <p style="margin:0 0 14px 0;">Szia ${username}!</p>
+      <p style="margin:0 0 22px 0;">Sikeresen beállítottad az új jelszavadat a KovacsFantasy fiókodhoz a jelszó-visszaállító linken keresztül.</p>
+      <p style="margin:0 0 22px 0; color:rgba(245,247,251,.6); font-size:13px;">Ha nem te kezdeményezted ezt a módosítást, kérjük azonnal vedd fel velünk a kapcsolatot.</p>
+
+      <hr style="border:none; border-top:1px solid rgba(255,255,255,.10); margin:0 0 22px 0;" />
+
+      <h2 style="margin:0 0 12px 0; font-size:17px; color:#f5f7fb; font-weight:800;">Password Successfully Reset</h2>
+      <p style="margin:0 0 14px 0;">Hi ${username}!</p>
+      <p style="margin:0 0 14px 0;">You have successfully set a new password for your account via the password reset link.</p>
+      <p style="margin:0; color:rgba(245,247,251,.6); font-size:13px;">If you didn't make this change, please contact us immediately.</p>
+    `,
+  });
+
+  await sendMail({ to, subject, text, html });
+}

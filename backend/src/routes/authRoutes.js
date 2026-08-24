@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { prisma } from "../lib/prisma.js";
 import { sendMail } from "../lib/mailer.js";
 import { buildEmailHtml } from "../lib/emailTemplate.js";
+import { sendPasswordResetConfirmedNotice } from "../services/mailer.js";
 
 const router = Router();
 
@@ -146,16 +147,26 @@ router.post("/reset-password", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await prisma.$transaction([
+    const [updatedUser] = await prisma.$transaction([
       prisma.user.update({
         where: { id: record.userId },
-        data: { passwordHash: hashedPassword }
+        data: { passwordHash: hashedPassword },
+        select: { email: true, username: true },
       }),
       prisma.passwordResetToken.update({
         where: { id: record.id },
         data: { usedAt: new Date() }
       })
     ]);
+
+    if (updatedUser) {
+      sendPasswordResetConfirmedNotice({
+        to: updatedUser.email,
+        username: updatedUser.username,
+      }).catch((err) =>
+        console.error("Nem sikerült a jelszó-visszaállítás értesítőt elküldeni:", err.message)
+      );
+    }
 
     res.json({ message: "Jelszó sikeresen frissítve." });
   } catch (err) {
