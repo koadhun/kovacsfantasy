@@ -11,11 +11,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider>
       <LanguageProvider>
-        <SiteGate>
           <BrowserRouter>
             <App />
           </BrowserRouter>
-        </SiteGate>
       </LanguageProvider>
     </ThemeProvider>
   </React.StrictMode>
