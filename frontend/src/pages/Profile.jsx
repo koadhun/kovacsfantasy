@@ -96,7 +96,7 @@ export default function Profile() {
         confirmPassword,
       });
 
-      setPasswordMsg(res.data.message || t("profile.passwordUpdated"));
+      setPasswordMsg(t("profile.passwordUpdated"));
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");

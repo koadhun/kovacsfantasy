@@ -17,7 +17,7 @@ export default function ForgotPassword() {
     setErr(""); setMsg("");
     try {
       const res = await api.post("/auth/forgot-password", { email });
-      setMsg(res.data.message || t("forgotPassword.successMessage"));
+      setMsg(t("forgotPassword.successMessage"));
 
       setTimeout(() => {
         navigate("/");

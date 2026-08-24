@@ -53,7 +53,7 @@ export default function ResetPassword() {
         password: pw,
         confirmPassword: pw2
       });
-      setMsg(res.data.message || t("resetPassword.successMessage"));
+      setMsg(t("resetPassword.successMessage"));
 
       setTimeout(() => {
         navigate("/");
