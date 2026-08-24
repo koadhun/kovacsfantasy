@@ -54,10 +54,10 @@ router.post("/forgot-password", async (req, res) => {
     const resetLink =
       `${process.env.FRONTEND_URL}/reset-password?token=${rawToken}`;
 
-        try {
+    try {
       await sendMail({
         to: user.email,
-        subject: "Jelszó visszaállítási kérelem - KovacsFantasy",
+        subject: "Jelszó visszaállítási kérelem / Password Reset Request - KovacsFantasy",
         text:
 `Szia ${user.username}!
 
@@ -67,16 +67,35 @@ ${resetLink}
 
 A link 30 percig érvényes. Ha nem te kérted a jelszó visszaállítását, nyugodtan hagyd figyelmen kívül ezt az emailt - a jelszavad nem fog megváltozni.
 
-A KovacsFantasy csapata`,
+A KovacsFantasy csapata
+
+---
+
+Hi ${user.username}!
+
+You requested a password reset for your KovacsFantasy account. Click the link below to set a new password:
+
+${resetLink}
+
+This link is valid for 30 minutes. If you didn't request this, you can safely ignore this email - your password will remain unchanged.
+
+The KovacsFantasy team`,
         html: buildEmailHtml({
-          preheader: "Kattints a linkre az új jelszó beállításához.",
+          preheader: "Kattints a linkre az új jelszó beállításához. / Click the link to set a new password.",
           heading: "Jelszó visszaállítása",
           bodyHtml: `
             <p style="margin:0 0 14px 0;">Szia ${user.username}!</p>
             <p style="margin:0 0 14px 0;">Jelszó-visszaállítást kértél a fiókodhoz. Az alábbi gombra kattintva állíthatsz be új jelszót.</p>
-            <p style="margin:0; color:rgba(245,247,251,.6); font-size:13px;">A link <strong>30 percig</strong> érvényes. Ha nem te kérted, nyugodtan hagyd figyelmen kívül ezt az emailt - a jelszavad változatlan marad.</p>
+            <p style="margin:0 0 22px 0; color:rgba(245,247,251,.6); font-size:13px;">A link <strong>30 percig</strong> érvényes. Ha nem te kérted, nyugodtan hagyd figyelmen kívül ezt az emailt - a jelszavad változatlan marad.</p>
+
+            <hr style="border:none; border-top:1px solid rgba(255,255,255,.10); margin:0 0 22px 0;" />
+
+            <h2 style="margin:0 0 12px 0; font-size:17px; color:#f5f7fb; font-weight:800;">Password Reset</h2>
+            <p style="margin:0 0 14px 0;">Hi ${user.username}!</p>
+            <p style="margin:0 0 14px 0;">You requested a password reset for your account. Click the button below to set a new password.</p>
+            <p style="margin:0; color:rgba(245,247,251,.6); font-size:13px;">This link is valid for <strong>30 minutes</strong>. If you didn't request this, you can safely ignore this email - your password will remain unchanged.</p>
           `,
-          buttonLabel: "Új jelszó beállítása",
+          buttonLabel: "Új jelszó beállítása / Set New Password",
           buttonUrl: resetLink,
         }),
       });
