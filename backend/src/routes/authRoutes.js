@@ -4,6 +4,7 @@ import crypto from "crypto";
 import bcrypt from "bcrypt";
 import { prisma } from "../lib/prisma.js";
 import { sendMail } from "../lib/mailer.js";
+import { buildEmailHtml } from "../lib/emailTemplate.js";
 
 const router = Router();
 
@@ -53,18 +54,31 @@ router.post("/forgot-password", async (req, res) => {
     const resetLink =
       `${process.env.FRONTEND_URL}/reset-password?token=${rawToken}`;
 
-    try {
+        try {
       await sendMail({
         to: user.email,
-        subject: "KovacsFantasy - Jelszó visszaállítás",
+        subject: "Jelszó visszaállítási kérelem - KovacsFantasy",
         text:
 `Szia ${user.username}!
 
-Új jelszó beállításához kattints:
+Jelszó-visszaállítást kértél a KovacsFantasy fiókodhoz. Az alábbi linkre kattintva állíthatsz be új jelszót:
 
 ${resetLink}
 
-A link 30 percig érvényes.`
+A link 30 percig érvényes. Ha nem te kérted a jelszó visszaállítását, nyugodtan hagyd figyelmen kívül ezt az emailt - a jelszavad nem fog megváltozni.
+
+A KovacsFantasy csapata`,
+        html: buildEmailHtml({
+          preheader: "Kattints a linkre az új jelszó beállításához.",
+          heading: "Jelszó visszaállítása",
+          bodyHtml: `
+            <p style="margin:0 0 14px 0;">Szia ${user.username}!</p>
+            <p style="margin:0 0 14px 0;">Jelszó-visszaállítást kértél a fiókodhoz. Az alábbi gombra kattintva állíthatsz be új jelszót.</p>
+            <p style="margin:0; color:rgba(245,247,251,.6); font-size:13px;">A link <strong>30 percig</strong> érvényes. Ha nem te kérted, nyugodtan hagyd figyelmen kívül ezt az emailt - a jelszavad változatlan marad.</p>
+          `,
+          buttonLabel: "Új jelszó beállítása",
+          buttonUrl: resetLink,
+        }),
       });
     } catch (err) {
       console.error("Nem sikerült a jelszó-visszaállító emailt elküldeni:", err.message);
