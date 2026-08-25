@@ -252,11 +252,13 @@ export default function PerfectChallenge() {
             <ScoreCard
               title={t("perfectChallenge.weeklyPoints")}
               value={formatScore(summary.weeklyPoints)}
+              tokens={tokens}
             />
 
             <ScoreCard
               title={t("perfectChallenge.seasonTotal")}
               value={formatScore(summary.seasonPoints)}
+              tokens={tokens}
             />
           </div>
         </div>

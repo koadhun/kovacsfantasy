@@ -258,12 +258,14 @@ export default function PlayoffChallenge() {
               title={t("playoffChallenge.roundPoints")}
               value={formatScore(summary.roundPoints)}
               sub={roundLabel}
+              tokens={tokens}
             />
 
             <ScoreCard
               title={t("playoffChallenge.playoffTotal")}
               value={formatScore(summary.playoffTotal)}
               sub={`${summary.selectedCount}/8 ${t("playoffChallenge.visibleSuffix")}`}
+              tokens={tokens}
             />
           </div>
         </div>
