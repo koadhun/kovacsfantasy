@@ -5,6 +5,8 @@ import WeekDropdown from "../components/WeekDropdown";
 import PerfectChallengeCard from "../components/perfect/PerfectChallengeCard";
 import PerfectChallengeSelectorModal from "../components/perfect/PerfectChallengeSelectorModal";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useTheme } from "../theme/ThemeContext";
+import { getThemeTokens } from "../theme/themeTokens";
 
 const SEASON = 2026;
 
@@ -72,6 +74,8 @@ function formatScore(value) {
 
 export default function PerfectChallenge() {
   const { t, language } = useLanguage();
+  const { theme } = useTheme();
+  const tokens = getThemeTokens(theme);
   const [sp, setSp] = useSearchParams();
 
   const requestedWeek = Number(sp.get("week") || 1);
