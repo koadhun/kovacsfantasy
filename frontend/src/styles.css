@@ -3122,3 +3122,244 @@ Output
 [data-theme="light"] .pc-side-stat-row strong {
   color: #101828;
 }
+
+/* ============================================================
+   RESPONSIVE / MOBILE
+   ============================================================ */
+
+@media (max-width: 860px) {
+  .container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .navbar-inner {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .nav-links {
+    order: 3;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+
+  .navbar-right {
+    flex-wrap: wrap;
+    gap: 8px;
+    row-gap: 8px;
+  }
+
+  .profile-chip-text {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hero {
+    padding: 18px !important;
+  }
+
+  .h1 {
+    font-size: 24px !important;
+    line-height: 1.2 !important;
+  }
+
+  .filters-bar {
+    flex-wrap: wrap !important;
+    row-gap: 10px !important;
+  }
+
+  .filters-bar > .filters-spacer {
+    display: none !important;
+  }
+
+  .filters-group {
+    min-width: 0 !important;
+    flex: 1 1 140px !important;
+  }
+
+  table.table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  .pc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .admin-shell {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-sidebar {
+    order: 2;
+  }
+
+  .admin-content {
+    order: 1;
+  }
+
+  .pc-picker-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pc-modal,
+  .pc-modal-wide {
+    width: 94vw !important;
+    max-width: 94vw !important;
+    max-height: 88vh !important;
+    overflow-y: auto !important;
+  }
+
+  .standings-grid-2x2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .pc-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .h1 {
+    font-size: 21px !important;
+  }
+
+  .btn {
+    padding: 9px 12px !important;
+    font-size: 13px !important;
+  }
+
+  .brand-text {
+    font-size: 14px !important;
+  }
+}
+
+
+/* ============================================================
+   RESPONSIVE / MOBILE
+   ============================================================ */
+
+@media (max-width: 860px) {
+  .container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .navbar-inner {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .nav-links {
+    order: 3;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+
+  .navbar-right {
+    flex-wrap: wrap;
+    gap: 8px;
+    row-gap: 8px;
+  }
+
+  .profile-chip-text {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hero {
+    padding: 18px !important;
+  }
+
+  .h1 {
+    font-size: 24px !important;
+    line-height: 1.2 !important;
+  }
+
+  .filters-bar {
+    flex-wrap: wrap !important;
+    row-gap: 10px !important;
+  }
+
+  .filters-bar > .filters-spacer {
+    display: none !important;
+  }
+
+  .filters-group {
+    min-width: 0 !important;
+    flex: 1 1 140px !important;
+  }
+
+  table.table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  .pc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .admin-shell {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-sidebar {
+    order: 2;
+  }
+
+  .admin-content {
+    order: 1;
+  }
+
+  .pc-picker-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pc-modal,
+  .pc-modal-wide {
+    width: 94vw !important;
+    max-width: 94vw !important;
+    max-height: 88vh !important;
+    overflow-y: auto !important;
+  }
+
+  .standings-grid-2x2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .pc-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .h1 {
+    font-size: 21px !important;
+  }
+
+  .btn {
+    padding: 9px 12px !important;
+    font-size: 13px !important;
+  }
+
+  .brand-text {
+    font-size: 14px !important;
+  }
+}
