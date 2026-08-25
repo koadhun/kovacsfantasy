@@ -5,8 +5,6 @@ import WeekDropdown from "../components/WeekDropdown";
 import PerfectChallengeCard from "../components/perfect/PerfectChallengeCard";
 import PerfectChallengeSelectorModal from "../components/perfect/PerfectChallengeSelectorModal";
 import { useLanguage } from "../i18n/LanguageContext";
-import { useTheme } from "../theme/ThemeContext";
-import { getThemeTokens } from "../theme/themeTokens";
 
 const SEASON = 2026;
 
@@ -74,8 +72,6 @@ function formatScore(value) {
 
 export default function PerfectChallenge() {
   const { t, language } = useLanguage();
-  const { theme } = useTheme();
-  const tokens = getThemeTokens(theme);
   const [sp, setSp] = useSearchParams();
 
   const requestedWeek = Number(sp.get("week") || 1);
@@ -228,14 +224,7 @@ export default function PerfectChallenge() {
   return (
     <div className="container page">
       <div className="hero">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0,1fr) auto",
-            gap: 18,
-            alignItems: "start",
-          }}
-        >
+        <div className="page-header-grid">
           <div>
             <div className="kicker">
               <span className="tag">FANTASY</span>
@@ -259,24 +248,15 @@ export default function PerfectChallenge() {
             </p>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              flexWrap: "wrap",
-              justifyContent: "flex-end",
-            }}
-          >
+          <div className="page-header-scores">
             <ScoreCard
               title={t("perfectChallenge.weeklyPoints")}
               value={formatScore(summary.weeklyPoints)}
-              tokens={tokens}
             />
 
             <ScoreCard
               title={t("perfectChallenge.seasonTotal")}
               value={formatScore(summary.seasonPoints)}
-              tokens={tokens}
             />
           </div>
         </div>

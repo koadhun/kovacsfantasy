@@ -3363,3 +3363,33 @@ Output
     font-size: 14px !important;
   }
 }
+
+.page-header-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: start;
+}
+
+.page-header-scores {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 860px) {
+  .page-header-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .page-header-scores {
+    justify-content: flex-start !important;
+    width: 100%;
+    margin-top: 6px;
+  }
+
+  .page-header-scores > * {
+    flex: 1 1 140px;
+  }
+}

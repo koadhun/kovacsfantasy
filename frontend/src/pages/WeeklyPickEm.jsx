@@ -247,14 +247,7 @@ export default function WeeklyPickEm() {
   return (
     <div className="container page">
       <div className="hero">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0,1fr) auto",
-            gap: 18,
-            alignItems: "start",
-          }}
-        >
+        <div className="page-header-grid">
           <div>
             <div className="kicker">
               <span className="tag">FANTASY</span>
@@ -266,14 +259,7 @@ export default function WeeklyPickEm() {
             <p className="sub">{t("pickem.subtitle")}</p>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              flexWrap: "wrap",
-              justifyContent: "flex-end",
-            }}
-          >
+          <div className="page-header-scores">
             {myWeeklyScore && (
               <ScoreCard
                 title={t("pickem.weeklyPointsLabel")}

@@ -5,8 +5,6 @@ import PerfectChallengeCard from "../components/perfect/PerfectChallengeCard";
 import PerfectChallengeSelectorModal from "../components/perfect/PerfectChallengeSelectorModal";
 import SimpleDropdown from "../components/SimpleDropdown";
 import { useLanguage } from "../i18n/LanguageContext";
-import { useTheme } from "../theme/ThemeContext";
-import { getThemeTokens } from "../theme/themeTokens";
 
 const SEASON = 2025;
 
@@ -74,8 +72,6 @@ function formatScore(value) {
 
 export default function PlayoffChallenge() {
   const { t, language } = useLanguage();
-  const { theme } = useTheme();
-  const tokens = getThemeTokens(theme);
   const [sp, setSp] = useSearchParams();
 
   const requestedRound = String(sp.get("round") || "WILDCARD");
@@ -222,14 +218,7 @@ export default function PlayoffChallenge() {
   return (
     <div className="container page">
       <div className="hero">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0,1fr) auto",
-            gap: 18,
-            alignItems: "start",
-          }}
-        >
+        <div className="page-header-grid">
           <div>
             <div className="kicker">
               <span className="tag">FANTASY</span>
@@ -264,26 +253,17 @@ export default function PlayoffChallenge() {
             </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              flexWrap: "wrap",
-              justifyContent: "flex-end",
-            }}
-          >
-                       <ScoreCard
+          <div className="page-header-scores">
+            <ScoreCard
               title={t("playoffChallenge.roundPoints")}
               value={formatScore(summary.roundPoints)}
               sub={roundLabel}
-              tokens={tokens}
             />
 
             <ScoreCard
               title={t("playoffChallenge.playoffTotal")}
               value={formatScore(summary.playoffTotal)}
               sub={`${summary.selectedCount}/8 ${t("playoffChallenge.visibleSuffix")}`}
-              tokens={tokens}
             />
           </div>
         </div>
