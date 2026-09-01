@@ -1,0 +1,4242 @@
+[
+  {
+    "teamCode": "BUF",
+    "displayName": "Josh Allen",
+    "firstName": "Josh",
+    "lastName": "Allen",
+    "position": "QB",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "Kyle Allen",
+    "firstName": "Kyle",
+    "lastName": "Allen",
+    "position": "QB",
+    "jerseyNumber": 11
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "Tyler Bass",
+    "firstName": "Tyler",
+    "lastName": "Bass",
+    "position": "K",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "Skyler Bell",
+    "firstName": "Skyler",
+    "lastName": "Bell",
+    "position": "WR",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "Keon Coleman",
+    "firstName": "Keon",
+    "lastName": "Coleman",
+    "position": "WR",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "James Cook",
+    "firstName": "James",
+    "lastName": "Cook",
+    "position": "RB",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "Ray Davis",
+    "firstName": "Ray",
+    "lastName": "Davis",
+    "position": "RB",
+    "jerseyNumber": 7
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "Jackson Hawes",
+    "firstName": "Jackson",
+    "lastName": "Hawes",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "Ty Johnson",
+    "firstName": "Ty",
+    "lastName": "Johnson",
+    "position": "RB",
+    "jerseyNumber": 26
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "Dalton Kincaid",
+    "firstName": "Dalton",
+    "lastName": "Kincaid",
+    "position": "TE",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "Dawson Knox",
+    "firstName": "Dawson",
+    "lastName": "Knox",
+    "position": "TE",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "Keleki Latu",
+    "firstName": "Keleki",
+    "lastName": "Latu",
+    "position": "TE",
+    "jerseyNumber": 83
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "DJ Moore",
+    "firstName": "DJ",
+    "lastName": "Moore",
+    "position": "WR",
+    "jerseyNumber": 3
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "Josh Palmer",
+    "firstName": "Josh",
+    "lastName": "Palmer",
+    "position": "WR",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "BUF",
+    "displayName": "Khalil Shakir",
+    "firstName": "Khalil",
+    "lastName": "Shakir",
+    "position": "WR",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Tanner Arkin",
+    "firstName": "Tanner",
+    "lastName": "Arkin",
+    "position": "TE",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Andy Borregales",
+    "firstName": "Andy",
+    "lastName": "Borregales",
+    "position": "K",
+    "jerseyNumber": 36
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "A.J. Brown",
+    "firstName": "A.J.",
+    "lastName": "Brown",
+    "position": "WR",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Efton Chism III",
+    "firstName": "Efton",
+    "lastName": "Chism III",
+    "position": "WR",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Tommy DeVito",
+    "firstName": "Tommy",
+    "lastName": "DeVito",
+    "position": "QB",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Romeo Doubs",
+    "firstName": "Romeo",
+    "lastName": "Doubs",
+    "position": "WR",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "DeMario Douglas",
+    "firstName": "DeMario",
+    "lastName": "Douglas",
+    "position": "WR",
+    "jerseyNumber": 3
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Reggie Gilliam",
+    "firstName": "Reggie",
+    "lastName": "Gilliam",
+    "position": "RB",
+    "jerseyNumber": 44
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "TreVeyon Henderson",
+    "firstName": "TreVeyon",
+    "lastName": "Henderson",
+    "position": "RB",
+    "jerseyNumber": 32
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Hunter Henry",
+    "firstName": "Hunter",
+    "lastName": "Henry",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Mack Hollins",
+    "firstName": "Mack",
+    "lastName": "Hollins",
+    "position": "WR",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Corey Kiner",
+    "firstName": "Corey",
+    "lastName": "Kiner",
+    "position": "RB",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Cameron Latu",
+    "firstName": "Cameron",
+    "lastName": "Latu",
+    "position": "TE",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Drake Maye",
+    "firstName": "Drake",
+    "lastName": "Maye",
+    "position": "QB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Behren Morton",
+    "firstName": "Behren",
+    "lastName": "Morton",
+    "position": "QB",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Eli Raridon",
+    "firstName": "Eli",
+    "lastName": "Raridon",
+    "position": "TE",
+    "jerseyNumber": 82
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Rhamondre Stevenson",
+    "firstName": "Rhamondre",
+    "lastName": "Stevenson",
+    "position": "RB",
+    "jerseyNumber": 38
+  },
+  {
+    "teamCode": "NE",
+    "displayName": "Kyle Williams",
+    "firstName": "Kyle",
+    "lastName": "Williams",
+    "position": "WR",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "De'Von Achane",
+    "firstName": "De'Von",
+    "lastName": "Achane",
+    "position": "RB",
+    "jerseyNumber": 28
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Chris Bell",
+    "firstName": "Chris",
+    "lastName": "Bell",
+    "position": "WR",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Kevin Coleman Jr.",
+    "firstName": "Kevin",
+    "lastName": "Coleman Jr.",
+    "position": "WR",
+    "jerseyNumber": 83
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Brady Cook",
+    "firstName": "Brady",
+    "lastName": "Cook",
+    "position": "QB",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Caleb Douglas",
+    "firstName": "Caleb",
+    "lastName": "Douglas",
+    "position": "WR",
+    "jerseyNumber": 7
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Greg Dulcich",
+    "firstName": "Greg",
+    "lastName": "Dulcich",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Ollie Gordon II",
+    "firstName": "Ollie",
+    "lastName": "Gordon II",
+    "position": "RB",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "DJ Herman",
+    "firstName": "DJ",
+    "lastName": "Herman",
+    "position": "RB",
+    "jerseyNumber": 34
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Justin Joly",
+    "firstName": "Justin",
+    "lastName": "Joly",
+    "position": "TE",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Will Kacmarek",
+    "firstName": "Will",
+    "lastName": "Kacmarek",
+    "position": "TE",
+    "jerseyNumber": 82
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Kyle McCord",
+    "firstName": "Kyle",
+    "lastName": "McCord",
+    "position": "QB",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Ryan Miller",
+    "firstName": "Ryan",
+    "lastName": "Miller",
+    "position": "WR",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Riley Patterson",
+    "firstName": "Riley",
+    "lastName": "Patterson",
+    "position": "K",
+    "jerseyNumber": 47
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Jalen Tolbert",
+    "firstName": "Jalen",
+    "lastName": "Tolbert",
+    "position": "WR",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Seydou Traore",
+    "firstName": "Seydou",
+    "lastName": "Traore",
+    "position": "TE",
+    "jerseyNumber": 49
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Malik Washington",
+    "firstName": "Malik",
+    "lastName": "Washington",
+    "position": "WR",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Malik Willis",
+    "firstName": "Malik",
+    "lastName": "Willis",
+    "position": "QB",
+    "jerseyNumber": 2
+  },
+  {
+    "teamCode": "MIA",
+    "displayName": "Jaylen Wright",
+    "firstName": "Jaylen",
+    "lastName": "Wright",
+    "position": "RB",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Braelon Allen",
+    "firstName": "Braelon",
+    "lastName": "Allen",
+    "position": "RB",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Omar Cooper Jr.",
+    "firstName": "Omar",
+    "lastName": "Cooper Jr.",
+    "position": "WR",
+    "jerseyNumber": 83
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Isaiah Davis",
+    "firstName": "Isaiah",
+    "lastName": "Davis",
+    "position": "RB",
+    "jerseyNumber": 32
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Blake Grupe",
+    "firstName": "Blake",
+    "lastName": "Grupe",
+    "position": "K",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Breece Hall",
+    "firstName": "Breece",
+    "lastName": "Hall",
+    "position": "RB",
+    "jerseyNumber": 20
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Cade Klubnik",
+    "firstName": "Cade",
+    "lastName": "Klubnik",
+    "position": "QB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Adonai Mitchell",
+    "firstName": "Adonai",
+    "lastName": "Mitchell",
+    "position": "WR",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Kene Nwangwu",
+    "firstName": "Kene",
+    "lastName": "Nwangwu",
+    "position": "RB",
+    "jerseyNumber": 3
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Tim Patrick",
+    "firstName": "Tim",
+    "lastName": "Patrick",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Jeremy Ruckert",
+    "firstName": "Jeremy",
+    "lastName": "Ruckert",
+    "position": "TE",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Kenyon Sadiq",
+    "firstName": "Kenyon",
+    "lastName": "Sadiq",
+    "position": "TE",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Arian Smith",
+    "firstName": "Arian",
+    "lastName": "Smith",
+    "position": "WR",
+    "jerseyNumber": 82
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Geno Smith",
+    "firstName": "Geno",
+    "lastName": "Smith",
+    "position": "QB",
+    "jerseyNumber": 7
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Mason Taylor",
+    "firstName": "Mason",
+    "lastName": "Taylor",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Isaiah Williams",
+    "firstName": "Isaiah",
+    "lastName": "Williams",
+    "position": "WR",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Garrett Wilson",
+    "firstName": "Garrett",
+    "lastName": "Wilson",
+    "position": "WR",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "NYJ",
+    "displayName": "Jelani Woods",
+    "firstName": "Jelani",
+    "lastName": "Woods",
+    "position": "TE",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Rasheen Ali",
+    "firstName": "Rasheen",
+    "lastName": "Ali",
+    "position": "RB",
+    "jerseyNumber": 26
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Mark Andrews",
+    "firstName": "Mark",
+    "lastName": "Andrews",
+    "position": "TE",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Rashod Bateman",
+    "firstName": "Rashod",
+    "lastName": "Bateman",
+    "position": "WR",
+    "jerseyNumber": 7
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Josh Cuevas",
+    "firstName": "Josh",
+    "lastName": "Cuevas",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Joe Fagnano",
+    "firstName": "Joe",
+    "lastName": "Fagnano",
+    "position": "QB",
+    "jerseyNumber": 12
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Zay Flowers",
+    "firstName": "Zay",
+    "lastName": "Flowers",
+    "position": "WR",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Derrick Henry",
+    "firstName": "Derrick",
+    "lastName": "Henry",
+    "position": "RB",
+    "jerseyNumber": 22
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Matthew Hibner",
+    "firstName": "Matthew",
+    "lastName": "Hibner",
+    "position": "TE",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Justice Hill",
+    "firstName": "Justice",
+    "lastName": "Hill",
+    "position": "RB",
+    "jerseyNumber": 43
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Tyler Huntley",
+    "firstName": "Tyler",
+    "lastName": "Huntley",
+    "position": "QB",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Lamar Jackson",
+    "firstName": "Lamar",
+    "lastName": "Jackson",
+    "position": "QB",
+    "jerseyNumber": 8
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Ja'Kobi Lane",
+    "firstName": "Ja'Kobi",
+    "lastName": "Lane",
+    "position": "WR",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Tyler Loop",
+    "firstName": "Tyler",
+    "lastName": "Loop",
+    "position": "K",
+    "jerseyNumber": 33
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Elijah Sarratt",
+    "firstName": "Elijah",
+    "lastName": "Sarratt",
+    "position": "WR",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Durham Smythe",
+    "firstName": "Durham",
+    "lastName": "Smythe",
+    "position": "TE",
+    "jerseyNumber": 80
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "Devontez Walker",
+    "firstName": "Devontez",
+    "lastName": "Walker",
+    "position": "WR",
+    "jerseyNumber": 81
+  },
+  {
+    "teamCode": "BAL",
+    "displayName": "LaJohntay Wester",
+    "firstName": "LaJohntay",
+    "lastName": "Wester",
+    "position": "WR",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Erick All",
+    "firstName": "Erick",
+    "lastName": "All",
+    "position": "TE",
+    "jerseyNumber": 83
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Tahj Brooks",
+    "firstName": "Tahj",
+    "lastName": "Brooks",
+    "position": "RB",
+    "jerseyNumber": 25
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Chase Brown",
+    "firstName": "Chase",
+    "lastName": "Brown",
+    "position": "RB",
+    "jerseyNumber": 30
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Joe Burrow",
+    "firstName": "Joe",
+    "lastName": "Burrow",
+    "position": "QB",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Ja'Marr Chase",
+    "firstName": "Ja'Marr",
+    "lastName": "Chase",
+    "position": "WR",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Jack Endries",
+    "firstName": "Jack",
+    "lastName": "Endries",
+    "position": "TE",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Joe Flacco",
+    "firstName": "Joe",
+    "lastName": "Flacco",
+    "position": "QB",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Mike Gesicki",
+    "firstName": "Mike",
+    "lastName": "Gesicki",
+    "position": "TE",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Tee Higgins",
+    "firstName": "Tee",
+    "lastName": "Higgins",
+    "position": "WR",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Andrei Iosivas",
+    "firstName": "Andrei",
+    "lastName": "Iosivas",
+    "position": "WR",
+    "jerseyNumber": 80
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Evan McPherson",
+    "firstName": "Evan",
+    "lastName": "McPherson",
+    "position": "K",
+    "jerseyNumber": 2
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Dohnte Meyers",
+    "firstName": "Dohnte",
+    "lastName": "Meyers",
+    "position": "WR",
+    "jerseyNumber": 81
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Samaje Perine",
+    "firstName": "Samaje",
+    "lastName": "Perine",
+    "position": "RB",
+    "jerseyNumber": 34
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Drew Sample",
+    "firstName": "Drew",
+    "lastName": "Sample",
+    "position": "TE",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Ke'Shawn Williams",
+    "firstName": "Ke'Shawn",
+    "lastName": "Williams",
+    "position": "WR",
+    "jerseyNumber": 12
+  },
+  {
+    "teamCode": "CIN",
+    "displayName": "Colbie Young",
+    "firstName": "Colbie",
+    "lastName": "Young",
+    "position": "WR",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Isaiah Bond",
+    "firstName": "Isaiah",
+    "lastName": "Bond",
+    "position": "WR",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Denzel Boston",
+    "firstName": "Denzel",
+    "lastName": "Boston",
+    "position": "WR",
+    "jerseyNumber": 12
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "KC Concepcion",
+    "firstName": "KC",
+    "lastName": "Concepcion",
+    "position": "WR",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Malachi Corley",
+    "firstName": "Malachi",
+    "lastName": "Corley",
+    "position": "WR",
+    "jerseyNumber": 83
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Harold Fannin Jr.",
+    "firstName": "Harold",
+    "lastName": "Fannin Jr.",
+    "position": "TE",
+    "jerseyNumber": 44
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Taylen Green",
+    "firstName": "Taylen",
+    "lastName": "Green",
+    "position": "QB",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Jerry Jeudy",
+    "firstName": "Jerry",
+    "lastName": "Jeudy",
+    "position": "WR",
+    "jerseyNumber": 3
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Quinshon Judkins",
+    "firstName": "Quinshon",
+    "lastName": "Judkins",
+    "position": "RB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Carsen Ryan",
+    "firstName": "Carsen",
+    "lastName": "Ryan",
+    "position": "TE",
+    "jerseyNumber": 48
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Dylan Sampson",
+    "firstName": "Dylan",
+    "lastName": "Sampson",
+    "position": "RB",
+    "jerseyNumber": 22
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Raheim Sanders",
+    "firstName": "Raheim",
+    "lastName": "Sanders",
+    "position": "RB",
+    "jerseyNumber": 35
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Shedeur Sanders",
+    "firstName": "Shedeur",
+    "lastName": "Sanders",
+    "position": "QB",
+    "jerseyNumber": 2
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Andre Szmyt",
+    "firstName": "Andre",
+    "lastName": "Szmyt",
+    "position": "K",
+    "jerseyNumber": 25
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Tylan Wallace",
+    "firstName": "Tylan",
+    "lastName": "Wallace",
+    "position": "WR",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Deshaun Watson",
+    "firstName": "Deshaun",
+    "lastName": "Watson",
+    "position": "QB",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "CLE",
+    "displayName": "Blake Whiteheart",
+    "firstName": "Blake",
+    "lastName": "Whiteheart",
+    "position": "TE",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Drew Allar",
+    "firstName": "Drew",
+    "lastName": "Allar",
+    "position": "QB",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Germie Bernard",
+    "firstName": "Germie",
+    "lastName": "Bernard",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Chris Boswell",
+    "firstName": "Chris",
+    "lastName": "Boswell",
+    "position": "K",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Rico Dowdle",
+    "firstName": "Rico",
+    "lastName": "Dowdle",
+    "position": "RB",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Pat Freiermuth",
+    "firstName": "Pat",
+    "lastName": "Freiermuth",
+    "position": "TE",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Eli Heidenreich",
+    "firstName": "Eli",
+    "lastName": "Heidenreich",
+    "position": "RB",
+    "jerseyNumber": 29
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Will Howard",
+    "firstName": "Will",
+    "lastName": "Howard",
+    "position": "QB",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "DK Metcalf",
+    "firstName": "DK",
+    "lastName": "Metcalf",
+    "position": "WR",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Michael Pittman",
+    "firstName": "Michael",
+    "lastName": "Pittman",
+    "position": "WR",
+    "jerseyNumber": 11
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Aaron Rodgers",
+    "firstName": "Aaron",
+    "lastName": "Rodgers",
+    "position": "QB",
+    "jerseyNumber": 8
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Mason Rudolph",
+    "firstName": "Mason",
+    "lastName": "Rudolph",
+    "position": "QB",
+    "jerseyNumber": 2
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Ben Skowronek",
+    "firstName": "Ben",
+    "lastName": "Skowronek",
+    "position": "WR",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Robert Tonyan",
+    "firstName": "Robert",
+    "lastName": "Tonyan",
+    "position": "TE",
+    "jerseyNumber": 83
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Jaylen Warren",
+    "firstName": "Jaylen",
+    "lastName": "Warren",
+    "position": "RB",
+    "jerseyNumber": 30
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Darnell Washington",
+    "firstName": "Darnell",
+    "lastName": "Washington",
+    "position": "TE",
+    "jerseyNumber": 80
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Kaden Wetjen",
+    "firstName": "Kaden",
+    "lastName": "Wetjen",
+    "position": "WR",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "PIT",
+    "displayName": "Roman Wilson",
+    "firstName": "Roman",
+    "lastName": "Wilson",
+    "position": "WR",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "Kayshon Boutte",
+    "firstName": "Kayshon",
+    "lastName": "Boutte",
+    "position": "WR",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "British Brooks",
+    "firstName": "British",
+    "lastName": "Brooks",
+    "position": "RB",
+    "jerseyNumber": 44
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "Nico Collins",
+    "firstName": "Nico",
+    "lastName": "Collins",
+    "position": "WR",
+    "jerseyNumber": 12
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "Ka'imi Fairbairn",
+    "firstName": "Ka'imi",
+    "lastName": "Fairbairn",
+    "position": "K",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "Xavier Hutchinson",
+    "firstName": "Xavier",
+    "lastName": "Hutchinson",
+    "position": "WR",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "Marlin Klein",
+    "firstName": "Marlin",
+    "lastName": "Klein",
+    "position": "TE",
+    "jerseyNumber": 83
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "Woody Marks",
+    "firstName": "Woody",
+    "lastName": "Marks",
+    "position": "RB",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "Davis Mills",
+    "firstName": "Davis",
+    "lastName": "Mills",
+    "position": "QB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "David Montgomery",
+    "firstName": "David",
+    "lastName": "Montgomery",
+    "position": "RB",
+    "jerseyNumber": 32
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "Foster Moreau",
+    "firstName": "Foster",
+    "lastName": "Moreau",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "Jaylin Noel",
+    "firstName": "Jaylin",
+    "lastName": "Noel",
+    "position": "WR",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "Dalton Schultz",
+    "firstName": "Dalton",
+    "lastName": "Schultz",
+    "position": "TE",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "Cade Stover",
+    "firstName": "Cade",
+    "lastName": "Stover",
+    "position": "TE",
+    "jerseyNumber": 8
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "C.J. Stroud",
+    "firstName": "C.J.",
+    "lastName": "Stroud",
+    "position": "QB",
+    "jerseyNumber": 7
+  },
+  {
+    "teamCode": "HOU",
+    "displayName": "Jared Wayne",
+    "firstName": "Jared",
+    "lastName": "Wayne",
+    "position": "WR",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Mo Alie-Cox",
+    "firstName": "Mo",
+    "lastName": "Alie-Cox",
+    "position": "TE",
+    "jerseyNumber": 81
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Keenan Allen",
+    "firstName": "Keenan",
+    "lastName": "Allen",
+    "position": "WR",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Deion Burks",
+    "firstName": "Deion",
+    "lastName": "Burks",
+    "position": "WR",
+    "jerseyNumber": 80
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Josh Downs",
+    "firstName": "Josh",
+    "lastName": "Downs",
+    "position": "WR",
+    "jerseyNumber": 2
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Ashton Dulin",
+    "firstName": "Ashton",
+    "lastName": "Dulin",
+    "position": "WR",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "DJ Giddens",
+    "firstName": "DJ",
+    "lastName": "Giddens",
+    "position": "RB",
+    "jerseyNumber": 21
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Daniel Jones",
+    "firstName": "Daniel",
+    "lastName": "Jones",
+    "position": "QB",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Riley Leonard",
+    "firstName": "Riley",
+    "lastName": "Leonard",
+    "position": "QB",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Seth McGowan",
+    "firstName": "Seth",
+    "lastName": "McGowan",
+    "position": "RB",
+    "jerseyNumber": 20
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Andrew Ogletree",
+    "firstName": "Andrew",
+    "lastName": "Ogletree",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Alec Pierce",
+    "firstName": "Alec",
+    "lastName": "Pierce",
+    "position": "WR",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Anthony Richardson",
+    "firstName": "Anthony",
+    "lastName": "Richardson",
+    "position": "QB",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Spencer Shrader",
+    "firstName": "Spencer",
+    "lastName": "Shrader",
+    "position": "K",
+    "jerseyNumber": 3
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Jonathan Taylor",
+    "firstName": "Jonathan",
+    "lastName": "Taylor",
+    "position": "RB",
+    "jerseyNumber": 28
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Laquon Treadwell",
+    "firstName": "Laquon",
+    "lastName": "Treadwell",
+    "position": "WR",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "IND",
+    "displayName": "Tyler Warren",
+    "firstName": "Tyler",
+    "lastName": "Warren",
+    "position": "TE",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Ameer Abdullah",
+    "firstName": "Ameer",
+    "lastName": "Abdullah",
+    "position": "RB",
+    "jerseyNumber": 43
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "LeQuint Allen Jr.",
+    "firstName": "LeQuint",
+    "lastName": "Allen Jr.",
+    "position": "RB",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Nate Boerkircher",
+    "firstName": "Nate",
+    "lastName": "Boerkircher",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Josh Cameron",
+    "firstName": "Josh",
+    "lastName": "Cameron",
+    "position": "WR",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Quinn Ewers",
+    "firstName": "Quinn",
+    "lastName": "Ewers",
+    "position": "QB",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Tanner Koziol",
+    "firstName": "Tanner",
+    "lastName": "Koziol",
+    "position": "TE",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Trevor Lawrence",
+    "firstName": "Trevor",
+    "lastName": "Lawrence",
+    "position": "QB",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Cam Little",
+    "firstName": "Cam",
+    "lastName": "Little",
+    "position": "K",
+    "jerseyNumber": 39
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Jakobi Meyers",
+    "firstName": "Jakobi",
+    "lastName": "Meyers",
+    "position": "WR",
+    "jerseyNumber": 3
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Quintin Morris",
+    "firstName": "Quintin",
+    "lastName": "Morris",
+    "position": "TE",
+    "jerseyNumber": 80
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Chris Rodriguez Jr.",
+    "firstName": "Chris",
+    "lastName": "Rodriguez Jr.",
+    "position": "RB",
+    "jerseyNumber": 24
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Brenton Strange",
+    "firstName": "Brenton",
+    "lastName": "Strange",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Brian Thomas Jr.",
+    "firstName": "Brian",
+    "lastName": "Thomas Jr.",
+    "position": "WR",
+    "jerseyNumber": 7
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Bhayshul Tuten",
+    "firstName": "Bhayshul",
+    "lastName": "Tuten",
+    "position": "RB",
+    "jerseyNumber": 33
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "Parker Washington",
+    "firstName": "Parker",
+    "lastName": "Washington",
+    "position": "WR",
+    "jerseyNumber": 11
+  },
+  {
+    "teamCode": "JAX",
+    "displayName": "C.J. Williams",
+    "firstName": "C.J.",
+    "lastName": "Williams",
+    "position": "WR",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Elic Ayomanor",
+    "firstName": "Elic",
+    "lastName": "Ayomanor",
+    "position": "WR",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Daniel Bellinger",
+    "firstName": "Daniel",
+    "lastName": "Bellinger",
+    "position": "TE",
+    "jerseyNumber": 82
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Julius Chestnut",
+    "firstName": "Julius",
+    "lastName": "Chestnut",
+    "position": "RB",
+    "jerseyNumber": 36
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Chimere Dike",
+    "firstName": "Chimere",
+    "lastName": "Dike",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Kylen Granson",
+    "firstName": "Kylen",
+    "lastName": "Granson",
+    "position": "TE",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Gunnar Helm",
+    "firstName": "Gunnar",
+    "lastName": "Helm",
+    "position": "TE",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "David Martin-Robinson",
+    "firstName": "David",
+    "lastName": "Martin-Robinson",
+    "position": "TE",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Tony Pollard",
+    "firstName": "Tony",
+    "lastName": "Pollard",
+    "position": "RB",
+    "jerseyNumber": 20
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Calvin Ridley",
+    "firstName": "Calvin",
+    "lastName": "Ridley",
+    "position": "WR",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Wan'Dale Robinson",
+    "firstName": "Wan'Dale",
+    "lastName": "Robinson",
+    "position": "WR",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Nicholas Singleton",
+    "firstName": "Nicholas",
+    "lastName": "Singleton",
+    "position": "RB",
+    "jerseyNumber": 32
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Joey Slye",
+    "firstName": "Joey",
+    "lastName": "Slye",
+    "position": "K",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Tyjae Spears",
+    "firstName": "Tyjae",
+    "lastName": "Spears",
+    "position": "RB",
+    "jerseyNumber": 2
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Carnell Tate",
+    "firstName": "Carnell",
+    "lastName": "Tate",
+    "position": "WR",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Mitchell Trubisky",
+    "firstName": "Mitchell",
+    "lastName": "Trubisky",
+    "position": "QB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "TEN",
+    "displayName": "Cam Ward",
+    "firstName": "Cam",
+    "lastName": "Ward",
+    "position": "QB",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Nate Adkins",
+    "firstName": "Nate",
+    "lastName": "Adkins",
+    "position": "TE",
+    "jerseyNumber": 45
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Tyler Badie",
+    "firstName": "Tyler",
+    "lastName": "Badie",
+    "position": "RB",
+    "jerseyNumber": 28
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Dallen Bentley",
+    "firstName": "Dallen",
+    "lastName": "Bentley",
+    "position": "TE",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Pat Bryant",
+    "firstName": "Pat",
+    "lastName": "Bryant",
+    "position": "WR",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Jonah Coleman",
+    "firstName": "Jonah",
+    "lastName": "Coleman",
+    "position": "RB",
+    "jerseyNumber": 20
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "J.K. Dobbins",
+    "firstName": "J.K.",
+    "lastName": "Dobbins",
+    "position": "RB",
+    "jerseyNumber": 27
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Sam Ehlinger",
+    "firstName": "Sam",
+    "lastName": "Ehlinger",
+    "position": "QB",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Evan Engram",
+    "firstName": "Evan",
+    "lastName": "Engram",
+    "position": "TE",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Troy Franklin",
+    "firstName": "Troy",
+    "lastName": "Franklin",
+    "position": "WR",
+    "jerseyNumber": 11
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "RJ Harvey",
+    "firstName": "RJ",
+    "lastName": "Harvey",
+    "position": "RB",
+    "jerseyNumber": 12
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Lil'Jordan Humphrey",
+    "firstName": "Lil'Jordan",
+    "lastName": "Humphrey",
+    "position": "WR",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Wil Lutz",
+    "firstName": "Wil",
+    "lastName": "Lutz",
+    "position": "K",
+    "jerseyNumber": 3
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Marvin Mims Jr.",
+    "firstName": "Marvin",
+    "lastName": "Mims Jr.",
+    "position": "WR",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Bo Nix",
+    "firstName": "Bo",
+    "lastName": "Nix",
+    "position": "QB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Jarrett Stidham",
+    "firstName": "Jarrett",
+    "lastName": "Stidham",
+    "position": "QB",
+    "jerseyNumber": 8
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Courtland Sutton",
+    "firstName": "Courtland",
+    "lastName": "Sutton",
+    "position": "WR",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Adam Trautman",
+    "firstName": "Adam",
+    "lastName": "Trautman",
+    "position": "TE",
+    "jerseyNumber": 82
+  },
+  {
+    "teamCode": "DEN",
+    "displayName": "Jaylen Waddle",
+    "firstName": "Jaylen",
+    "lastName": "Waddle",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Cyrus Allen",
+    "firstName": "Cyrus",
+    "lastName": "Allen",
+    "position": "WR",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Jake Briningstool",
+    "firstName": "Jake",
+    "lastName": "Briningstool",
+    "position": "TE",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Harrison Butker",
+    "firstName": "Harrison",
+    "lastName": "Butker",
+    "position": "K",
+    "jerseyNumber": 7
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Justin Fields",
+    "firstName": "Justin",
+    "lastName": "Fields",
+    "position": "QB",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Noah Gray",
+    "firstName": "Noah",
+    "lastName": "Gray",
+    "position": "TE",
+    "jerseyNumber": 83
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Emmett Johnson",
+    "firstName": "Emmett",
+    "lastName": "Johnson",
+    "position": "RB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Travis Kelce",
+    "firstName": "Travis",
+    "lastName": "Kelce",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Patrick Mahomes",
+    "firstName": "Patrick",
+    "lastName": "Mahomes",
+    "position": "QB",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Garrett Nussmeier",
+    "firstName": "Garrett",
+    "lastName": "Nussmeier",
+    "position": "QB",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Nikko Remigio",
+    "firstName": "Nikko",
+    "lastName": "Remigio",
+    "position": "WR",
+    "jerseyNumber": 81
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Rashee Rice",
+    "firstName": "Rashee",
+    "lastName": "Rice",
+    "position": "WR",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Jalen Royals",
+    "firstName": "Jalen",
+    "lastName": "Royals",
+    "position": "WR",
+    "jerseyNumber": 11
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Brashard Smith",
+    "firstName": "Brashard",
+    "lastName": "Smith",
+    "position": "RB",
+    "jerseyNumber": 24
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Tyquan Thornton",
+    "firstName": "Tyquan",
+    "lastName": "Thornton",
+    "position": "WR",
+    "jerseyNumber": 2
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Kenneth Walker III",
+    "firstName": "Kenneth",
+    "lastName": "Walker III",
+    "position": "RB",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Jared Wiley",
+    "firstName": "Jared",
+    "lastName": "Wiley",
+    "position": "TE",
+    "jerseyNumber": 12
+  },
+  {
+    "teamCode": "KC",
+    "displayName": "Xavier Worthy",
+    "firstName": "Xavier",
+    "lastName": "Worthy",
+    "position": "WR",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Jack Bech",
+    "firstName": "Jack",
+    "lastName": "Bech",
+    "position": "WR",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Malik Benson",
+    "firstName": "Malik",
+    "lastName": "Benson",
+    "position": "WR",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Brock Bowers",
+    "firstName": "Brock",
+    "lastName": "Bowers",
+    "position": "TE",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Kirk Cousins",
+    "firstName": "Kirk",
+    "lastName": "Cousins",
+    "position": "QB",
+    "jerseyNumber": 8
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Matt Gay",
+    "firstName": "Matt",
+    "lastName": "Gay",
+    "position": "K",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Ashton Jeanty",
+    "firstName": "Ashton",
+    "lastName": "Jeanty",
+    "position": "RB",
+    "jerseyNumber": 2
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Dylan Laube",
+    "firstName": "Dylan",
+    "lastName": "Laube",
+    "position": "RB",
+    "jerseyNumber": 23
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Michael Mayer",
+    "firstName": "Michael",
+    "lastName": "Mayer",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Fernando Mendoza",
+    "firstName": "Fernando",
+    "lastName": "Mendoza",
+    "position": "QB",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Jalen Nailor",
+    "firstName": "Jalen",
+    "lastName": "Nailor",
+    "position": "WR",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Aidan O'Connell",
+    "firstName": "Aidan",
+    "lastName": "O'Connell",
+    "position": "QB",
+    "jerseyNumber": 12
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Ian Thomas",
+    "firstName": "Ian",
+    "lastName": "Thomas",
+    "position": "TE",
+    "jerseyNumber": 80
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Dont'e Thornton Jr.",
+    "firstName": "Dont'e",
+    "lastName": "Thornton Jr.",
+    "position": "WR",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Tre Tucker",
+    "firstName": "Tre",
+    "lastName": "Tucker",
+    "position": "WR",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Mike Washington Jr.",
+    "firstName": "Mike",
+    "lastName": "Washington Jr.",
+    "position": "RB",
+    "jerseyNumber": 30
+  },
+  {
+    "teamCode": "LV",
+    "displayName": "Dareke Young",
+    "firstName": "Dareke",
+    "lastName": "Young",
+    "position": "WR",
+    "jerseyNumber": 81
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Derius Davis",
+    "firstName": "Derius",
+    "lastName": "Davis",
+    "position": "WR",
+    "jerseyNumber": 12
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Cameron Dicker",
+    "firstName": "Cameron",
+    "lastName": "Dicker",
+    "position": "K",
+    "jerseyNumber": 11
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Oronde Gadsden II",
+    "firstName": "Oronde",
+    "lastName": "Gadsden II",
+    "position": "TE",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Omarion Hampton",
+    "firstName": "Omarion",
+    "lastName": "Hampton",
+    "position": "RB",
+    "jerseyNumber": 8
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Tre Harris",
+    "firstName": "Tre",
+    "lastName": "Harris",
+    "position": "WR",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Justin Herbert",
+    "firstName": "Justin",
+    "lastName": "Herbert",
+    "position": "QB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Quentin Johnston",
+    "firstName": "Quentin",
+    "lastName": "Johnston",
+    "position": "WR",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Charlie Kolar",
+    "firstName": "Charlie",
+    "lastName": "Kolar",
+    "position": "TE",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "KeAndre Lambert-Smith",
+    "firstName": "KeAndre",
+    "lastName": "Lambert-Smith",
+    "position": "WR",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Trey Lance",
+    "firstName": "Trey",
+    "lastName": "Lance",
+    "position": "QB",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Ladd McConkey",
+    "firstName": "Ladd",
+    "lastName": "McConkey",
+    "position": "WR",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Keaton Mitchell",
+    "firstName": "Keaton",
+    "lastName": "Mitchell",
+    "position": "RB",
+    "jerseyNumber": 34
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "David Njoku",
+    "firstName": "David",
+    "lastName": "Njoku",
+    "position": "TE",
+    "jerseyNumber": 83
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Brenen Thompson",
+    "firstName": "Brenen",
+    "lastName": "Thompson",
+    "position": "WR",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "LAC",
+    "displayName": "Kimani Vidal",
+    "firstName": "Kimani",
+    "lastName": "Vidal",
+    "position": "RB",
+    "jerseyNumber": 28
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Brandon Aubrey",
+    "firstName": "Brandon",
+    "lastName": "Aubrey",
+    "position": "K",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Camden Brown",
+    "firstName": "Camden",
+    "lastName": "Brown",
+    "position": "WR",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Malik Davis",
+    "firstName": "Malik",
+    "lastName": "Davis",
+    "position": "RB",
+    "jerseyNumber": 20
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Emari Demercado",
+    "firstName": "Emari",
+    "lastName": "Demercado",
+    "position": "RB",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Jake Ferguson",
+    "firstName": "Jake",
+    "lastName": "Ferguson",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Ryan Flournoy",
+    "firstName": "Ryan",
+    "lastName": "Flournoy",
+    "position": "WR",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Sam Howell",
+    "firstName": "Sam",
+    "lastName": "Howell",
+    "position": "QB",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "CeeDee Lamb",
+    "firstName": "CeeDee",
+    "lastName": "Lamb",
+    "position": "WR",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Hunter Luepke",
+    "firstName": "Hunter",
+    "lastName": "Luepke",
+    "position": "RB",
+    "jerseyNumber": 40
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Jonathan Mingo",
+    "firstName": "Jonathan",
+    "lastName": "Mingo",
+    "position": "WR",
+    "jerseyNumber": 81
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "George Pickens",
+    "firstName": "George",
+    "lastName": "Pickens",
+    "position": "WR",
+    "jerseyNumber": 3
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Dak Prescott",
+    "firstName": "Dak",
+    "lastName": "Prescott",
+    "position": "QB",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Luke Schoonmaker",
+    "firstName": "Luke",
+    "lastName": "Schoonmaker",
+    "position": "TE",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Brevyn Spann-Ford",
+    "firstName": "Brevyn",
+    "lastName": "Spann-Ford",
+    "position": "TE",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "KaVontae Turpin",
+    "firstName": "KaVontae",
+    "lastName": "Turpin",
+    "position": "WR",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "DAL",
+    "displayName": "Javonte Williams",
+    "firstName": "Javonte",
+    "lastName": "Williams",
+    "position": "RB",
+    "jerseyNumber": 33
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Odell Beckham Jr.",
+    "firstName": "Odell",
+    "lastName": "Beckham Jr.",
+    "position": "WR",
+    "jerseyNumber": 3
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Jaxson Dart",
+    "firstName": "Jaxson",
+    "lastName": "Dart",
+    "position": "QB",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Thomas Fidone II",
+    "firstName": "Thomas",
+    "lastName": "Fidone II",
+    "position": "TE",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Malachi Fields",
+    "firstName": "Malachi",
+    "lastName": "Fields",
+    "position": "WR",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Najee Harris",
+    "firstName": "Najee",
+    "lastName": "Harris",
+    "position": "RB",
+    "jerseyNumber": 22
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Theo Johnson",
+    "firstName": "Theo",
+    "lastName": "Johnson",
+    "position": "TE",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Isaiah Likely",
+    "firstName": "Isaiah",
+    "lastName": "Likely",
+    "position": "TE",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Chris Manhertz",
+    "firstName": "Chris",
+    "lastName": "Manhertz",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Darnell Mooney",
+    "firstName": "Darnell",
+    "lastName": "Mooney",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Malik Nabers",
+    "firstName": "Malik",
+    "lastName": "Nabers",
+    "position": "WR",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Patrick Ricard",
+    "firstName": "Patrick",
+    "lastName": "Ricard",
+    "position": "RB",
+    "jerseyNumber": 45
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Devin Singletary",
+    "firstName": "Devin",
+    "lastName": "Singletary",
+    "position": "RB",
+    "jerseyNumber": 26
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Cam Skattebo",
+    "firstName": "Cam",
+    "lastName": "Skattebo",
+    "position": "RB",
+    "jerseyNumber": 44
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Darius Slayton",
+    "firstName": "Darius",
+    "lastName": "Slayton",
+    "position": "WR",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Tyrone Tracy Jr.",
+    "firstName": "Tyrone",
+    "lastName": "Tracy Jr.",
+    "position": "RB",
+    "jerseyNumber": 29
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Jameis Winston",
+    "firstName": "Jameis",
+    "lastName": "Winston",
+    "position": "QB",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "NYG",
+    "displayName": "Dominic Zvada",
+    "firstName": "Dominic",
+    "lastName": "Zvada",
+    "position": "K",
+    "jerseyNumber": 34
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Saquon Barkley",
+    "firstName": "Saquon",
+    "lastName": "Barkley",
+    "position": "RB",
+    "jerseyNumber": 26
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Tank Bigsby",
+    "firstName": "Tank",
+    "lastName": "Bigsby",
+    "position": "RB",
+    "jerseyNumber": 8
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Marquise Brown",
+    "firstName": "Marquise",
+    "lastName": "Brown",
+    "position": "WR",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Darius Cooper",
+    "firstName": "Darius",
+    "lastName": "Cooper",
+    "position": "WR",
+    "jerseyNumber": 80
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Andy Dalton",
+    "firstName": "Andy",
+    "lastName": "Dalton",
+    "position": "QB",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Jake Elliott",
+    "firstName": "Jake",
+    "lastName": "Elliott",
+    "position": "K",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Dallas Goedert",
+    "firstName": "Dallas",
+    "lastName": "Goedert",
+    "position": "TE",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Jalen Hurts",
+    "firstName": "Jalen",
+    "lastName": "Hurts",
+    "position": "QB",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "E.J. Jenkins",
+    "firstName": "E.J.",
+    "lastName": "Jenkins",
+    "position": "TE",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Makai Lemon",
+    "firstName": "Makai",
+    "lastName": "Lemon",
+    "position": "WR",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Tanner McKee",
+    "firstName": "Tanner",
+    "lastName": "McKee",
+    "position": "QB",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Elijah Moore",
+    "firstName": "Elijah",
+    "lastName": "Moore",
+    "position": "WR",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Johnny Mundt",
+    "firstName": "Johnny",
+    "lastName": "Mundt",
+    "position": "TE",
+    "jerseyNumber": 83
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Cole Payton",
+    "firstName": "Cole",
+    "lastName": "Payton",
+    "position": "QB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Will Shipley",
+    "firstName": "Will",
+    "lastName": "Shipley",
+    "position": "RB",
+    "jerseyNumber": 28
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "DeVonta Smith",
+    "firstName": "DeVonta",
+    "lastName": "Smith",
+    "position": "WR",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Eli Stowers",
+    "firstName": "Eli",
+    "lastName": "Stowers",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "PHI",
+    "displayName": "Dontayvion Wicks",
+    "firstName": "Dontayvion",
+    "lastName": "Wicks",
+    "position": "WR",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Kaytron Allen",
+    "firstName": "Kaytron",
+    "lastName": "Allen",
+    "position": "RB",
+    "jerseyNumber": 31
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "John Bates",
+    "firstName": "John",
+    "lastName": "Bates",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Dyami Brown",
+    "firstName": "Dyami",
+    "lastName": "Brown",
+    "position": "WR",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Treylon Burks",
+    "firstName": "Treylon",
+    "lastName": "Burks",
+    "position": "WR",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Jacory Croskey-Merritt",
+    "firstName": "Jacory",
+    "lastName": "Croskey-Merritt",
+    "position": "RB",
+    "jerseyNumber": 22
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Jayden Daniels",
+    "firstName": "Jayden",
+    "lastName": "Daniels",
+    "position": "QB",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Stefon Diggs",
+    "firstName": "Stefon",
+    "lastName": "Diggs",
+    "position": "WR",
+    "jerseyNumber": 3
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Athan Kaliakmanis",
+    "firstName": "Athan",
+    "lastName": "Kaliakmanis",
+    "position": "QB",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Jaylin Lane",
+    "firstName": "Jaylin",
+    "lastName": "Lane",
+    "position": "WR",
+    "jerseyNumber": 83
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Marcus Mariota",
+    "firstName": "Marcus",
+    "lastName": "Mariota",
+    "position": "QB",
+    "jerseyNumber": 8
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Luke McCaffrey",
+    "firstName": "Luke",
+    "lastName": "McCaffrey",
+    "position": "WR",
+    "jerseyNumber": 11
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Terry McLaurin",
+    "firstName": "Terry",
+    "lastName": "McLaurin",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Chig Okonkwo",
+    "firstName": "Chig",
+    "lastName": "Okonkwo",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Ben Sinnott",
+    "firstName": "Ben",
+    "lastName": "Sinnott",
+    "position": "TE",
+    "jerseyNumber": 82
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Drew Stevens",
+    "firstName": "Drew",
+    "lastName": "Stevens",
+    "position": "K",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Rachaad White",
+    "firstName": "Rachaad",
+    "lastName": "White",
+    "position": "RB",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Antonio Williams",
+    "firstName": "Antonio",
+    "lastName": "Williams",
+    "position": "WR",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "WAS",
+    "displayName": "Colson Yankoff",
+    "firstName": "Colson",
+    "lastName": "Yankoff",
+    "position": "TE",
+    "jerseyNumber": 80
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Tyson Bagent",
+    "firstName": "Tyson",
+    "lastName": "Bagent",
+    "position": "QB",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Luther Burden III",
+    "firstName": "Luther",
+    "lastName": "Burden III",
+    "position": "WR",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Roschon Johnson",
+    "firstName": "Roschon",
+    "lastName": "Johnson",
+    "position": "RB",
+    "jerseyNumber": 23
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Case Keenum",
+    "firstName": "Case",
+    "lastName": "Keenum",
+    "position": "QB",
+    "jerseyNumber": 11
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Cole Kmet",
+    "firstName": "Cole",
+    "lastName": "Kmet",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Hayden Large",
+    "firstName": "Hayden",
+    "lastName": "Large",
+    "position": "TE",
+    "jerseyNumber": 43
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Colston Loveland",
+    "firstName": "Colston",
+    "lastName": "Loveland",
+    "position": "TE",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Kyle Monangai",
+    "firstName": "Kyle",
+    "lastName": "Monangai",
+    "position": "RB",
+    "jerseyNumber": 25
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Rome Odunze",
+    "firstName": "Rome",
+    "lastName": "Odunze",
+    "position": "WR",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Kalif Raymond",
+    "firstName": "Kalif",
+    "lastName": "Raymond",
+    "position": "WR",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Sam Roush",
+    "firstName": "Sam",
+    "lastName": "Roush",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Cairo Santos",
+    "firstName": "Cairo",
+    "lastName": "Santos",
+    "position": "K",
+    "jerseyNumber": 8
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "D'Andre Swift",
+    "firstName": "D'Andre",
+    "lastName": "Swift",
+    "position": "RB",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Zavion Thomas",
+    "firstName": "Zavion",
+    "lastName": "Thomas",
+    "position": "WR",
+    "jerseyNumber": 81
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Jahdae Walker",
+    "firstName": "Jahdae",
+    "lastName": "Walker",
+    "position": "WR",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "CHI",
+    "displayName": "Caleb Williams",
+    "firstName": "Caleb",
+    "lastName": "Williams",
+    "position": "QB",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Jake Bates",
+    "firstName": "Jake",
+    "lastName": "Bates",
+    "position": "K",
+    "jerseyNumber": 39
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Joshua Dobbs",
+    "firstName": "Joshua",
+    "lastName": "Dobbs",
+    "position": "QB",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Jahmyr Gibbs",
+    "firstName": "Jahmyr",
+    "lastName": "Gibbs",
+    "position": "RB",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Jared Goff",
+    "firstName": "Jared",
+    "lastName": "Goff",
+    "position": "QB",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Sam LaPorta",
+    "firstName": "Sam",
+    "lastName": "LaPorta",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Tay Martin",
+    "firstName": "Tay",
+    "lastName": "Martin",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Jackson Meeks",
+    "firstName": "Jackson",
+    "lastName": "Meeks",
+    "position": "WR",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Isiah Pacheco",
+    "firstName": "Isiah",
+    "lastName": "Pacheco",
+    "position": "RB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Jacob Saylors",
+    "firstName": "Jacob",
+    "lastName": "Saylors",
+    "position": "RB",
+    "jerseyNumber": 25
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Jabari Small",
+    "firstName": "Jabari",
+    "lastName": "Small",
+    "position": "RB",
+    "jerseyNumber": 26
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Amon-Ra St. Brown",
+    "firstName": "Amon-Ra",
+    "lastName": "St. Brown",
+    "position": "WR",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Isaac TeSlaa",
+    "firstName": "Isaac",
+    "lastName": "TeSlaa",
+    "position": "WR",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Sione Vaki",
+    "firstName": "Sione",
+    "lastName": "Vaki",
+    "position": "RB",
+    "jerseyNumber": 33
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Jameson Williams",
+    "firstName": "Jameson",
+    "lastName": "Williams",
+    "position": "WR",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "DET",
+    "displayName": "Brock Wright",
+    "firstName": "Brock",
+    "lastName": "Wright",
+    "position": "TE",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Chris Brooks",
+    "firstName": "Chris",
+    "lastName": "Brooks",
+    "position": "RB",
+    "jerseyNumber": 30
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Matthew Golden",
+    "firstName": "Matthew",
+    "lastName": "Golden",
+    "position": "WR",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Kaleb Johnson",
+    "firstName": "Kaleb",
+    "lastName": "Johnson",
+    "position": "RB",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Tucker Kraft",
+    "firstName": "Tucker",
+    "lastName": "Kraft",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "MarShawn Lloyd",
+    "firstName": "MarShawn",
+    "lastName": "Lloyd",
+    "position": "RB",
+    "jerseyNumber": 32
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Jordan Love",
+    "firstName": "Jordan",
+    "lastName": "Love",
+    "position": "QB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Bo Melton",
+    "firstName": "Bo",
+    "lastName": "Melton",
+    "position": "WR",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Skyy Moore",
+    "firstName": "Skyy",
+    "lastName": "Moore",
+    "position": "WR",
+    "jerseyNumber": 23
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Mark Redman",
+    "firstName": "Mark",
+    "lastName": "Redman",
+    "position": "TE",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Jayden Reed",
+    "firstName": "Jayden",
+    "lastName": "Reed",
+    "position": "WR",
+    "jerseyNumber": 11
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Trey Smack",
+    "firstName": "Trey",
+    "lastName": "Smack",
+    "position": "K",
+    "jerseyNumber": 28
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Jonnu Smith",
+    "firstName": "Jonnu",
+    "lastName": "Smith",
+    "position": "TE",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "J. Michael Sturdivant",
+    "firstName": "J.",
+    "lastName": "Michael Sturdivant",
+    "position": "WR",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Tyrod Taylor",
+    "firstName": "Tyrod",
+    "lastName": "Taylor",
+    "position": "QB",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Christian Watson",
+    "firstName": "Christian",
+    "lastName": "Watson",
+    "position": "WR",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "GB",
+    "displayName": "Josh Whyle",
+    "firstName": "Josh",
+    "lastName": "Whyle",
+    "position": "TE",
+    "jerseyNumber": 81
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Jordan Addison",
+    "firstName": "Jordan",
+    "lastName": "Addison",
+    "position": "WR",
+    "jerseyNumber": 3
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Gavin Bartholomew",
+    "firstName": "Gavin",
+    "lastName": "Bartholomew",
+    "position": "TE",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Max Bredeson",
+    "firstName": "Max",
+    "lastName": "Bredeson",
+    "position": "RB",
+    "jerseyNumber": 45
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Demond Claiborne",
+    "firstName": "Demond",
+    "lastName": "Claiborne",
+    "position": "RB",
+    "jerseyNumber": 21
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Tai Felton",
+    "firstName": "Tai",
+    "lastName": "Felton",
+    "position": "WR",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "T.J. Hockenson",
+    "firstName": "T.J.",
+    "lastName": "Hockenson",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Justin Jefferson",
+    "firstName": "Justin",
+    "lastName": "Jefferson",
+    "position": "WR",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Jauan Jennings",
+    "firstName": "Jauan",
+    "lastName": "Jennings",
+    "position": "WR",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Aaron Jones",
+    "firstName": "Aaron",
+    "lastName": "Jones",
+    "position": "RB",
+    "jerseyNumber": 33
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Jordan Mason",
+    "firstName": "Jordan",
+    "lastName": "Mason",
+    "position": "RB",
+    "jerseyNumber": 27
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "J.J. McCarthy",
+    "firstName": "J.J.",
+    "lastName": "McCarthy",
+    "position": "QB",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Kyler Murray",
+    "firstName": "Kyler",
+    "lastName": "Murray",
+    "position": "QB",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Josh Oliver",
+    "firstName": "Josh",
+    "lastName": "Oliver",
+    "position": "TE",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Myles Price",
+    "firstName": "Myles",
+    "lastName": "Price",
+    "position": "WR",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Will Reichard",
+    "firstName": "Will",
+    "lastName": "Reichard",
+    "position": "K",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Carson Wentz",
+    "firstName": "Carson",
+    "lastName": "Wentz",
+    "position": "QB",
+    "jerseyNumber": 11
+  },
+  {
+    "teamCode": "MIN",
+    "displayName": "Ben Yurosek",
+    "firstName": "Ben",
+    "lastName": "Yurosek",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Chris Blair",
+    "firstName": "Chris",
+    "lastName": "Blair",
+    "position": "WR",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Zachariah Branch",
+    "firstName": "Zachariah",
+    "lastName": "Branch",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Jahan Dotson",
+    "firstName": "Jahan",
+    "lastName": "Dotson",
+    "position": "WR",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Nick Folk",
+    "firstName": "Nick",
+    "lastName": "Folk",
+    "position": "K",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Austin Hooper",
+    "firstName": "Austin",
+    "lastName": "Hooper",
+    "position": "TE",
+    "jerseyNumber": 81
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Drake London",
+    "firstName": "Drake",
+    "lastName": "London",
+    "position": "WR",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Michael Penix Jr.",
+    "firstName": "Michael",
+    "lastName": "Penix Jr.",
+    "position": "QB",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Kyle Pitts",
+    "firstName": "Kyle",
+    "lastName": "Pitts",
+    "position": "TE",
+    "jerseyNumber": 8
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Bijan Robinson",
+    "firstName": "Bijan",
+    "lastName": "Robinson",
+    "position": "RB",
+    "jerseyNumber": 7
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Brian Robinson",
+    "firstName": "Brian",
+    "lastName": "Robinson",
+    "position": "RB",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Cooper Rush",
+    "firstName": "Cooper",
+    "lastName": "Rush",
+    "position": "QB",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Jack Strand",
+    "firstName": "Jack",
+    "lastName": "Strand",
+    "position": "QB",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Tua Tagovailoa",
+    "firstName": "Tua",
+    "lastName": "Tagovailoa",
+    "position": "QB",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Charlie Woerner",
+    "firstName": "Charlie",
+    "lastName": "Woerner",
+    "position": "TE",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "ATL",
+    "displayName": "Olamide Zaccheaus",
+    "firstName": "Olamide",
+    "lastName": "Zaccheaus",
+    "position": "WR",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Jonathon Brooks",
+    "firstName": "Jonathon",
+    "lastName": "Brooks",
+    "position": "RB",
+    "jerseyNumber": 25
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Jalen Coker",
+    "firstName": "Jalen",
+    "lastName": "Coker",
+    "position": "WR",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "AJ Dillon",
+    "firstName": "AJ",
+    "lastName": "Dillon",
+    "position": "RB",
+    "jerseyNumber": 28
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Mitchell Evans",
+    "firstName": "Mitchell",
+    "lastName": "Evans",
+    "position": "TE",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Ryan Fitzgerald",
+    "firstName": "Ryan",
+    "lastName": "Fitzgerald",
+    "position": "K",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Feleipe Franks",
+    "firstName": "Feleipe",
+    "lastName": "Franks",
+    "position": "TE",
+    "jerseyNumber": 81
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Jimmy Horn Jr.",
+    "firstName": "Jimmy",
+    "lastName": "Horn Jr.",
+    "position": "WR",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Chuba Hubbard",
+    "firstName": "Chuba",
+    "lastName": "Hubbard",
+    "position": "RB",
+    "jerseyNumber": 30
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Haynes King",
+    "firstName": "Haynes",
+    "lastName": "King",
+    "position": "QB",
+    "jerseyNumber": 16
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Xavier Legette",
+    "firstName": "Xavier",
+    "lastName": "Legette",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Tetairoa McMillan",
+    "firstName": "Tetairoa",
+    "lastName": "McMillan",
+    "position": "WR",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "John Metchie III",
+    "firstName": "John",
+    "lastName": "Metchie III",
+    "position": "WR",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Kenny Pickett",
+    "firstName": "Kenny",
+    "lastName": "Pickett",
+    "position": "QB",
+    "jerseyNumber": 12
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Ja'Tavion Sanders",
+    "firstName": "Ja'Tavion",
+    "lastName": "Sanders",
+    "position": "TE",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Brycen Tremayne",
+    "firstName": "Brycen",
+    "lastName": "Tremayne",
+    "position": "WR",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Tommy Tremble",
+    "firstName": "Tommy",
+    "lastName": "Tremble",
+    "position": "TE",
+    "jerseyNumber": 82
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Darren Waller",
+    "firstName": "Darren",
+    "lastName": "Waller",
+    "position": "TE",
+    "jerseyNumber": 35
+  },
+  {
+    "teamCode": "CAR",
+    "displayName": "Bryce Young",
+    "firstName": "Bryce",
+    "lastName": "Young",
+    "position": "QB",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Barion Brown",
+    "firstName": "Barion",
+    "lastName": "Brown",
+    "position": "WR",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Daniel Carlson",
+    "firstName": "Daniel",
+    "lastName": "Carlson",
+    "position": "K",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Oscar Delp",
+    "firstName": "Oscar",
+    "lastName": "Delp",
+    "position": "TE",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Audric Estimé",
+    "firstName": "Audric",
+    "lastName": "Estimé",
+    "position": "RB",
+    "jerseyNumber": 30
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Travis Etienne",
+    "firstName": "Travis",
+    "lastName": "Etienne",
+    "position": "RB",
+    "jerseyNumber": 3
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Noah Fant",
+    "firstName": "Noah",
+    "lastName": "Fant",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Juwan Johnson",
+    "firstName": "Juwan",
+    "lastName": "Johnson",
+    "position": "TE",
+    "jerseyNumber": 83
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Alvin Kamara",
+    "firstName": "Alvin",
+    "lastName": "Kamara",
+    "position": "RB",
+    "jerseyNumber": 41
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Bryce Lance",
+    "firstName": "Bryce",
+    "lastName": "Lance",
+    "position": "WR",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Kendre Miller",
+    "firstName": "Kendre",
+    "lastName": "Miller",
+    "position": "RB",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Chris Olave",
+    "firstName": "Chris",
+    "lastName": "Olave",
+    "position": "WR",
+    "jerseyNumber": 12
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Spencer Rattler",
+    "firstName": "Spencer",
+    "lastName": "Rattler",
+    "position": "QB",
+    "jerseyNumber": 2
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Tyler Shough",
+    "firstName": "Tyler",
+    "lastName": "Shough",
+    "position": "QB",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Devaughn Vele",
+    "firstName": "Devaughn",
+    "lastName": "Vele",
+    "position": "WR",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "NO",
+    "displayName": "Zach Wilson",
+    "firstName": "Zach",
+    "lastName": "Wilson",
+    "position": "QB",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Jalon Daniels",
+    "firstName": "Jalon",
+    "lastName": "Daniels",
+    "position": "QB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Payne Durham",
+    "firstName": "Payne",
+    "lastName": "Durham",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Emeka Egbuka",
+    "firstName": "Emeka",
+    "lastName": "Egbuka",
+    "position": "WR",
+    "jerseyNumber": 2
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Kenny Gainwell",
+    "firstName": "Kenny",
+    "lastName": "Gainwell",
+    "position": "RB",
+    "jerseyNumber": 1
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Chris Godwin Jr.",
+    "firstName": "Chris",
+    "lastName": "Godwin Jr.",
+    "position": "WR",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Ted Hurst III",
+    "firstName": "Ted",
+    "lastName": "Hurst III",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Bucky Irving",
+    "firstName": "Bucky",
+    "lastName": "Irving",
+    "position": "RB",
+    "jerseyNumber": 7
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Kameron Johnson",
+    "firstName": "Kameron",
+    "lastName": "Johnson",
+    "position": "WR",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Tez Johnson",
+    "firstName": "Tez",
+    "lastName": "Johnson",
+    "position": "WR",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Ko Kieft",
+    "firstName": "Ko",
+    "lastName": "Kieft",
+    "position": "TE",
+    "jerseyNumber": 41
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Baker Mayfield",
+    "firstName": "Baker",
+    "lastName": "Mayfield",
+    "position": "QB",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Chase McLaughlin",
+    "firstName": "Chase",
+    "lastName": "McLaughlin",
+    "position": "K",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Jalen McMillan",
+    "firstName": "Jalen",
+    "lastName": "McMillan",
+    "position": "WR",
+    "jerseyNumber": 11
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Cade Otton",
+    "firstName": "Cade",
+    "lastName": "Otton",
+    "position": "TE",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Bauer Sharp",
+    "firstName": "Bauer",
+    "lastName": "Sharp",
+    "position": "TE",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "TB",
+    "displayName": "Sean Tucker",
+    "firstName": "Sean",
+    "lastName": "Tucker",
+    "position": "RB",
+    "jerseyNumber": 44
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Tyler Allgeier",
+    "firstName": "Tyler",
+    "lastName": "Allgeier",
+    "position": "RB",
+    "jerseyNumber": 22
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Carson Beck",
+    "firstName": "Carson",
+    "lastName": "Beck",
+    "position": "QB",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Kendrick Bourne",
+    "firstName": "Kendrick",
+    "lastName": "Bourne",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Jacoby Brissett",
+    "firstName": "Jacoby",
+    "lastName": "Brissett",
+    "position": "QB",
+    "jerseyNumber": 7
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Jalen Brooks",
+    "firstName": "Jalen",
+    "lastName": "Brooks",
+    "position": "WR",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Devin Duvernay",
+    "firstName": "Devin",
+    "lastName": "Duvernay",
+    "position": "WR",
+    "jerseyNumber": 81
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Simi Fehoko",
+    "firstName": "Simi",
+    "lastName": "Fehoko",
+    "position": "WR",
+    "jerseyNumber": 80
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Marvin Harrison Jr.",
+    "firstName": "Marvin",
+    "lastName": "Harrison Jr.",
+    "position": "WR",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Elijah Higgins",
+    "firstName": "Elijah",
+    "lastName": "Higgins",
+    "position": "TE",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Bam Knight",
+    "firstName": "Bam",
+    "lastName": "Knight",
+    "position": "RB",
+    "jerseyNumber": 20
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Hunter Long",
+    "firstName": "Hunter",
+    "lastName": "Long",
+    "position": "TE",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Jeremiyah Love",
+    "firstName": "Jeremiyah",
+    "lastName": "Love",
+    "position": "RB",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Trey McBride",
+    "firstName": "Trey",
+    "lastName": "McBride",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Gardner Minshew",
+    "firstName": "Gardner",
+    "lastName": "Minshew",
+    "position": "QB",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Chad Ryland",
+    "firstName": "Chad",
+    "lastName": "Ryland",
+    "position": "K",
+    "jerseyNumber": 38
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Reggie Virgil",
+    "firstName": "Reggie",
+    "lastName": "Virgil",
+    "position": "WR",
+    "jerseyNumber": 82
+  },
+  {
+    "teamCode": "ARI",
+    "displayName": "Michael Wilson",
+    "firstName": "Michael",
+    "lastName": "Wilson",
+    "position": "WR",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Davante Adams",
+    "firstName": "Davante",
+    "lastName": "Adams",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Davis Allen",
+    "firstName": "Davis",
+    "lastName": "Allen",
+    "position": "TE",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Tutu Atwell",
+    "firstName": "Tutu",
+    "lastName": "Atwell",
+    "position": "WR",
+    "jerseyNumber": null
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Stetson Bennett",
+    "firstName": "Stetson",
+    "lastName": "Bennett",
+    "position": "QB",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Blake Corum",
+    "firstName": "Blake",
+    "lastName": "Corum",
+    "position": "RB",
+    "jerseyNumber": 24
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "CJ Daniels",
+    "firstName": "CJ",
+    "lastName": "Daniels",
+    "position": "WR",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Terrance Ferguson",
+    "firstName": "Terrance",
+    "lastName": "Ferguson",
+    "position": "TE",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Tyler Higbee",
+    "firstName": "Tyler",
+    "lastName": "Higbee",
+    "position": "TE",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Max Klare",
+    "firstName": "Max",
+    "lastName": "Klare",
+    "position": "TE",
+    "jerseyNumber": 86
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Harrison Mevis",
+    "firstName": "Harrison",
+    "lastName": "Mevis",
+    "position": "K",
+    "jerseyNumber": 92
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Konata Mumpfield",
+    "firstName": "Konata",
+    "lastName": "Mumpfield",
+    "position": "WR",
+    "jerseyNumber": 4
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Puka Nacua",
+    "firstName": "Puka",
+    "lastName": "Nacua",
+    "position": "WR",
+    "jerseyNumber": 12
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Colby Parkinson",
+    "firstName": "Colby",
+    "lastName": "Parkinson",
+    "position": "TE",
+    "jerseyNumber": 84
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Ronnie Rivers",
+    "firstName": "Ronnie",
+    "lastName": "Rivers",
+    "position": "RB",
+    "jerseyNumber": 20
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Ty Simpson",
+    "firstName": "Ty",
+    "lastName": "Simpson",
+    "position": "QB",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Xavier Smith",
+    "firstName": "Xavier",
+    "lastName": "Smith",
+    "position": "WR",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Matthew Stafford",
+    "firstName": "Matthew",
+    "lastName": "Stafford",
+    "position": "QB",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Jordan Whittington",
+    "firstName": "Jordan",
+    "lastName": "Whittington",
+    "position": "WR",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "LAR",
+    "displayName": "Kyren Williams",
+    "firstName": "Kyren",
+    "lastName": "Williams",
+    "position": "RB",
+    "jerseyNumber": 23
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Kaelon Black",
+    "firstName": "Kaelon",
+    "lastName": "Black",
+    "position": "RB",
+    "jerseyNumber": 26
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Jacob Cowing",
+    "firstName": "Jacob",
+    "lastName": "Cowing",
+    "position": "WR",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Mike Evans",
+    "firstName": "Mike",
+    "lastName": "Evans",
+    "position": "WR",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Luke Farrell",
+    "firstName": "Luke",
+    "lastName": "Farrell",
+    "position": "TE",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Jordan James",
+    "firstName": "Jordan",
+    "lastName": "James",
+    "position": "RB",
+    "jerseyNumber": 29
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Mac Jones",
+    "firstName": "Mac",
+    "lastName": "Jones",
+    "position": "QB",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "George Kittle",
+    "firstName": "George",
+    "lastName": "Kittle",
+    "position": "TE",
+    "jerseyNumber": 85
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Christian McCaffrey",
+    "firstName": "Christian",
+    "lastName": "McCaffrey",
+    "position": "RB",
+    "jerseyNumber": 23
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Eddy Pineiro",
+    "firstName": "Eddy",
+    "lastName": "Pineiro",
+    "position": "K",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Brock Purdy",
+    "firstName": "Brock",
+    "lastName": "Purdy",
+    "position": "QB",
+    "jerseyNumber": 13
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Demarcus Robinson",
+    "firstName": "Demarcus",
+    "lastName": "Robinson",
+    "position": "WR",
+    "jerseyNumber": 7
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Kurtis Rourke",
+    "firstName": "Kurtis",
+    "lastName": "Rourke",
+    "position": "QB",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Deebo Samuel Sr.",
+    "firstName": "Deebo",
+    "lastName": "Samuel Sr.",
+    "position": "WR",
+    "jerseyNumber": 19
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "De'Zhaun Stribling",
+    "firstName": "De'Zhaun",
+    "lastName": "Stribling",
+    "position": "WR",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Jake Tonges",
+    "firstName": "Jake",
+    "lastName": "Tonges",
+    "position": "TE",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Jordan Watkins",
+    "firstName": "Jordan",
+    "lastName": "Watkins",
+    "position": "WR",
+    "jerseyNumber": 17
+  },
+  {
+    "teamCode": "SF",
+    "displayName": "Brayden Willis",
+    "firstName": "Brayden",
+    "lastName": "Willis",
+    "position": "TE",
+    "jerseyNumber": 9
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Elijah Arroyo",
+    "firstName": "Elijah",
+    "lastName": "Arroyo",
+    "position": "TE",
+    "jerseyNumber": 18
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "AJ Barner",
+    "firstName": "AJ",
+    "lastName": "Barner",
+    "position": "TE",
+    "jerseyNumber": 88
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Sam Darnold",
+    "firstName": "Sam",
+    "lastName": "Darnold",
+    "position": "QB",
+    "jerseyNumber": 14
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Montorie Foster Jr",
+    "firstName": "Montorie",
+    "lastName": "Foster Jr",
+    "position": "WR",
+    "jerseyNumber": 87
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "George Holani",
+    "firstName": "George",
+    "lastName": "Holani",
+    "position": "RB",
+    "jerseyNumber": 36
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Tory Horton",
+    "firstName": "Tory",
+    "lastName": "Horton",
+    "position": "WR",
+    "jerseyNumber": 15
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Nick Kallerup",
+    "firstName": "Nick",
+    "lastName": "Kallerup",
+    "position": "TE",
+    "jerseyNumber": 89
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Cooper Kupp",
+    "firstName": "Cooper",
+    "lastName": "Kupp",
+    "position": "WR",
+    "jerseyNumber": 10
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Drew Lock",
+    "firstName": "Drew",
+    "lastName": "Lock",
+    "position": "QB",
+    "jerseyNumber": 2
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Jalen Milroe",
+    "firstName": "Jalen",
+    "lastName": "Milroe",
+    "position": "QB",
+    "jerseyNumber": 6
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Jason Myers",
+    "firstName": "Jason",
+    "lastName": "Myers",
+    "position": "K",
+    "jerseyNumber": 5
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Jadarian Price",
+    "firstName": "Jadarian",
+    "lastName": "Price",
+    "position": "RB",
+    "jerseyNumber": 8
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Brady Russell",
+    "firstName": "Brady",
+    "lastName": "Russell",
+    "position": "RB",
+    "jerseyNumber": 38
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Eric Saubert",
+    "firstName": "Eric",
+    "lastName": "Saubert",
+    "position": "TE",
+    "jerseyNumber": 81
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Rashid Shaheed",
+    "firstName": "Rashid",
+    "lastName": "Shaheed",
+    "position": "WR",
+    "jerseyNumber": 22
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Jaxon Smith-Njigba",
+    "firstName": "Jaxon",
+    "lastName": "Smith-Njigba",
+    "position": "WR",
+    "jerseyNumber": 11
+  },
+  {
+    "teamCode": "SEA",
+    "displayName": "Emanuel Wilson",
+    "firstName": "Emanuel",
+    "lastName": "Wilson",
+    "position": "RB",
+    "jerseyNumber": 27
+  }
+]

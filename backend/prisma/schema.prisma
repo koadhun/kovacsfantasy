@@ -159,6 +159,7 @@ model PerfectChallengePlayer {
   currentWeekOpponentDefenseTeamCode String?
   allowedPassingYards               Float?
   allowedRushingYards               Float?
+  jerseyNumber                      Int?
   overallStats                      Json
   weeklyStats                       Json
   isActive                          Boolean                        @default(true)
