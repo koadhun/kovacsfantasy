@@ -2,6 +2,7 @@ import "dotenv/config";
 import { prisma } from "../lib/prisma.js";
 import { teamCodeFromApiId } from "../lib/nflTeams.js";
 import { ACTIVE_GAME_TYPE } from "../lib/activeGameType.js";
+import { fetchFieldGoalYardsByPlayer, bucketFieldGoalYards } from "../lib/fieldGoalEvents.js";
 
 const API_BASE = "https://v1.american-football.api-sports.io";
 
@@ -35,7 +36,7 @@ async function fetchGameBoxscoreRaw(apiGameId) {
   return data.response || [];
 }
 
-function extractGameSnapshots(teamsStats) {
+function extractGameSnapshots(teamsStats, fgYardsByPlayer) {
   const snapshots = [];
 
   for (const teamBlock of teamsStats) {
@@ -103,12 +104,32 @@ function extractGameSnapshots(teamsStats) {
         if (group.name === "Kicking") {
           const [fgm, fga] = parseSplit(s["field goals"]);
           const [xpm, xpa] = parseSplit(s["extra point"]);
-          const fg0to49 =
+
+          // A "field goals from X-Y yards" mezők az API-ban megbízhatatlanok
+          // (a gyakorlatban mindig 0-t adnak vissza, még sikeres rúgásnál is).
+          // Ezért elsődlegesen a /games/events végpontból, a rúgás szöveges
+          // leírásából (pl. "Josh Brown 20 Yd Field Goal") kinyert, valós
+          // yardokból számoljuk a sávokat. Ha ez valamiért nem elérhető
+          // (pl. az események lekérdezése sikertelen volt), visszaesünk a
+          // régi, API-mezőkből számolt (jelenleg megbízhatatlan) értékre.
+          const rawFg0to49 =
             num(s["field goals from 1 19 yards"]) +
             num(s["field goals from 20 29 yards"]) +
             num(s["field goals from 30 39 yards"]) +
             num(s["field goals from 40 49 yards"]);
-          const fg50plus = num(s["field goals from 50 yards"]);
+          const rawFg50plus = num(s["field goals from 50 yards"]);
+
+          const yardsList = fgYardsByPlayer?.get(apiPlayerId) || [];
+
+          let fg0to49 = rawFg0to49;
+          let fg50plus = rawFg50plus;
+
+          if (yardsList.length) {
+            const bucketed = bucketFieldGoalYards(yardsList);
+            fg0to49 = bucketed.fg0to49Yards;
+            fg50plus = bucketed.fg50plusYards;
+          }
+
           snapshots.push({
             category: "field_goals", apiPlayerId, playerName, team: teamCode,
             stats: { fgm, fga, xpm, xpa, pts: num(s["points"]), long: num(s["long"]), fg0to49, fg50plus },
@@ -303,7 +324,17 @@ export async function syncLiveStats(season) {
       continue;
     }
 
-    const snapshots = extractGameSnapshots(teamsStats);
+    // A field goal táv-sávok pontos kiszámolásához az esemény-listát is
+    // lekérjük (a /games/statistics/players "Kicking" kategóriájának
+    // táv-sáv mezői megbízhatatlanok, ld. fieldGoalEvents.js komment).
+    let fgYardsByPlayer = new Map();
+    try {
+      fgYardsByPlayer = await fetchFieldGoalYardsByPlayer(game.apiGameId);
+    } catch (err) {
+      console.warn(`  Field goal esemenyek lekerese sikertelen a ${game.apiGameId} meccsnel: ${err.message}`);
+    }
+
+    const snapshots = extractGameSnapshots(teamsStats, fgYardsByPlayer);
 
     for (const snap of snapshots) {
       const id = `${season}-${game.apiGameId}-${snap.category}-${snap.apiPlayerId}`;
