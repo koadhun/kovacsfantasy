@@ -99,7 +99,7 @@ function buildPlayerWeeklyRows(player, t) {
   return order.map((key) => ({
     key,
     label: t(`perfectChallengeCard.statLabels.${key}`) || key,
-    value: formatValue(key, player.weeklyStats?.[key]),
+    value: formatValue(key, player.lastWeekStats?.[key]),
   }));
 }
 

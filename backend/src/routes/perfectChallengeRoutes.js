@@ -324,7 +324,7 @@ async function buildAverageMaps(season, currentWeek) {
   };
 }
 
-function normalizePlayer(player, averageMaps, statusByTeam, injuryMap) {
+function normalizePlayer(player, averageMaps, statusByTeam, injuryMap, previousWeekStatsMap) {
   if (!player) return null;
 
   const currentScore = getPlayerScore(player);
@@ -357,6 +357,7 @@ function normalizePlayer(player, averageMaps, statusByTeam, injuryMap) {
     avgScore: player.avgScore,
     overallStats: player.overallStats,
     weeklyStats: player.weeklyStats,
+    lastWeekStats: previousWeekStatsMap?.get(apiPlayerId) || null,
     weeklyScoreBreakdown,
     gameStatus: statusByTeam?.get(player.teamCode) || "SCHEDULED",
     injury: injury
@@ -511,7 +512,7 @@ async function getMaskedSeasonPoints(userId, season, viewedWeek, startedByTeam) 
 }
 
 async function buildWeekStateForUser(userId, season, week, createIfMissing = false) {
-  const [averageMaps, pool, roster, startedByTeam, statusByTeam, injuryRows] = await Promise.all([
+  const [averageMaps, pool, roster, startedByTeam, statusByTeam, injuryRows, previousWeekPlayers] = await Promise.all([
     buildAverageMaps(season, week),
     prisma.perfectChallengePlayer.findMany({
       where: {
@@ -527,14 +528,29 @@ async function buildWeekStateForUser(userId, season, week, createIfMissing = fal
     getStartedTeamMap(season, week),
     getGameStatusMap(season, week),
     prisma.injury.findMany(),
+    week > 1
+      ? prisma.perfectChallengePlayer.findMany({
+          where: { season, week: week - 1 },
+          select: { id: true, weeklyStats: true },
+        })
+      : Promise.resolve([]),
   ]);
 
   const injuryMap = new Map(injuryRows.map((i) => [i.apiPlayerId, i]));
 
+  const previousWeekStatsMap = new Map();
+  for (const row of previousWeekPlayers) {
+    const idParts = String(row.id).split("-");
+    const apiPlayerId = Number(idParts[2]);
+    if (Number.isFinite(apiPlayerId)) {
+      previousWeekStatsMap.set(apiPlayerId, row.weeklyStats);
+    }
+  }
+
   const slotMap = Object.fromEntries(
     (roster?.slots || []).map((slot) => [
       slot.slot,
-      normalizePlayer(slot.player, averageMaps, statusByTeam, injuryMap),
+      normalizePlayer(slot.player, averageMaps, statusByTeam, injuryMap, previousWeekStatsMap),
     ])
   );
 
@@ -554,7 +570,7 @@ async function buildWeekStateForUser(userId, season, week, createIfMissing = fal
 
   // A pool-ból (választható lista) kivesszük azokat, akiknek a csapata mérkőzése már elkezdődött.
   const normalizedPool = pool
-    .map((player) => normalizePlayer(player, averageMaps, statusByTeam, injuryMap))
+    .map((player) => normalizePlayer(player, averageMaps, statusByTeam, injuryMap, previousWeekStatsMap))
     .filter((player) => startedByTeam.get(player.teamCode) !== true);
 
   const poolByPosition = {
