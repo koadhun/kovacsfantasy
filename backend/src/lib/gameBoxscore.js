@@ -1,4 +1,5 @@
 const API_BASE = "https://v1.american-football.api-sports.io";
+import { fetchFieldGoalYardsByPlayer, bucketFieldGoalYards } from "./fieldGoalEvents.js";
 
 function parseSplit(value) {
   if (value == null) return [0, 0];
@@ -120,17 +121,32 @@ function buildDefense(players) {
   return { rows, total };
 }
 
-function buildKicking(players) {
+function buildKicking(players, fgYardsByPlayer) {
   const rows = players.map((p) => {
     const s = statMap(p.statistics);
     const [fgm, fga] = parseSplit(s["field goals"]);
     const [xpm, xpa] = parseSplit(s["extra point"]);
-    const fg0to49 =
+
+    // A "field goals from X-Y yards" API-mezők megbízhatatlanok (gyakorlatban
+    // mindig 0-t adnak). Elsődlegesen a /games/events-ből, a rúgás szöveges
+    // leírásából kinyert valós yardok alapján számoljuk a sávokat.
+    const rawFg0to49 =
       num(s["field goals from 1 19 yards"]) +
       num(s["field goals from 20 29 yards"]) +
       num(s["field goals from 30 39 yards"]) +
       num(s["field goals from 40 49 yards"]);
-    const fg50plus = num(s["field goals from 50 yards"]);
+    const rawFg50plus = num(s["field goals from 50 yards"]);
+
+    const yardsList = fgYardsByPlayer?.get(p.player.id) || [];
+    let fg0to49 = rawFg0to49;
+    let fg50plus = rawFg50plus;
+
+    if (yardsList.length) {
+      const bucketed = bucketFieldGoalYards(yardsList);
+      fg0to49 = bucketed.fg0to49Yards;
+      fg50plus = bucketed.fg50plusYards;
+    }
+
     return {
       player: p.player.name,
       fgm, fga,
@@ -185,7 +201,7 @@ function buildKickReturns(players) {
   return { rows, total };
 }
 
-function buildTeamBoxscore(teamBlock) {
+function buildTeamBoxscore(teamBlock, fgYardsByPlayer) {
   const groups = {};
   for (const g of teamBlock.groups || []) groups[g.name] = g.players || [];
 
@@ -196,7 +212,7 @@ function buildTeamBoxscore(teamBlock) {
     receiving: buildReceiving(groups["Receiving"] || []),
     fumbles: buildFumbles(groups["Fumbles"] || []),
     defense: buildDefense(groups["Defensive"] || []),
-    kicking: buildKicking(groups["Kicking"] || []),
+    kicking: buildKicking(groups["Kicking"] || [], fgYardsByPlayer),
     punting: buildPunting(groups["Punting"] || []),
     kickReturns: buildKickReturns(groups["Kick_returns"] || []),
   };
@@ -221,8 +237,15 @@ export async function fetchGameBoxscore(apiGameId) {
   const teams = data.response || [];
   if (teams.length < 2) return null;
 
+  let fgYardsByPlayer = new Map();
+  try {
+    fgYardsByPlayer = await fetchFieldGoalYardsByPlayer(apiGameId);
+  } catch (err) {
+    console.warn(`Field goal esemenyek lekerese sikertelen (${apiGameId}): ${err.message}`);
+  }
+
   return {
-    home: buildTeamBoxscore(teams[0]),
-    away: buildTeamBoxscore(teams[1]),
+    home: buildTeamBoxscore(teams[0], fgYardsByPlayer),
+    away: buildTeamBoxscore(teams[1], fgYardsByPlayer),
   };
 }

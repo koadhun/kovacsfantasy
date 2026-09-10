@@ -260,6 +260,7 @@ async function recomputePlayerStat(season, apiPlayerId, category) {
         player: playerName, fgm, fga,
         pct: fga ? Math.round((fgm / fga) * 1000) / 10 : 0,
         lng: maxLng, xpm: sums.xpm || 0, xpa: sums.xpa || 0, pts: sums.pts || 0,
+        fg0to49: sums.fg0to49 || 0, fg50plus: sums.fg50plus || 0,
       };
       break;
     }
