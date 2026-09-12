@@ -54,7 +54,7 @@ export default function Navbar() {
           </Link>
 
           {isLoggedIn && (
-            <nav className="nav-links-primary">
+            <nav className="nav-links nav-links-primary">
               <NavLink
                 to="/schedule"
                 onClick={closeMenu}
