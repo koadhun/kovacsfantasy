@@ -3393,3 +3393,35 @@ Output
     flex: 1 1 140px;
   }
 }
+
+
+.schedule-card-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  gap: 16px;
+  align-items: center;
+}
+
+.schedule-card-right {
+  display: grid;
+  justify-items: end;
+  align-content: center;
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .schedule-card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .schedule-card-right {
+    justify-items: start !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 10px;
+  }
+
+  [data-theme="light"] .schedule-card-right {
+    border-top-color: rgba(16, 24, 40, 0.1);
+  }
+}

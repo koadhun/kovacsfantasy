@@ -331,14 +331,7 @@ export default function Schedule() {
                 background: tokens.panelBg,
               }}
             >
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "minmax(0, 1fr) 180px",
-                  gap: 16,
-                  alignItems: "center",
-                }}
-              >
+              <div className="schedule-card-grid">
                 <div
                   style={{
                     display: "grid",
@@ -365,14 +358,7 @@ export default function Schedule() {
                   />
                 </div>
 
-                <div
-                  style={{
-                    display: "grid",
-                    justifyItems: "end",
-                    alignContent: "center",
-                    gap: 10,
-                  }}
-                >
+                <div className="schedule-card-right">
                   <span className="pill" style={{ fontWeight: 800 }}>
                     {final
                       ? "FINAL"
