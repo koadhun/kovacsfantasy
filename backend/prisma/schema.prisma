@@ -327,6 +327,6 @@ model HallOfFameEntry {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([season, game, rank])
+
   @@index([season])
 }
