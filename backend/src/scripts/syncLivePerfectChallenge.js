@@ -3,6 +3,74 @@ import { prisma } from "../lib/prisma.js";
 import { calculatePerfectChallengeScore } from "../lib/perfectChallengeScoring.js";
 import { ACTIVE_GAME_TYPE } from "../lib/activeGameType.js";
 
+function normalizeName(name) {
+  return String(name || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9 ]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// Ha egy játékoshoz még nem létezik a várt API-alapú PerfectChallengePlayer
+// sor (mert a heti roster-sync még nem futott le rá, pl. csak most az adott
+// meccsen tűnt fel először az API-ban), megkeressük a hozzá tartozó, korábban
+// Excel-ből kézzel felvitt sort (ugyanaz a hét/csapat/normalizált név), és
+// "előléptetjük": létrehozzuk a helyes ID-val, a rá mutató felhasználói
+// pickeket átirányítjuk, majd töröljük a régit. Ez biztosítja, hogy a friss
+// játékosok statisztikája ne maradjon ki csak azért, mert időzítésileg a
+// heti sync még nem futott le rájuk.
+async function promoteImportedPlayerIfNeeded(season, week, apiPlayerId, playerName, teamCode) {
+  const newId = `${season}-${week}-${apiPlayerId}`;
+
+  const xlsCandidates = await prisma.perfectChallengePlayer.findMany({
+    where: {
+      season, week, teamCode,
+      id: { contains: "-XLS-" },
+    },
+  });
+
+  const normalizedTarget = normalizeName(playerName);
+  const match = xlsCandidates.find(
+    (c) => normalizeName(c.displayName) === normalizedTarget
+  );
+
+  if (!match) return null;
+
+  const promoted = await prisma.perfectChallengePlayer.create({
+    data: {
+      id: newId,
+      season,
+      week,
+      position: match.position,
+      teamCode: match.teamCode,
+      firstName: match.firstName,
+      lastName: match.lastName,
+      displayName: match.displayName,
+      headshotUrl: match.headshotUrl,
+      isDefense: false,
+      currentScore: 0,
+      avgScore: 0,
+      overallStats: {},
+      weeklyStats: {},
+      jerseyNumber: match.jerseyNumber,
+      isActive: true,
+    },
+  });
+
+  await prisma.perfectChallengeRosterSlot.updateMany({
+    where: { playerId: match.id },
+    data: { playerId: newId },
+  });
+
+  await prisma.perfectChallengePlayer.delete({ where: { id: match.id } });
+
+  console.log(`  Eloleptetve: ${playerName} (${teamCode}) - XLS sor -> ${newId}`);
+
+  return promoted;
+}
+
 function buildWeeklyStatsForPosition(position, cats) {
   const passing = cats.passing || {};
   const rushing = cats.rushing || {};
@@ -124,7 +192,7 @@ export async function syncLivePerfectChallenge(season) {
 
     const byPlayer = {};
     for (const row of gameStats) {
-      byPlayer[row.apiPlayerId] ||= { team: row.team, cats: {} };
+      byPlayer[row.apiPlayerId] ||= { team: row.team, playerName: row.playerName, cats: {} };
       byPlayer[row.apiPlayerId].cats[row.category] = row.stats;
     }
 
@@ -132,7 +200,14 @@ export async function syncLivePerfectChallenge(season) {
       const apiPlayerId = Number(apiPlayerIdStr);
       const id = `${season}-${game.week}-${apiPlayerId}`;
 
-      const pcPlayer = await prisma.perfectChallengePlayer.findUnique({ where: { id } });
+      let pcPlayer = await prisma.perfectChallengePlayer.findUnique({ where: { id } });
+
+      if (!pcPlayer) {
+        pcPlayer = await promoteImportedPlayerIfNeeded(
+          season, game.week, apiPlayerId, data.playerName, data.team
+        );
+      }
+
       if (!pcPlayer || pcPlayer.isDefense) continue;
 
       const weeklyStats = buildWeeklyStatsForPosition(pcPlayer.position, data.cats);
