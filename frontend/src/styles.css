@@ -3399,7 +3399,7 @@ Output
   [data-theme="light"] .schedule-card-right {
     border-top-color: rgba(16, 24, 40, 0.1);
   }
-}
+
 
 
 /* --- Hamburger menü (mobil) --- */
@@ -3504,6 +3504,7 @@ Output
   gap: 18px;
 }
 
+
 .schedule-card-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 180px;
@@ -3536,6 +3537,7 @@ Output
   .schedule-card-grid {
     display: flex !important;
     flex-direction: column;
+    align-items: stretch !important;
     gap: 10px;
   }
 
@@ -3551,15 +3553,125 @@ Output
     order: 2;
     border-right: none !important;
     padding-right: 0 !important;
+    width: 100%;
   }
 
   .schedule-card-action {
     order: 3;
     justify-items: stretch;
+    width: 100%;
   }
 
   .schedule-card-action a {
     width: 100%;
     text-align: center;
   }
+}
+
+
+/* --- Navbar: hamburger csak mobilon --- */
+.navbar-hamburger {
+  display: none;
+}
+
+@media (min-width: 861px) {
+  .navbar-hamburger {
+    display: none !important;
+  }
+
+  .navbar-collapsible {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 860px) {
+  .navbar-inner {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+
+  .navbar-hamburger {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .navbar-hamburger:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .navbar-collapsible {
+    display: none !important;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .navbar-collapsible.open {
+    display: flex !important;
+  }
+
+  .navbar-collapsible .nav-links {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .navbar-collapsible .nav-links a {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+  }
+
+  .navbar-collapsible .navbar-right {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .navbar-collapsible .navbar-right > * {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .navbar-collapsible .profile-chip-text {
+    max-width: none !important;
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+  }
+}
+
+[data-theme="light"] .navbar-hamburger {
+  border-color: rgba(16, 24, 40, 0.14);
+  background: rgba(16, 24, 40, 0.04);
+}
+
+[data-theme="light"] .navbar-hamburger:hover {
+  background: rgba(16, 24, 40, 0.08);
+}
+
+[data-theme="light"] .navbar-collapsible {
+  border-top-color: rgba(16, 24, 40, 0.1);
 }
