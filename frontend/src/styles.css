@@ -3685,6 +3685,10 @@ Output
     order: 2;
   }
 
+  .navbar-collapsible .navbar-right .navbar-lang-switcher {
+    order: 3;
+  }
+
   .navbar-collapsible .navbar-right .profile-chip {
     order: 1;
   }
@@ -3697,7 +3701,5 @@ Output
     order: 2;
   }
 
-  .navbar-collapsible .navbar-right .navbar-lang-switcher {
-    order: 3;
-  }
+  
 }
