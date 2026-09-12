@@ -3700,6 +3700,19 @@ Output
   .navbar-collapsible .navbar-right .navbar-logout-btn {
     order: 2;
   }
+}
 
-  
+@media (min-width: 861px) {
+  .navbar-inner {
+    justify-content: flex-start !important;
+    gap: 28px;
+  }
+
+  .navbar-collapsible {
+    justify-content: flex-start;
+  }
+
+  .navbar-collapsible .navbar-right {
+    margin-left: auto;
+  }
 }
