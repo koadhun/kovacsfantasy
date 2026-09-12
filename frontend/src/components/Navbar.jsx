@@ -135,11 +135,14 @@ export default function Navbar() {
             </nav>
 
             <div className="navbar-right">
-              <LanguageSwitcher />
+              <div className="navbar-lang-switcher">
+                <LanguageSwitcher />
+              </div>
 
               {!isAdmin && !isVip && (
                 <Link
                   to="/become-vip"
+                  className="navbar-vip-link"
                   onClick={closeMenu}
                   style={{
                     display: "inline-flex",
@@ -182,7 +185,7 @@ export default function Navbar() {
                 </span>
               </button>
 
-              <button type="button" className="btn" onClick={logout}>
+              <button type="button" className="btn navbar-logout-btn" onClick={logout}>
                 {t("nav.logout")}
               </button>
             </div>

@@ -3675,3 +3675,29 @@ Output
 [data-theme="light"] .navbar-collapsible {
   border-top-color: rgba(16, 24, 40, 0.1);
 }
+
+@media (max-width: 860px) {
+  .navbar-collapsible .nav-links {
+    order: 1;
+  }
+
+  .navbar-collapsible .navbar-right {
+    order: 2;
+  }
+
+  .navbar-collapsible .navbar-right .profile-chip {
+    order: 1;
+  }
+
+  .navbar-collapsible .navbar-right .navbar-vip-link {
+    order: 1;
+  }
+
+  .navbar-collapsible .navbar-right .navbar-logout-btn {
+    order: 2;
+  }
+
+  .navbar-collapsible .navbar-right .navbar-lang-switcher {
+    order: 3;
+  }
+}
