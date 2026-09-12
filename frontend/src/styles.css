@@ -3716,3 +3716,9 @@ Output
     margin-left: auto;
   }
 }
+
+@media (min-width: 861px) {
+  .navbar-left {
+    flex: 0 0 auto !important;
+  }
+}
