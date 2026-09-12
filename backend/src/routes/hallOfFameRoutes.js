@@ -76,9 +76,17 @@ router.put("/:id", requireAuth, requireAdmin, async (req, res) => {
     });
 
     res.json({ entry });
-  } catch (err) {
+    } catch (err) {
     console.error("Hall of Fame frissítési hiba:", err);
-    res.status(404).json({ error: "Bejegyzés nem található." });
+
+    if (err.code === "P2025") {
+      return res.status(404).json({ error: "Bejegyzés nem található." });
+    }
+
+    return res.status(500).json({
+      error: "Nem sikerült frissíteni a bejegyzést.",
+      detail: err.message,
+    });
   }
 });
 
