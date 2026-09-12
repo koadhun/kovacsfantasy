@@ -332,7 +332,22 @@ export default function Schedule() {
               }}
             >
               <div className="schedule-card-grid">
+                <div className="schedule-card-meta">
+                  <span className="pill" style={{ fontWeight: 800 }}>
+                    {final
+                      ? "FINAL"
+                      : isLive(g)
+                      ? `${g.liveQuarter === 5 ? "OT" : `Q${g.liveQuarter ?? "?"}`} · ${g.liveClock ?? "--:--"}`
+                      : formatKickoff(g.kickoffAt)}
+                  </span>
+
+                  <div className="muted" style={{ fontWeight: 700 }}>
+                    {formatDay(g.kickoffAt)}
+                  </div>
+                </div>
+
                 <div
+                  className="schedule-card-teams"
                   style={{
                     display: "grid",
                     gap: 10,
@@ -358,19 +373,7 @@ export default function Schedule() {
                   />
                 </div>
 
-                <div className="schedule-card-right">
-                  <span className="pill" style={{ fontWeight: 800 }}>
-                    {final
-                      ? "FINAL"
-                      : isLive(g)
-                      ? `${g.liveQuarter === 5 ? "OT" : `Q${g.liveQuarter ?? "?"}`} · ${g.liveClock ?? "--:--"}`
-                      : formatKickoff(g.kickoffAt)}
-                  </span>
-
-                  <div className="muted" style={{ fontWeight: 700 }}>
-                    {formatDay(g.kickoffAt)}
-                  </div>
-
+                <div className="schedule-card-action">
                   <Link className="btn" to={`/schedule/game/${g.id}`}>{t("schedule.details")}</Link>
                 </div>
               </div>

@@ -52,6 +52,36 @@ export default function Navbar() {
           <Link to="/" className="brand" onClick={closeMenu}>
             <span className="brand-text">KOVACS FANTASY</span>
           </Link>
+
+          {isLoggedIn && (
+            <nav className="nav-links-primary">
+              <NavLink
+                to="/schedule"
+                onClick={closeMenu}
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                {t("nav.schedule")}
+              </NavLink>
+
+              <NavLink
+                to="/fantasy"
+                onClick={closeMenu}
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                {t("nav.fantasy")}
+              </NavLink>
+
+              {(isVip || isAdmin) && (
+                <NavLink
+                  to="/injuries"
+                  onClick={closeMenu}
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  {t("nav.injuries")}
+                </NavLink>
+              )}
+            </nav>
+          )}
         </div>
 
         {isLoggedIn && (
@@ -70,14 +100,6 @@ export default function Navbar() {
           <div className={`navbar-collapsible${menuOpen ? " open" : ""}`}>
             <nav className="nav-links">
               <NavLink
-                to="/schedule"
-                onClick={closeMenu}
-                className={({ isActive }) => (isActive ? "active" : "")}
-              >
-                {t("nav.schedule")}
-              </NavLink>
-
-              <NavLink
                 to="/standings"
                 onClick={closeMenu}
                 className={({ isActive }) => (isActive ? "active" : "")}
@@ -94,30 +116,12 @@ export default function Navbar() {
               </NavLink>
 
               <NavLink
-                to="/fantasy"
-                onClick={closeMenu}
-                className={({ isActive }) => (isActive ? "active" : "")}
-              >
-                {t("nav.fantasy")}
-              </NavLink>
-
-              <NavLink
                 to="/hall-of-fame"
                 onClick={closeMenu}
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
                 Hall of Fame
               </NavLink>
-
-              {(isVip || isAdmin) && (
-                <NavLink
-                  to="/injuries"
-                  onClick={closeMenu}
-                  className={({ isActive }) => (isActive ? "active" : "")}
-                >
-                  {t("nav.injuries")}
-                </NavLink>
-              )}
 
               {isAdmin && (
                 <NavLink

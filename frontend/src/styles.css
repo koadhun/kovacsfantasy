@@ -3508,3 +3508,15 @@ Output
 [data-theme="light"] .navbar-collapsible {
   border-top-color: rgba(16, 24, 40, 0.1);
 }
+
+.nav-links-primary {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.navbar-collapsible {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
