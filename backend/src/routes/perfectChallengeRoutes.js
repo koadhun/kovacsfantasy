@@ -836,7 +836,12 @@ router.get("/lineup", requireAuth, async (req, res) => {
       hidden: false,
     }));
 
-    res.json({ season, week, slots });
+    const totalScore = slots.reduce(
+      (sum, s) => sum + (Number(s.player?.currentScore) || 0),
+      0
+    );
+
+    res.json({ season, week, slots, totalScore });
   } catch (err) {
     console.error("Perfect Lineup hiba:", err);
     res.status(500).json({ error: "Nem sikerült betölteni a Perfect Lineup-ot." });
