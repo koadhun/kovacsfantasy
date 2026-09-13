@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../api";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "../components/PasswordIcons";
 import { useLanguage } from "../i18n/LanguageContext";
 import LanguageSwitcher from "../components/LanguageSwitcher";
@@ -31,6 +31,14 @@ export default function Login() {
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [sp] = useSearchParams();
+
+  useEffect(() => {
+    if (sp.get("reason") === "session-expired") {
+      setError(t("login.sessionExpired"));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleLogin(e) {
     e.preventDefault();

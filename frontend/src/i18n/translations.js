@@ -22,6 +22,7 @@ export const translations = {
       registerLink: "Create an account",
       submit: "Sign In",
       genericError: "Something went wrong. Please try again.",
+            sessionExpired: "You've been logged out due to inactivity. Please log in again.",
     },
     register: {
       badge: "CREATE ACCOUNT",
@@ -700,6 +701,7 @@ export const translations = {
       registerLink: "Fiók létrehozása",
       submit: "Bejelentkezés",
       genericError: "Hiba történt. Kérjük, próbáld újra.",
+            sessionExpired: "Túl sokáig voltál inaktív, ezért kijelentkeztettünk. Jelentkezz be újra.",
     },
     register: {
       badge: "FIÓK LÉTREHOZÁSA",
