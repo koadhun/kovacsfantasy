@@ -782,6 +782,67 @@ router.get("/user/:userId/roster", requireAuth, async (req, res) => {
   }
 });
 
+// GET /api/perfect-challenge/lineup?season=X&week=Y
+// A hét legjobban pontozó valós játékosaiból összeállított "tökéletes" felállás,
+// mindig a legfrissebb (élő szinkronból származó) currentScore alapján.
+router.get("/lineup", requireAuth, async (req, res) => {
+  try {
+    const season = Number(req.query.season || DEFAULT_SEASON);
+    const week = Number(req.query.week || 1);
+
+    const [averageMaps, statusByTeam, injuryRows, offensePlayers, defensePlayers] =
+      await Promise.all([
+        buildAverageMaps(season, week),
+        getGameStatusMap(season, week),
+        prisma.injury.findMany(),
+        prisma.perfectChallengePlayer.findMany({
+          where: { season, week, isActive: true, isDefense: false },
+          orderBy: { currentScore: "desc" },
+        }),
+        prisma.perfectChallengePlayer.findMany({
+          where: { season, week, isActive: true, isDefense: true },
+          orderBy: { currentScore: "desc" },
+        }),
+      ]);
+
+    const injuryMap = new Map(injuryRows.map((i) => [i.apiPlayerId, i]));
+
+    const byPosition = { QB: [], RB: [], WR: [], TE: [], K: [] };
+    for (const p of offensePlayers) {
+      if (byPosition[p.position]) byPosition[p.position].push(p);
+    }
+
+    function bestAt(position, index = 0) {
+      return byPosition[position]?.[index] || null;
+    }
+
+    const rawBySlot = {
+      QB: bestAt("QB", 0),
+      RB1: bestAt("RB", 0),
+      RB2: bestAt("RB", 1),
+      WR1: bestAt("WR", 0),
+      WR2: bestAt("WR", 1),
+      TE: bestAt("TE", 0),
+      K: bestAt("K", 0),
+      DEF: defensePlayers[0] || null,
+    };
+
+    const slots = SLOT_ORDER.map((slotKey) => ({
+      slot: slotKey,
+      position: SLOT_TO_POSITION[slotKey],
+      player: normalizePlayer(rawBySlot[slotKey], averageMaps, statusByTeam, injuryMap),
+      canSwap: false,
+      locked: true,
+      hidden: false,
+    }));
+
+    res.json({ season, week, slots });
+  } catch (err) {
+    console.error("Perfect Lineup hiba:", err);
+    res.status(500).json({ error: "Nem sikerült betölteni a Perfect Lineup-ot." });
+  }
+});
+
 router.get("/week", requireAuth, async (req, res) => {
   try {
     const season = Number(req.query.season || DEFAULT_SEASON);

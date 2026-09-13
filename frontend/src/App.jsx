@@ -43,6 +43,8 @@ import BecomeVip from "./pages/BecomeVip";
 import HallOfFame from "./pages/HallOfFame";
 import AdminHallOfFame from "./pages/AdminHallOfFame";
 
+import PerfectLineup from "./pages/PerfectLineup";
+
 function hasToken() {
   return !!localStorage.getItem("token");
 }
@@ -182,6 +184,17 @@ export default function App() {
           <ProtectedRoute>
             <Layout>
               <PerfectChallengeRules />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+            <Route
+        path="/fantasy/perfect-challenge/lineup"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <PerfectLineup />
             </Layout>
           </ProtectedRoute>
         }

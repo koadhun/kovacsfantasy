@@ -279,6 +279,10 @@ export default function PerfectChallenge() {
 
          <div className="filters-spacer" />
 
+          <Link to={`/fantasy/perfect-challenge/lineup?week=${week}`} className="btn">
+            {t("perfectChallenge.perfectLineup")}
+          </Link>
+
           <Link to="/fantasy/perfect-challenge/rules" className="btn">
             {t("perfectChallenge.rules")}
           </Link>
