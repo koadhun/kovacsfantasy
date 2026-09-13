@@ -81,6 +81,8 @@ export async function syncLiveGames(season) {
   let updated = 0;
   let newlyFinal = false;
 
+  const updates = [];
+
   for (const apiGame of apiGames) {
     if (apiGame.game?.stage !== ACTIVE_STAGE_NAME) continue;
 
@@ -108,13 +110,16 @@ export async function syncLiveGames(season) {
       newlyFinal = true;
     }
 
-    await prisma.game.update({
-      where: { id: existing.id },
-      data: { status, homeScore, awayScore, liveQuarter, liveClock },
-    });
-
-    updated++;
+    updates.push(
+      prisma.game.update({
+        where: { id: existing.id },
+        data: { status, homeScore, awayScore, liveQuarter, liveClock },
+      })
+    );
   }
+
+  await Promise.all(updates);
+  updated = updates.length;
 
   console.log(`[live-sync] ${updated} meccs frissitve a(z) ${activeWeek}. heten.`);
 

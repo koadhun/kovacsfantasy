@@ -40,26 +40,35 @@ router.post("/perfect-challenge-roster", async (req, res) => {
 // POST /api/sync/live-games
 // Külső cron szolgáltatás hívja 30 percenként.
 // Sorban: 1) meccs-állapotok, 2) Stats oldal statisztikái, 3) Perfect Challenge élő statjai/pontszáma.
+// Azonnal válaszol, a tényleges munka a háttérben fut tovább, hogy a cron
+// hívó (és a Render saját request-timeoutja) ne szakítsa félbe forgalmas
+// napokon, amikor sok egyidejű meccs frissítése hosszabb ideig tart.
 router.post("/live-games", async (req, res) => {
   if (!checkSyncSecret(req, res)) return;
 
   const season = Number(req.query.season) || new Date().getFullYear();
 
-  try {
-    const gamesResult = await syncLiveGames(season);
-    const statsResult = await syncLiveStats(season);
-    const pcResult = await syncLivePerfectChallenge(season);
+  res.json({ message: "Live sync elindult a háttérben.", season });
 
-    res.json({
-      message: "Live sync lefutott.",
-      season,
+  try {
+    console.log(`[cron] Live sync indul: season=${season}`);
+
+    const gamesResult = await syncLiveGames(season);
+    console.log(`[cron] syncLiveGames kész:`, gamesResult);
+
+    const statsResult = await syncLiveStats(season);
+    console.log(`[cron] syncLiveStats kész:`, statsResult);
+
+    const pcResult = await syncLivePerfectChallenge(season);
+    console.log(`[cron] syncLivePerfectChallenge kész:`, pcResult);
+
+    console.log(`[cron] Live sync teljesen kész.`, {
       games: gamesResult,
       stats: statsResult,
       perfectChallenge: pcResult,
     });
   } catch (err) {
     console.error("[cron] Live sync hiba:", err);
-    res.status(500).json({ error: "Live sync sikertelen.", detail: err.message });
   }
 });
 
