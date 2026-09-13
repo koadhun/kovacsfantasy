@@ -89,10 +89,23 @@ export async function syncLiveGames(season) {
     const existing = dbById.get(apiGame.game.id);
     if (!existing) continue;
 
-    const { status, liveQuarter, liveClock } = parseLiveState(
+    let { status, liveQuarter, liveClock } = parseLiveState(
       apiGame.game?.status?.short,
       apiGame.game?.status?.timer
     );
+
+    // Védelem az API bulk (összes meccs egyben) végpontjának esetleges
+    // átmeneti/ellentmondásos válasza ellen: előfordulhat, hogy a scores
+    // mező már a végeredményt mutatja, miközben a status mező pillanatnyilag
+    // "NS"/üres marad (tapasztalt jelenség). Ilyenkor NE engedjük, hogy egy
+    // már elindult/lezárult meccs visszaessen SCHEDULED-re vagy IN_PROGRESS-ről
+    // visszább - a következő futás úgyis behozza a helyes állapotot.
+    const STATUS_RANK = { SCHEDULED: 0, IN_PROGRESS: 1, FINAL: 2 };
+    if ((STATUS_RANK[status] ?? 0) < (STATUS_RANK[existing.status] ?? 0)) {
+      status = existing.status;
+      liveQuarter = existing.liveQuarter;
+      liveClock = existing.liveClock;
+    }
 
     const homeScore = apiGame.scores?.home?.total ?? existing.homeScore;
     const awayScore = apiGame.scores?.away?.total ?? existing.awayScore;
