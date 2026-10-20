@@ -49,4 +49,59 @@ router.delete("/users/:id", requireAuth, requireAdmin, async (req, res) => {
   return res.json({ message: "Felhasználó törölve." });
 });
 
+// Változásnapló: ki, mikor, mit, miről mire módosított a Weekly / Perfect / Playoff játékban.
+// GET /api/admin/change-log?game=PICKEM|PERFECT|PLAYOFF&season=2026&week=5&round=WILDCARD&q=felhasznalo&page=1&limit=50
+router.get("/change-log", requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const where = {};
+
+    const game = String(req.query.game || "").toUpperCase();
+    if (["PICKEM", "PERFECT", "PLAYOFF"].includes(game)) where.game = game;
+
+    const season = Number(req.query.season);
+    if (Number.isInteger(season) && season > 0) where.season = season;
+
+    const week = Number(req.query.week);
+    if (req.query.week !== undefined && req.query.week !== "" && Number.isInteger(week)) {
+      where.week = week;
+    }
+
+    const round = String(req.query.round || "").toUpperCase();
+    if (round) where.round = round;
+
+    const q = String(req.query.q || "").trim();
+    if (q) where.username = { contains: q, mode: "insensitive" };
+
+    const limit = Math.min(Math.max(Number(req.query.limit) || 50, 1), 200);
+    const page = Math.max(Number(req.query.page) || 1, 1);
+
+    const [entries, total, seasonRows] = await Promise.all([
+      prisma.fantasyChangeLog.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      prisma.fantasyChangeLog.count({ where }),
+      prisma.fantasyChangeLog.findMany({
+        distinct: ["season"],
+        select: { season: true },
+        orderBy: { season: "desc" },
+      }),
+    ]);
+
+    return res.json({
+      entries,
+      total,
+      page,
+      limit,
+      totalPages: Math.max(Math.ceil(total / limit), 1),
+      seasons: seasonRows.map((r) => r.season),
+    });
+  } catch (err) {
+    console.error("GET /api/admin/change-log error:", err);
+    return res.status(500).json({ error: "Nem sikerült betölteni a változásnaplót." });
+  }
+});
+
 export default router;

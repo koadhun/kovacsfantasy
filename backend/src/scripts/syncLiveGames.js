@@ -2,6 +2,7 @@ import "dotenv/config";
 import { prisma } from "../lib/prisma.js";
 import { syncStandings } from "./syncStandings.js";
 import { ACTIVE_GAME_TYPE, ACTIVE_STAGE_NAME } from "../lib/activeGameType.js";
+import { refreshKickoffTimes } from "../lib/refreshKickoffs.js";
 
 const LEAGUE_ID = 1;
 const API_BASE = "https://v1.american-football.api-sports.io";
@@ -71,6 +72,15 @@ export async function syncLiveGames(season) {
   console.log(`[live-sync] Aktiv het: ${activeWeek}`);
 
   const apiGames = await fetchSeasonGames(season);
+
+  // Ha a liga áttett egy meccset, a kezdési időpontot (kickoffAt) is átvezetjük,
+  // különben a tippelés zárása a régi időponthoz igazodna.
+  try {
+    const kickoffChanges = await refreshKickoffTimes(season, apiGames);
+    if (kickoffChanges) console.log(`[live-sync] ${kickoffChanges} meccs kezdési ideje frissítve.`);
+  } catch (err) {
+    console.error("[live-sync] Kezdési idők frissítése sikertelen:", err);
+  }
 
   const dbGames = await prisma.game.findMany({
     where: { season, week: activeWeek, gameType: ACTIVE_GAME_TYPE },

@@ -330,3 +330,28 @@ model HallOfFameEntry {
 
   @@index([season])
 }
+
+// Változásnapló a Weekly Pick'Em / Perfect Challenge / Playoff Challenge választásokhoz.
+// Szándékosan nincs relation/FK: a napló akkor is megmarad, ha a user, a meccs vagy a játékos sora
+// később törlődik; a nevek szövegként is el vannak tárolva.
+model FantasyChangeLog {
+  id            String   @id @default(uuid())
+  createdAt     DateTime @default(now())
+  userId        String
+  username      String
+  game          String
+  season        Int
+  week          Int?
+  round         String?
+  target        String
+  targetId      String?
+  previousValue String?
+  previousId    String?
+  newValue      String
+  newId         String?
+  meta          Json?
+
+  @@index([createdAt])
+  @@index([userId, createdAt])
+  @@index([game, season, week])
+}

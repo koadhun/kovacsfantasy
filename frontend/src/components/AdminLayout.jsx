@@ -59,6 +59,14 @@ export default function AdminLayout() {
                         <span className="admin-icon">📝</span>
             {t("admin.navScheduleResults")}
           </NavLink>
+
+          <NavLink
+            to="/admin/change-log"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <span className="admin-icon">🕘</span>
+            {t("admin.navChangeLog")}
+          </NavLink>
         </nav>
       </aside>
 

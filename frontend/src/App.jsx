@@ -26,6 +26,7 @@ import PlayoffChallengeLeaderboard from "./pages/PlayoffChallengeLeaderboard";
 
 import Users from "./pages/Users";
 import ScheduleResultsEditor from "./pages/admin/ScheduleResultsEditor";
+import AdminChangeLog from "./pages/admin/AdminChangeLog";
 import AdminStandings from "./pages/AdminStandings.jsx";
 
 import GameDetail from "./pages/GameDetail";
@@ -304,6 +305,7 @@ export default function App() {
         <Route path="standings" element={<AdminStandings />} />
         <Route path="schedule-results" element={<ScheduleResultsEditor />} />
         <Route path="hall-of-fame" element={<AdminHallOfFame />} />
+        <Route path="change-log" element={<AdminChangeLog />} />
         <Route index element={<Navigate to="users" replace />} />
       </Route>
 

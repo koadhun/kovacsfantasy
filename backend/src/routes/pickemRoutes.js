@@ -3,6 +3,8 @@ import { prisma } from "../lib/prisma.js";
 import { computePickEmPoints } from "../services/pickemScoring.js";
 import { requireAuth } from "../middleware/requireAuth.js";
 import { ACTIVE_GAME_TYPE } from "../lib/activeGameType.js";
+import { isGameStarted } from "../lib/gameLock.js";
+import { logChange, CHANGE_GAME } from "../lib/changeLog.js";
 
 const router = Router();
 
@@ -54,7 +56,7 @@ router.get("/week", requireAuth, async (req, res) => {
   const enriched = games.map((g) => {
     const picked = pickMap[g.id] || null;
     const final = isFinalGame(g);
-    const started = final || new Date(g.kickoffAt) <= now;
+    const started = final || isGameStarted(g, now);
     const winner = getWinner(g);
 
     let correct = null;
@@ -95,7 +97,7 @@ router.post("/pick", requireAuth, async (req, res) => {
 
     const now = getNow();
     const final = isFinalGame(game);
-    const started = final || new Date(game.kickoffAt) <= now;
+    const started = final || isGameStarted(game, now);
 
     if (started) {
       return res.status(400).json({ error: "A mérkőzés már elkezdődött, nem lehet tippelni." });
@@ -108,10 +110,32 @@ router.post("/pick", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "Érvénytelen csapat választás." });
     }
 
+    // A korábbi tipp a változásnaplóhoz kell (a mentés felülírja).
+    const previous = await prisma.pickEmPick.findUnique({
+      where: { userId_gameId: { userId, gameId } },
+      select: { picked: true },
+    });
+
     const saved = await prisma.pickEmPick.upsert({
       where: { userId_gameId: { userId, gameId } },
       create: { userId, gameId, picked: pickedUp },
       update: { picked: pickedUp },
+    });
+
+    // Változásnapló: ki, mikor, melyik meccsnél, miről mire. A hibája nem akadályozza a mentést.
+    await logChange({
+      userId,
+      game: CHANGE_GAME.PICKEM,
+      season: game.season,
+      week: game.week,
+      target: `${game.awayTeam} @ ${game.homeTeam}`,
+      targetId: game.id,
+      previousValue: previous?.picked ?? null,
+      newValue: pickedUp,
+      meta: {
+        gameStatus: game.status,
+        kickoffAt: game.kickoffAt,
+      },
     });
 
     res.json({ message: "Tipp elmentve.", pick: saved });
@@ -248,7 +272,7 @@ router.get("/user/:userId/picks", requireAuth, async (req, res) => {
 
   const result = games.map((g) => {
     const final = isFinalGame(g);
-    const started = final || new Date(g.kickoffAt) <= now;
+    const started = final || isGameStarted(g, now);
     const revealedPick = started ? pickMap[g.id] || null : null;
     const winner = getWinner(g);
 

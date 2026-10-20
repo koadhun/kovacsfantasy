@@ -6,6 +6,8 @@ import {
   calculatePerfectChallengeScore,
 } from "../lib/perfectChallengeScoring.js";
 import { ACTIVE_GAME_TYPE } from "../lib/activeGameType.js";
+import { isGameStarted as baseIsGameStarted } from "../lib/gameLock.js";
+import { logChange, playerLabel, CHANGE_GAME } from "../lib/changeLog.js";
 
 
 const router = Router();
@@ -144,10 +146,9 @@ function getOrCreate(map, key, factory) {
 }
 
 function isGameStarted(game, now = getNow()) {
-  if (!game) return false;
-  if (game.status === "FINAL") return true;
-  if (game.status === "ONGOING") return true;
-  return new Date(game.kickoffAt) <= now;
+  // Közös logika (lib/gameLock.js): elkezdettnek számít, ha a státusz már nem
+  // SCHEDULED, vagy a kickoffAt elmúlt.
+  return baseIsGameStarted(game, now);
 }
 
 async function getStartedTeamMap(season, week) {
@@ -981,6 +982,21 @@ router.put("/slot", requireAuth, async (req, res) => {
       update: {
         playerId,
       },
+    });
+
+    // Változásnapló: ki, mikor, melyik slotban, melyik játékosról melyikre.
+    await logChange({
+      userId: existingUser.id,
+      username: existingUser.username,
+      game: CHANGE_GAME.PERFECT,
+      season: Number(season),
+      week: Number(week),
+      target: slot,
+      targetId: slot,
+      previousValue: playerLabel(currentSlot?.player),
+      previousId: currentSlot?.player?.id ?? null,
+      newValue: playerLabel(player),
+      newId: player.id,
     });
 
     return res.json({ message: "Slot sikeresen frissítve." });
