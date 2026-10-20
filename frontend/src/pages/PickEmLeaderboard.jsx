@@ -174,7 +174,13 @@ export default function PickEmLeaderboard() {
             {totals.map((r, idx) => (
               <tr key={r.userId}>
                 <td>{idx + 1}</td>
-                <td>{r.username}</td>
+                <td>
+                  <Link
+                    to={`/fantasy/weekly-pickem/user/${r.userId}?week=${week}`}
+                  >
+                    {r.username}
+                  </Link>
+                </td>
                 <td>{r.points}</td>
               </tr>
             ))}
