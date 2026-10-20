@@ -5,6 +5,7 @@ import { requireAuth } from "../middleware/requireAuth.js";
 import { ACTIVE_GAME_TYPE } from "../lib/activeGameType.js";
 import { isGameStarted } from "../lib/gameLock.js";
 import { logChange, CHANGE_GAME } from "../lib/changeLog.js";
+import { hasLeaderboardPoints } from "../lib/leaderboardFilter.js";
 
 const router = Router();
 
@@ -199,10 +200,13 @@ async function recomputeWeekScore(season, week, userId) {
 
 /**
  * GET /api/pickem/leaderboard?season=2025&week=1
+ * - alapból csak a legalább 1 pontos felhasználók szerepelnek (heti és szezon tábla is)
+ * - includeZero=1: minden felhasználó (a Weekly oldal saját pontkártyái használják)
  */
 router.get("/leaderboard", requireAuth, async (req, res) => {
   const season = Number(req.query.season || 2025);
   const week = Number(req.query.week || 1);
+  const includeZero = String(req.query.includeZero || "") === "1";
 
   const users = await prisma.user.findMany({
     select: { id: true, username: true },
@@ -210,13 +214,17 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
 
   await Promise.all(users.map((u) => recomputeWeekScore(season, week, u.id)));
 
-  const weekly = await prisma.pickEmWeekScore.findMany({
+  const weeklyAll = await prisma.pickEmWeekScore.findMany({
     where: { season, week },
     include: {
       user: { select: { id: true, username: true } },
     },
     orderBy: [{ points: "desc" }, { correct: "desc" }],
   });
+
+  const weekly = includeZero
+    ? weeklyAll
+    : weeklyAll.filter((r) => hasLeaderboardPoints(r.points));
 
   const totalsRaw = await prisma.pickEmWeekScore.groupBy({
     by: ["userId"],
@@ -234,6 +242,7 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
       correct: r._sum.correct || 0,
       totalGames: r._sum.totalGames || 0,
     }))
+    .filter((r) => includeZero || hasLeaderboardPoints(r.points))
     .sort((a, b) => b.points - a.points || b.correct - a.correct);
 
   res.json({ season, week, weekly, totals });

@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma.js";
 import { requireAuth } from "../middleware/requireAuth.js";
 import { isGameStarted as baseIsGameStarted } from "../lib/gameLock.js";
 import { logChange, playerLabel, CHANGE_GAME } from "../lib/changeLog.js";
+import { hasLeaderboardPoints } from "../lib/leaderboardFilter.js";
 import {
   calculatePerfectChallengeBreakdown,
   calculatePerfectChallengeScore,
@@ -844,8 +845,13 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
       }),
     ]);
 
-    const roundRows = buildRoundLeaderboardRows(users, rosters, round);
-    const totals = buildPlayoffTotalsLeaderboardRows(users, rosters);
+    // Csak a legalább 1 pontos felhasználók szerepelnek a ranglistán.
+    const roundRows = buildRoundLeaderboardRows(users, rosters, round).filter((row) =>
+      hasLeaderboardPoints(row.points)
+    );
+    const totals = buildPlayoffTotalsLeaderboardRows(users, rosters).filter((row) =>
+      hasLeaderboardPoints(row.points)
+    );
 
     return res.json({
       season,

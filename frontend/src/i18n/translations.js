@@ -150,7 +150,7 @@ export const translations = {
       colPoints: "Points",
       colCorrect: "Correct",
       colTotalPoints: "Total Points",
-      noData: "No data.",
+      noData: "Nobody has scored yet.",
 
       userPicksBadge: "FANTASY",
       userPicksHeading: "User Picks",
@@ -388,7 +388,7 @@ export const translations = {
       colUser: "User",
       colPoints: "Points",
       colTotalPoints: "Total Points",
-      noData: "No data.",
+      noData: "Nobody has scored yet.",
     },
     perfectChallengeUserRoster: {
       loadError: "Failed to load the user's Perfect Challenge roster.",
@@ -438,7 +438,7 @@ export const translations = {
       colUser: "User",
       colRoundPoints: "Round Points",
       colTotalPoints: "Total Points",
-      noData: "No data.",
+      noData: "Nobody has scored yet.",
     },
     playoffChallengeRules: {
       badge: "RULES",
@@ -861,7 +861,7 @@ export const translations = {
       colPoints: "Pontok",
       colCorrect: "Helyes",
       colTotalPoints: "Összpontszám",
-      noData: "Nincs adat.",
+      noData: "Még senkinek nincs pontja.",
 
       userPicksBadge: "FANTASY",
       userPicksHeading: "Felhasználói tippek",
@@ -1099,7 +1099,7 @@ export const translations = {
       colUser: "Felhasználó",
       colPoints: "Pontok",
       colTotalPoints: "Összpontszám",
-      noData: "Nincs adat.",
+      noData: "Még senkinek nincs pontja.",
     },
     perfectChallengeUserRoster: {
       loadError: "Nem sikerült betölteni a felhasználó Perfect Challenge rosterét.",
@@ -1149,7 +1149,7 @@ export const translations = {
       colUser: "Felhasználó",
       colRoundPoints: "Köri pontok",
       colTotalPoints: "Összpontszám",
-      noData: "Nincs adat.",
+      noData: "Még senkinek nincs pontja.",
     },
     playoffChallengeRules: {
       badge: "SZABÁLYOK",

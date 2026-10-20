@@ -8,6 +8,7 @@ import {
 import { ACTIVE_GAME_TYPE } from "../lib/activeGameType.js";
 import { isGameStarted as baseIsGameStarted } from "../lib/gameLock.js";
 import { logChange, playerLabel, CHANGE_GAME } from "../lib/changeLog.js";
+import { hasLeaderboardPoints } from "../lib/leaderboardFilter.js";
 
 
 const router = Router();
@@ -691,8 +692,13 @@ router.get("/leaderboard", requireAuth, async (req, res) => {
       }),
     ]);
 
-    const weekly = buildWeeklyLeaderboardRows(users, weeklyRosters);
-    const totals = buildSeasonLeaderboardRows(users, seasonRosters);
+    // Csak a legalább 1 pontos felhasználók szerepelnek a ranglistán.
+    const weekly = buildWeeklyLeaderboardRows(users, weeklyRosters).filter((row) =>
+      hasLeaderboardPoints(row.points)
+    );
+    const totals = buildSeasonLeaderboardRows(users, seasonRosters).filter((row) =>
+      hasLeaderboardPoints(row.points)
+    );
 
     return res.json({
       season,

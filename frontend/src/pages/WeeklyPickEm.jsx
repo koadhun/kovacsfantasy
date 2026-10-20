@@ -153,8 +153,10 @@ export default function WeeklyPickEm() {
 
   async function loadMyScores(w) {
     try {
+      // includeZero: a ranglista alapból elrejti a 0 pontosokat, de a saját
+      // pontkártyákhoz (pl. "0/16 helyes") a 0 pontos sor is kell.
       const res = await api.get("/pickem/leaderboard", {
-        params: { season: SEASON, week: w },
+        params: { season: SEASON, week: w, includeZero: 1 },
       });
 
       const weekly = Array.isArray(res.data?.weekly) ? res.data.weekly : [];
