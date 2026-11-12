@@ -68,6 +68,15 @@ function roundToOne(value) {
   return Number(Number(value || 0).toFixed(1));
 }
 
+// A játékos azonosítójának hétfüggetlen része (a "season-week-" előtag után):
+//   API-játékos:          "2026-8-1414"             -> "1414"
+//   Védelem (DEF):        "2026-8-DEF-BUF"          -> "DEF-BUF"
+//   Excelből felvitt:     "2026-8-XLS-BUF-some-guy" -> "XLS-BUF-some-guy"
+// Ezzel lehet ugyanazt a játékost megtalálni az előző heti sorok között.
+function playerIdentityKey(id) {
+  return String(id).split("-").slice(2).join("-");
+}
+
 function parseUserId(value) {
   const n = Number(value);
   return Number.isNaN(n) ? value : n;
@@ -363,7 +372,11 @@ function normalizePlayer(player, averageMaps, statusByTeam, injuryMap, previousW
     avgScore: player.avgScore,
     overallStats: player.overallStats,
     weeklyStats: player.weeklyStats,
-    lastWeekStats: previousWeekStatsMap?.get(apiPlayerId) || null,
+    // Védelemnél bye hét után (nincs múlt heti ellenfél) nincs mit mutatni.
+    lastWeekStats:
+      player.isDefense && !player.lastWeekOpponentTeam
+        ? null
+        : previousWeekStatsMap?.get(playerIdentityKey(player.id)) || null,
     weeklyScoreBreakdown,
     gameStatus: statusByTeam?.get(player.teamCode) || "SCHEDULED",
     injury: injury
@@ -546,11 +559,7 @@ async function buildWeekStateForUser(userId, season, week, createIfMissing = fal
 
   const previousWeekStatsMap = new Map();
   for (const row of previousWeekPlayers) {
-    const idParts = String(row.id).split("-");
-    const apiPlayerId = Number(idParts[2]);
-    if (Number.isFinite(apiPlayerId)) {
-      previousWeekStatsMap.set(apiPlayerId, row.weeklyStats);
-    }
+    previousWeekStatsMap.set(playerIdentityKey(row.id), row.weeklyStats);
   }
 
   const slotMap = Object.fromEntries(
