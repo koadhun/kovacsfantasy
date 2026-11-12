@@ -23,7 +23,18 @@ const existingUser = await prisma.user.findFirst({
     return res.status(400).json({ error: "A megadott felhasználónév már foglalt." });
   }
 
-  const existingEmail = await prisma.user.findUnique({ where: { email } });
+  // Belépéskor a felhasználónév és az email cím is használható, ezért a kettő nem
+  // ütközhet: a felhasználónév nem lehet más felhasználó email címe.
+  const usernameIsSomeonesEmail = await prisma.user.findFirst({
+    where: { email: { equals: username, mode: "insensitive" } }
+  });
+  if (usernameIsSomeonesEmail) {
+    return res.status(400).json({ error: "A megadott felhasználónév már foglalt." });
+  }
+
+  const existingEmail = await prisma.user.findFirst({
+    where: { email: { equals: email, mode: "insensitive" } }
+  });
   if (existingEmail) {
     return res.status(400).json({ error: "A megadott email cim már használatban van." });
   }
@@ -46,22 +57,53 @@ try {
 }
 
 export async function login(req, res) {
-  const { username, password } = req.body;
+  const body = req.body || {};
 
-  if (!username || !password) {
-    return res.status(400).json({ error: "Felhasználónév és jelszó kötelező." });
+  // Felhasználónév VAGY email cím. A régi kliensek "username" mezőt küldenek, ezt is elfogadjuk.
+  const identifier = String(body.identifier ?? body.username ?? body.email ?? "").trim();
+  const { password } = body;
+
+  if (!identifier || typeof password !== "string" || !password) {
+    return res
+      .status(400)
+      .json({ error: "Felhasználónév vagy email cím és jelszó kötelező." });
   }
 
-  const user = await prisma.user.findFirst({
-    where: { username: { equals: username, mode: "insensitive" } }
+  const candidates = await prisma.user.findMany({
+    where: {
+      OR: [
+        { username: { equals: identifier, mode: "insensitive" } },
+        { email: { equals: identifier, mode: "insensitive" } }
+      ]
+    },
+    take: 5
   });
-  if (!user) {
-    return res.status(400).json({ error: "Megadott felhasználónév vagy jelszó hibás!" });
+
+  // Ha a megadott érték email cimnek látszik ("@" van benne), az email-egyezés az első,
+  // különben a felhasználónév-egyezés. Mindegyik jelöltnél ellenőrizzük a jelszót, így
+  // egy esetleges névütközés sem zárhat ki senkit a belépésből.
+  const lowered = identifier.toLowerCase();
+  const looksLikeEmail = identifier.includes("@");
+  const rank = (u) => {
+    const emailMatch = String(u.email).toLowerCase() === lowered;
+    const nameMatch = String(u.username).toLowerCase() === lowered;
+    if (looksLikeEmail) return emailMatch ? 0 : nameMatch ? 1 : 2;
+    return nameMatch ? 0 : emailMatch ? 1 : 2;
+  };
+  candidates.sort((a, b) => rank(a) - rank(b));
+
+  let user = null;
+  for (const candidate of candidates) {
+    if (await bcrypt.compare(password, candidate.passwordHash)) {
+      user = candidate;
+      break;
+    }
   }
 
-  const ok = await bcrypt.compare(password, user.passwordHash);
-  if (!ok) {
-    return res.status(400).json({ error: "Megadott felhasználónév vagy jelszó hibás!" });
+  if (!user) {
+    return res
+      .status(400)
+      .json({ error: "Megadott felhasználónév / email cím vagy jelszó hibás!" });
   }
 
   const token = jwt.sign(

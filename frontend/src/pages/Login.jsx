@@ -26,7 +26,7 @@ const eyeButtonStyle = {
 
 export default function Login() {
   const { t } = useLanguage();
-  const [username, setUsername] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
@@ -44,7 +44,8 @@ export default function Login() {
     e.preventDefault();
     setError("");
     try {
-      const res = await api.post("/auth/login", { username, password });
+      // Felhasználónév vagy email cím is megadható.
+      const res = await api.post("/auth/login", { identifier, password });
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -77,8 +78,8 @@ export default function Login() {
               <input
                 className="input"
                 placeholder={t("login.usernamePlaceholder")}
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
               />
             </div>
 
