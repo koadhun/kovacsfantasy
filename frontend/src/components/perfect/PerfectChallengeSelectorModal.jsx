@@ -92,13 +92,23 @@ function getDisplayName(player) {
   return player?.displayName || `${player?.firstName || ""} ${player?.lastName || ""}`.trim();
 }
 
-function buildPlayerWeeklyRows(player, t) {
+// Heti (Perfect Challenge) védelemnél a múlt heti kapott yardok a lista elején állnak.
+// Ezek feliratai a defenseLabels alatt vannak, nem a statLabels alatt.
+const DEFENSE_LAST_WEEK_YARD_KEYS = ["allowedPassingYards", "allowedRushingYards"];
+
+function buildPlayerWeeklyRows(player, t, periodType = "week") {
   if (!player) return [];
-  const order = PLAYER_STAT_ORDER_BY_POSITION[player.position] || [];
+  let order = PLAYER_STAT_ORDER_BY_POSITION[player.position] || [];
+
+  if (player.position === "DEF" && periodType !== "round") {
+    order = [...DEFENSE_LAST_WEEK_YARD_KEYS, ...order];
+  }
 
   return order.map((key) => ({
     key,
-    label: t(`perfectChallengeCard.statLabels.${key}`) || key,
+    label: DEFENSE_LAST_WEEK_YARD_KEYS.includes(key)
+      ? t(`perfectChallengeSelectorModal.defenseLabels.${key}`)
+      : t(`perfectChallengeCard.statLabels.${key}`) || key,
     value: formatValue(key, player.lastWeekStats?.[key]),
   }));
 }
@@ -245,8 +255,8 @@ export default function PerfectChallengeSelectorModal({
 
   const weeklyRows = useMemo(() => {
     if (!selectedPlayer) return [];
-    return buildPlayerWeeklyRows(selectedPlayer, t);
-  }, [selectedPlayer, t]);
+    return buildPlayerWeeklyRows(selectedPlayer, t, periodType);
+  }, [selectedPlayer, t, periodType]);
 
   const defenseRows = useMemo(() => {
     if (!selectedPlayer || initialPeriod || selectedPlayer.position === "DEF") return [];

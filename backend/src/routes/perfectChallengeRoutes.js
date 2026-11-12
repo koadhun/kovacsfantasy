@@ -550,7 +550,13 @@ async function buildWeekStateForUser(userId, season, week, createIfMissing = fal
     week > 1
       ? prisma.perfectChallengePlayer.findMany({
           where: { season, week: week - 1 },
-          select: { id: true, weeklyStats: true },
+          select: {
+            id: true,
+            isDefense: true,
+            weeklyStats: true,
+            allowedPassingYards: true,
+            allowedRushingYards: true,
+          },
         })
       : Promise.resolve([]),
   ]);
@@ -559,7 +565,18 @@ async function buildWeekStateForUser(userId, season, week, createIfMissing = fal
 
   const previousWeekStatsMap = new Map();
   for (const row of previousWeekPlayers) {
-    previousWeekStatsMap.set(playerIdentityKey(row.id), row.weeklyStats);
+    // Védelemnél a múlt heti kapott yardok külön oszlopban vannak, ezeket a heti
+    // statisztikához fűzzük, hogy a felület egy helyről mutathassa őket.
+    previousWeekStatsMap.set(
+      playerIdentityKey(row.id),
+      row.isDefense
+        ? {
+            ...(row.weeklyStats || {}),
+            allowedPassingYards: row.allowedPassingYards,
+            allowedRushingYards: row.allowedRushingYards,
+          }
+        : row.weeklyStats
+    );
   }
 
   const slotMap = Object.fromEntries(
