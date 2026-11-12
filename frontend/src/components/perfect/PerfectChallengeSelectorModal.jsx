@@ -211,6 +211,9 @@ export default function PerfectChallengeSelectorModal({
       return null;
     }
   }, []);
+  // Perfect Challenge (heti): a listában a játékos szezonátlaga látszik (pts / game avg).
+  // A Playoff Challenge (körök) listája változatlan.
+  const showSeasonAvg = periodType !== "round";
   const userRole = currentUser?.role || "USER";
   const hasFullAccess = userRole === "VIP" || userRole === "ADMIN";
 
@@ -378,10 +381,16 @@ export default function PerfectChallengeSelectorModal({
 
                     <div className="pc-player-option-right">
                       <div className="pc-player-option-score">
-                        {Number(player.avgScore || 0).toFixed(1)}
+                        {showSeasonAvg
+                          ? player.seasonAvgScore != null
+                            ? Number(player.seasonAvgScore).toFixed(1)
+                            : "-"
+                          : Number(player.avgScore || 0).toFixed(1)}
                       </div>
                       <div className="muted" style={{ fontSize: 11 }}>
-                        {t("perfectChallengeSelectorModal.points")}
+                        {showSeasonAvg
+                          ? t("perfectChallengeSelectorModal.pointsPerGameAvg")
+                          : t("perfectChallengeSelectorModal.points")}
                       </div>
 
                       {!hasFullAccess && (

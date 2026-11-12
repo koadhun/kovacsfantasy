@@ -109,10 +109,20 @@ function getPlayerScore(player) {
   );
 }
 
-function sortByAvgScoreDesc(players) {
-  return [...players].sort(
-    (a, b) => Number(b.avgScore || 0) - Number(a.avgScore || 0)
-  );
+// A választható lista rendezése: felül a legnagyobb szezonátlagú játékos, alul a legkisebb.
+// Akinek még nincs lejátszott meccse (nincs átlaga), az a lista végére kerül, név szerint.
+function sortBySeasonAvgDesc(players) {
+  return [...players].sort((a, b) => {
+    const aHas = a.seasonAvgScore != null;
+    const bHas = b.seasonAvgScore != null;
+
+    if (aHas !== bHas) return aHas ? -1 : 1;
+    if (aHas && a.seasonAvgScore !== b.seasonAvgScore) {
+      return b.seasonAvgScore - a.seasonAvgScore;
+    }
+
+    return String(a.displayName || "").localeCompare(String(b.displayName || ""));
+  });
 }
 
 function sumRosterScoreFromSlots(slots = []) {
@@ -203,17 +213,39 @@ async function buildAverageMaps(season, currentWeek) {
     return {
       defenseByTeam: new Map(),
       offenseByTeam: new Map(),
+      playerAverageByKey: new Map(),
     };
   }
 
-  const previousWeeksPlayers = await prisma.perfectChallengePlayer.findMany({
-    where: {
-      season,
-      week: { lt: currentWeek },
-      isActive: true,
-    },
-    orderBy: [{ week: "asc" }, { teamCode: "asc" }, { position: "asc" }],
-  });
+  const [previousWeeksPlayers, finishedGames] = await Promise.all([
+    prisma.perfectChallengePlayer.findMany({
+      where: {
+        season,
+        week: { lt: currentWeek },
+        isActive: true,
+      },
+      orderBy: [{ week: "asc" }, { teamCode: "asc" }, { position: "asc" }],
+    }),
+    prisma.game.findMany({
+      where: {
+        season,
+        gameType: ACTIVE_GAME_TYPE,
+        status: "FINAL",
+        week: { lt: currentWeek },
+      },
+      select: { week: true, homeTeam: true, awayTeam: true },
+    }),
+  ]);
+
+  // Mely csapat melyik héten játszott lefújt meccset (a bye hét nem számít meccsnek).
+  const playedTeamWeeks = new Set();
+  for (const g of finishedGames) {
+    playedTeamWeeks.add(`${g.week}|${normalizeTeamKey(g.homeTeam)}`);
+    playedTeamWeeks.add(`${g.week}|${normalizeTeamKey(g.awayTeam)}`);
+  }
+
+  // Játékosonkénti szezonátlag (az aktuális hét előtti, ténylegesen lejátszott meccsekből).
+  const playerScoreAcc = new Map();
 
   const defenseByTeam = new Map();
   const offenseByTeam = new Map();
@@ -223,6 +255,26 @@ async function buildAverageMaps(season, currentWeek) {
   for (const player of previousWeeksPlayers) {
     const stats = player.weeklyStats || {};
     const teamCode = normalizeTeamKey(player.teamCode);
+
+    // Szezonátlaghoz csak az a hét számít, amikor a csapat lefújt meccset játszott, és van
+    // a játékosról adat: támadóknál nem üres heti statisztika (aki nem lépett pályára, az
+    // nem kap 0-t az átlagába), védelemnél kitöltött kapott yard (a még fel nem dolgozott
+    // meccs alap 10 pontja ne torzítsa az átlagot).
+    if (playedTeamWeeks.has(`${player.week}|${teamCode}`)) {
+      const hasData =
+        player.position === "DEF"
+          ? Number(player.allowedPassingYards || 0) + Number(player.allowedRushingYards || 0) > 0
+          : Object.keys(stats).length > 0;
+
+      if (hasData) {
+        const acc = getOrCreate(playerScoreAcc, playerIdentityKey(player.id), () => ({
+          total: 0,
+          games: 0,
+        }));
+        acc.total += getPlayerScore(player);
+        acc.games += 1;
+      }
+    }
 
     if (player.position === "DEF") {
       // Bye hét (nincs ellenfél): a csapat nem játszott, ezért nem számít meccsnek,
@@ -333,9 +385,19 @@ async function buildAverageMaps(season, currentWeek) {
     });
   }
 
+  const playerAverageByKey = new Map();
+  for (const [key, acc] of playerScoreAcc.entries()) {
+    if (!acc.games) continue;
+    playerAverageByKey.set(key, {
+      avg: roundToOne(acc.total / acc.games),
+      games: acc.games,
+    });
+  }
+
   return {
     defenseByTeam: normalizedDefenseByTeam,
     offenseByTeam: normalizedOffenseByTeam,
+    playerAverageByKey,
   };
 }
 
@@ -355,6 +417,7 @@ function normalizePlayer(player, averageMaps, statusByTeam, injuryMap, previousW
 
   const idParts = String(player.id).split("-");
   const apiPlayerId = Number(idParts[2]);
+  const seasonAvg = averageMaps?.playerAverageByKey?.get(playerIdentityKey(player.id)) || null;
   const injury = injuryMap && Number.isFinite(apiPlayerId)
     ? injuryMap.get(apiPlayerId) || null
     : null;
@@ -370,6 +433,9 @@ function normalizePlayer(player, averageMaps, statusByTeam, injuryMap, previousW
     isDefense: player.isDefense,
     currentScore,
     avgScore: player.avgScore,
+    // Szezonátlag az eddig lejátszott meccsekből (null, ha még nincs lejátszott meccse).
+    seasonAvgScore: seasonAvg ? seasonAvg.avg : null,
+    seasonGamesPlayed: seasonAvg ? seasonAvg.games : 0,
     overallStats: player.overallStats,
     weeklyStats: player.weeklyStats,
     // Védelemnél bye hét után (nincs múlt heti ellenfél) nincs mit mutatni.
@@ -606,12 +672,12 @@ async function buildWeekStateForUser(userId, season, week, createIfMissing = fal
     .filter((player) => startedByTeam.get(player.teamCode) !== true);
 
   const poolByPosition = {
-    QB: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "QB")),
-    RB: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "RB")),
-    WR: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "WR")),
-    TE: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "TE")),
-    K: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "K")),
-    DEF: sortByAvgScoreDesc(normalizedPool.filter((p) => p.position === "DEF")),
+    QB: sortBySeasonAvgDesc(normalizedPool.filter((p) => p.position === "QB")),
+    RB: sortBySeasonAvgDesc(normalizedPool.filter((p) => p.position === "RB")),
+    WR: sortBySeasonAvgDesc(normalizedPool.filter((p) => p.position === "WR")),
+    TE: sortBySeasonAvgDesc(normalizedPool.filter((p) => p.position === "TE")),
+    K: sortBySeasonAvgDesc(normalizedPool.filter((p) => p.position === "K")),
+    DEF: sortBySeasonAvgDesc(normalizedPool.filter((p) => p.position === "DEF")),
   };
 
   const weeklyPoints = roundToOne(
