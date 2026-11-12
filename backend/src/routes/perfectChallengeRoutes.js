@@ -109,6 +109,16 @@ function getPlayerScore(player) {
   );
 }
 
+// Bye héten lévő játékos: a csapatának nincs meccse az adott héten (a felületen "vs -").
+// Az ütemezés (Game tábla) a mérvadó; ha az adott hétre még egyáltalán nincs betöltött
+// meccs, akkor a játékos ellenfél-mezőjére támaszkodunk, hogy ne tűnjön el mindenki.
+function isOnBye(player, statusByTeam) {
+  if (statusByTeam && statusByTeam.size > 0) {
+    return !statusByTeam.has(player.teamCode);
+  }
+  return !player.currentWeekOpponentTeam;
+}
+
 // A választható lista rendezése: felül a legnagyobb szezonátlagú játékos, alul a legkisebb.
 // Akinek még nincs lejátszott meccse (nincs átlaga), az a lista végére kerül, név szerint.
 function sortBySeasonAvgDesc(players) {
@@ -669,7 +679,9 @@ async function buildWeekStateForUser(userId, season, week, createIfMissing = fal
   // A pool-ból (választható lista) kivesszük azokat, akiknek a csapata mérkőzése már elkezdődött.
   const normalizedPool = pool
     .map((player) => normalizePlayer(player, averageMaps, statusByTeam, injuryMap, previousWeekStatsMap))
-    .filter((player) => startedByTeam.get(player.teamCode) !== true);
+    .filter((player) => startedByTeam.get(player.teamCode) !== true)
+    // A bye héten lévő játékosok nem választhatók, ezért nem jelennek meg a listában.
+    .filter((player) => !isOnBye(player, statusByTeam));
 
   const poolByPosition = {
     QB: sortBySeasonAvgDesc(normalizedPool.filter((p) => p.position === "QB")),
