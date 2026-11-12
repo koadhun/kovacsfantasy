@@ -216,6 +216,10 @@ async function buildAverageMaps(season, currentWeek) {
     const teamCode = normalizeTeamKey(player.teamCode);
 
     if (player.position === "DEF") {
+      // Bye hét (nincs ellenfél): a csapat nem játszott, ezért nem számít meccsnek,
+      // különben a 0 értékek lehúznák a védelmi átlagokat.
+      if (!normalizeTeamKey(player.currentWeekOpponentTeam)) continue;
+
       const defenseAcc = getOrCreate(
         defenseByTeam,
         teamCode,

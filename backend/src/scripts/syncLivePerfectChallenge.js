@@ -139,6 +139,12 @@ async function updateDefenseRow(season, week, teamCode, opponentCode, gameStats,
   const returnTD = teamTackles.reduce((sum, r) => sum + Number(r.stats.intTd || 0), 0);
   const interception = oppPassing.reduce((sum, r) => sum + Number(r.stats.int || 0), 0);
 
+  // Kapott yardok = az ellenfél passz- és futott yardjainak összege ebben a meccsben.
+  // (A nyers statisztikában a kulcsok: passing -> passYds, rushing -> rushYds.)
+  const oppRushing = gameStats.filter((r) => r.team === opponentCode && r.category === "rushing");
+  const allowedPassingYards = oppPassing.reduce((sum, r) => sum + Number(r.stats.passYds || 0), 0);
+  const allowedRushingYards = oppRushing.reduce((sum, r) => sum + Number(r.stats.rushYds || 0), 0);
+
   const weeklyStats = {
     interception,
     forcedFumble,
@@ -158,7 +164,7 @@ async function updateDefenseRow(season, week, teamCode, opponentCode, gameStats,
 
   await prisma.perfectChallengePlayer.update({
     where: { id },
-    data: { weeklyStats, currentScore, avgScore },
+    data: { weeklyStats, currentScore, avgScore, allowedPassingYards, allowedRushingYards },
   });
 }
 
@@ -188,7 +194,13 @@ export async function syncLivePerfectChallenge(season) {
       where: { season, apiGameId: game.apiGameId },
     });
 
-    if (!gameStats.length) continue;
+    if (!gameStats.length) {
+      // Nincs nyers statisztika: ha a meccs már le van zárva (feladtuk), a PC jelölőt is lezárjuk.
+      if (game.status === "FINAL" && game.statsSynced) {
+        await prisma.game.update({ where: { id: game.id }, data: { pcStatsSynced: true } });
+      }
+      continue;
+    }
 
     const byPlayer = {};
     for (const row of gameStats) {
@@ -228,7 +240,9 @@ export async function syncLivePerfectChallenge(season) {
     await updateDefenseRow(season, game.week, game.awayTeam, game.homeTeam, gameStats, game.homeScore);
     playersUpdated += 2;
 
-    if (game.status === "FINAL") {
+    // A Perfect Challenge pontokat csak akkor zárjuk le, ha a nyers meccs-statisztika
+    // (syncLiveStats) is lezárt: addig a következő futások újraszámolják őket.
+    if (game.status === "FINAL" && game.statsSynced) {
       await prisma.game.update({ where: { id: game.id }, data: { pcStatsSynced: true } });
     }
   }
